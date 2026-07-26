@@ -15,8 +15,10 @@ First public release of DevTools Hub — a collection of 15 developer tools runn
 
 ### Added
 
-- **Core**
-  - Dark theme design system with glassmorphism & micro-animations
+- **Core & UI Overhaul**
+  - Linear/Vercel-inspired professional Design System
+  - Global Light / Dark mode switcher with `localStorage` persistence
+  - Crisp, thin-line SVG icons replacing all emojis across the UI
   - Sidebar navigation with search (Ctrl+K)
   - Hash-based routing (SPA-like experience)
   - Mobile responsive layout
@@ -43,6 +45,11 @@ First public release of DevTools Hub — a collection of 15 developer tools runn
   - README with badges, tool catalog & contribution guide
   - MIT License
   - CHANGELOG (this file)
+
+### Changed
+- Removed GSAP and heavy 3D background scripts to achieve absolute zero-dependencies and improve rendering performance.
+- Flattened tool cards and removed heavy box-shadows / glowing gradients for a cleaner, engineering-focused look.
+- Fixed layout parsing bugs and right-shift overflow issues on `main-content`.
 
 ### Security
 - Zero external API calls — all processing happens in-browser
