@@ -367,21 +367,31 @@ body {
     z-index: 1;
 }
 
-.global-cubes-bg {
-    position: fixed !important;
+.bg-grid {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -10 !important;
-    opacity: 0.3; /* Even more subdued for full page bg */
+    z-index: -10;
+    background-image: 
+        radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 24px 24px;
     pointer-events: none;
-    overflow: hidden;
+    mask-image: radial-gradient(ellipse at center 0%, black 0%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center 0%, black 0%, transparent 80%);
 }
 
-/* Let the cubes capture pointer events */
-.global-cubes-bg .cubes-wrapper {
-    pointer-events: auto;
+.bg-glow {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80vw;
+    height: 50vh;
+    background: radial-gradient(ellipse at top center, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+    z-index: -10;
+    pointer-events: none;
 }
 
 .welcome-glow {
