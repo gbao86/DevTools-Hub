@@ -28,7 +28,7 @@ Every developer's browser has 20+ bookmarks to random tool websites — most of 
 - 🔒 **Your data never leaves your browser.** Everything runs client-side.
 - ⚡ **Instant.** No loading spinners. No server round-trips. No sign-ups.
 - 🎨 **Beautiful.** Dark theme. Glassmorphism. Smooth animations.
-- 📦 **Zero dependencies.** Pure HTML + CSS + JavaScript. That's it.
+- 📦 **Minimal dependencies.** Pure HTML + CSS + JavaScript for the tools. (Just GSAP for the hero background effect).
 
 ---
 
@@ -79,9 +79,12 @@ Every developer's browser has 20+ bookmarks to random tool websites — most of 
 DevTools-Hub/
 ├── index.html              # Entry point
 ├── css/
-│   └── style.css           # Design system (dark theme, components)
+│   ├── style.css           # Core design system
+│   └── animations.css      # Smooth transitions & micro-interactions
 ├── js/
 │   ├── app.js              # Core app controller & routing
+│   ├── effects.js          # Interactive UI effects (spotlight, etc.)
+│   ├── cubes-bg.js         # GSAP-powered interactive cubes background
 │   └── tools/              # Each tool is a self-contained module
 │       ├── json-formatter.js
 │       ├── base64.js
@@ -151,6 +154,6 @@ Free to use, modify, and distribute. Go wild. 🚀
 
 **Built with ❤️ and vanilla JavaScript**
 
-_No React. No Angular. No Vue. No dependencies. Just vibes._
+_No React. No Angular. No Vue. Just vibes (and a little GSAP)._
 
 </div>
