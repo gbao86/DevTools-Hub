@@ -8,7 +8,8 @@
     'use strict';
 
     const DEFAULTS = {
-        gridSize: 8,
+        cubeSize: 70, // fixed pixel size per cube
+        gap: 4, // gap between cubes in px
         maxAngle: 50,
         radius: 3,
         easing: 'power3.out',
@@ -29,10 +30,15 @@
     let simPos = { x: 0, y: 0 };
     let simTarget = { x: 0, y: 0 };
     let simRAF = null;
+    let gridCols = 0;
+    let gridRows = 0;
 
     // --- Build the cube grid ---
     function buildGrid(container) {
-        const { gridSize, borderStyle, faceColor } = DEFAULTS;
+        const { cubeSize, gap, borderStyle, faceColor } = DEFAULTS;
+        
+        gridCols = Math.ceil(window.innerWidth / (cubeSize + gap)) + 1;
+        gridRows = Math.ceil(window.innerHeight / (cubeSize + gap)) + 1;
 
         // Wrapper
         const wrapper = document.createElement('div');
@@ -48,11 +54,12 @@
         scene.className = 'cubes-scene';
         scene.style.cssText = `
             display: grid;
-            grid-template-columns: repeat(${gridSize}, 1fr);
-            grid-template-rows: repeat(${gridSize}, 1fr);
-            width: 100%; height: 100%;
-            column-gap: 5%; row-gap: 5%;
-            perspective: 99999999px;
+            grid-template-columns: repeat(${gridCols}, ${cubeSize}px);
+            grid-template-rows: repeat(${gridRows}, ${cubeSize}px);
+            width: 100vw; height: 100vh;
+            column-gap: ${gap}px; row-gap: ${gap}px;
+            justify-content: center; align-content: center;
+            perspective: 1000px;
         `;
 
         // CSS variables on wrapper
@@ -69,8 +76,8 @@
             'rotateY(90deg) translateX(-50%) rotateY(-90deg)',
         ];
 
-        for (let r = 0; r < gridSize; r++) {
-            for (let c = 0; c < gridSize; c++) {
+        for (let r = 0; r < gridRows; r++) {
+            for (let c = 0; c < gridCols; c++) {
                 const cube = document.createElement('div');
                 cube.className = 'cube';
                 cube.dataset.row = r;
@@ -138,9 +145,9 @@
         if (idleTimer) clearTimeout(idleTimer);
 
         const rect = scene.getBoundingClientRect();
-        const { gridSize } = DEFAULTS;
-        const colCenter = (e.clientX - rect.left) / (rect.width / gridSize);
-        const rowCenter = (e.clientY - rect.top) / (rect.height / gridSize);
+        const { cubeSize, gap } = DEFAULTS;
+        const colCenter = (e.clientX - rect.left) / (cubeSize + gap);
+        const rowCenter = (e.clientY - rect.top) / (cubeSize + gap);
 
         if (rafId) cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(() => tiltAt(rowCenter, colCenter));
@@ -165,11 +172,9 @@
         if (!DEFAULTS.rippleOnClick || !scene || typeof gsap === 'undefined') return;
 
         const rect = scene.getBoundingClientRect();
-        const { gridSize, rippleColor, faceColor, rippleSpeed } = DEFAULTS;
-        const cellW = rect.width / gridSize;
-        const cellH = rect.height / gridSize;
-        const colHit = Math.floor((e.clientX - rect.left) / cellW);
-        const rowHit = Math.floor((e.clientY - rect.top) / cellH);
+        const { rippleColor, faceColor, rippleSpeed, cubeSize, gap } = DEFAULTS;
+        const colHit = Math.floor((e.clientX - rect.left) / (cubeSize + gap));
+        const rowHit = Math.floor((e.clientY - rect.top) / (cubeSize + gap));
 
         const spreadDelay = 0.15 / rippleSpeed;
         const animDuration = 0.3 / rippleSpeed;
@@ -208,10 +213,9 @@
     // --- Auto-animate (idle simulation) ---
     function startAutoAnimate() {
         if (!DEFAULTS.autoAnimate) return;
-        const { gridSize } = DEFAULTS;
 
-        simPos = { x: Math.random() * gridSize, y: Math.random() * gridSize };
-        simTarget = { x: Math.random() * gridSize, y: Math.random() * gridSize };
+        simPos = { x: Math.random() * gridCols, y: Math.random() * gridRows };
+        simTarget = { x: Math.random() * gridCols, y: Math.random() * gridRows };
 
         const speed = 0.02;
         function loop() {
@@ -222,8 +226,8 @@
 
                 if (Math.hypot(simPos.x - simTarget.x, simPos.y - simTarget.y) < 0.1) {
                     simTarget = {
-                        x: Math.random() * gridSize,
-                        y: Math.random() * gridSize,
+                        x: Math.random() * gridCols,
+                        y: Math.random() * gridRows,
                     };
                 }
             }

@@ -367,20 +367,20 @@ body {
     z-index: 1;
 }
 
-.cubes-container {
-    position: absolute !important;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-    z-index: 0 !important;
-    opacity: 0.6; /* Subdued opacity */
-    pointer-events: none; /* Let clicks pass through if needed, though js makes it interactive. We'll set pointer-events: auto on the wrapper in JS if we want interactions, or leave it none so it doesn't block clicks */
+.global-cubes-bg {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -10 !important;
+    opacity: 0.3; /* Even more subdued for full page bg */
+    pointer-events: none;
+    overflow: hidden;
 }
 
 /* Let the cubes capture pointer events */
-.cubes-container .cubes-wrapper {
+.global-cubes-bg .cubes-wrapper {
     pointer-events: auto;
 }
 
