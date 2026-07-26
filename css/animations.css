@@ -1,216 +1,60 @@
-/* D:\App\DevTools-Hub\css\animations.css */
+/* ============================================
+   DevTools Hub - Animations (Minimal & Clean)
+   Inspired by: Linear.app, Vercel, Raycast
+   Rule: Only animate on user interaction.
+   No background animations. No distractions.
+   ============================================ */
 
-/* 1. Aurora/Gradient Background */
-.aurora-bg {
-    background: linear-gradient(125deg, #1e1b4b, #312e81, #1e3a8a, #06b6d4, #8b5cf6, #1e1b4b);
-    background-size: 400% 400%;
-    animation: aurora-flow 20s ease infinite;
-    position: relative;
-    overflow: hidden;
-}
-
-@keyframes aurora-flow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* 2. Grain/Noise Texture Overlay */
-.grain-overlay::before {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    opacity: 0.04;
-    pointer-events: none;
-    z-index: 10;
-    animation: grain-animation 8s steps(10) infinite;
-}
-
-@keyframes grain-animation {
-    0%, 100% { transform: translate(0, 0); }
-    10% { transform: translate(-5%, -10%); }
-    20% { transform: translate(-15%, 5%); }
-    30% { transform: translate(7%, -25%); }
-    40% { transform: translate(-5%, 25%); }
-    50% { transform: translate(-15%, 10%); }
-    60% { transform: translate(15%, 0%); }
-    70% { transform: translate(0%, 15%); }
-    80% { transform: translate(3%, 35%); }
-    90% { transform: translate(-10%, 10%); }
-}
-
-/* 3. Animated Gradient Text */
-.gradient-text-animated {
-    background: linear-gradient(to right, #6366f1, #06b6d4, #8b5cf6, #ec4899, #6366f1);
-    background-size: 200% auto;
-    color: transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-    animation: gradient-text 3s linear infinite;
-}
-
-@keyframes gradient-text {
-    0% { background-position: 0% center; }
-    100% { background-position: 200% center; }
-}
-
-/* 4. Card Shine/Glare Effect */
-.card-shine {
-    position: relative;
-    overflow: hidden;
-}
-
-.card-shine::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 100%);
-    transform: skewX(-20deg);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1;
-    pointer-events: none;
-}
-
-.card-shine:hover::after {
-    left: 150%;
-    transition: left 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* 5. Staggered Fade-In */
+/* --- Fade-in on page load (one-time, fast) --- */
 .stagger-in > * {
     opacity: 0;
-    transform: translateY(20px) scale(0.98);
+    transform: translateY(12px);
 }
 
 .stagger-in > *.visible {
-    animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: calc(var(--stagger-delay, 0) * 100ms);
+    animation: enter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation-delay: calc(var(--stagger-delay, 0) * 60ms);
 }
 
-@keyframes fade-in-up {
+@keyframes enter {
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
 }
 
-/* 6. Glow Border Animation */
-.glow-border {
-    position: relative;
-    border-radius: inherit;
-    padding: 2px;
+/* --- Scale-in for tool panels --- */
+.scale-in {
+    animation: tool-enter 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-.glow-border::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: conic-gradient(from 0deg, transparent 70%, #6366f1, #06b6d4, #8b5cf6, transparent 100%);
-    border-radius: inherit;
-    z-index: -1;
-    animation: rotate-border 4s linear infinite;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.glow-border:hover::before {
-    opacity: 1;
-}
-
-.glow-border::after {
-    content: '';
-    position: absolute;
-    inset: 1px;
-    background: inherit;
-    border-radius: inherit;
-    z-index: -1;
-}
-
-@keyframes rotate-border {
-    100% { transform: rotate(1turn); }
-}
-
-/* 7. Pulse Dot */
-.pulse-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #10b981;
-    position: relative;
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-    animation: pulse-animation 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse-animation {
-    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-}
-
-/* 8. Float Animation */
-.float {
-    animation: floating 6s ease-in-out infinite;
-    will-change: transform;
-}
-
-@keyframes floating {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
-    100% { transform: translateY(0); }
-}
-
-/* 9. Button Ripple */
-.ripple-effect {
-    position: relative;
-    overflow: hidden;
-}
-
-.ripple-effect .ripple {
-    position: absolute;
-    border-radius: 50%;
-    transform: scale(0);
-    animation: ripple-animation 0.6s linear;
-    background-color: rgba(255, 255, 255, 0.3);
-    pointer-events: none;
-}
-
-@keyframes ripple-animation {
-    to {
-        transform: scale(4);
+@keyframes tool-enter {
+    from {
         opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
-/* 10. Spotlight Card */
+/* --- Card hover spotlight (subtle mouse glow) --- */
 .spotlight-card {
     position: relative;
-    overflow: hidden;
 }
 
 .spotlight-card::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     background: radial-gradient(
-        600px circle at var(--mouse-x) var(--mouse-y),
-        rgba(255, 255, 255, 0.08),
-        transparent 40%
+        400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(99, 102, 241, 0.04),
+        transparent 50%
     );
-    z-index: 2;
+    border-radius: inherit;
+    z-index: 1;
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none;
@@ -220,68 +64,48 @@
     opacity: 1;
 }
 
-/* 11. Typewriter cursor blink */
-.typewriter-cursor::after {
-    content: '|';
-    animation: blink 1s step-start infinite;
-    font-weight: 300;
+/* --- Top accent bar on card hover --- */
+.card-shine {
+    position: relative;
+    overflow: hidden;
 }
 
-@keyframes blink {
-    50% { opacity: 0; }
-}
-
-/* 12. Scale-in for tool panels */
-.scale-in {
-    animation: scale-fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    transform-origin: center;
-    opacity: 0;
-    will-change: transform, opacity;
-}
-
-@keyframes scale-fade-in {
-    0% {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Particle Container (for Parallax Floating Particles) */
-#particle-container {
+.card-shine::after {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.particle {
-    position: absolute;
-    border-radius: 50%;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
     opacity: 0;
-    animation: particle-float infinite linear;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
-@keyframes particle-float {
-    0% {
-        transform: translateY(100px) scale(0.5);
-        opacity: 0;
-    }
-    10% {
-        opacity: var(--particle-opacity, 0.3);
-    }
-    90% {
-        opacity: var(--particle-opacity, 0.3);
-    }
-    100% {
-        transform: translateY(-500px) scale(1.5);
-        opacity: 0;
-    }
+.card-shine:hover::after {
+    opacity: 1;
+}
+
+/* --- Button press feedback --- */
+.tool-btn:active,
+.tool-card:active {
+    transform: scale(0.98) !important;
+    transition: transform 0.1s ease !important;
+}
+
+/* --- Smooth status dot --- */
+.pulse-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--accent-success);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+    animation: pulse-ring 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+    50% { box-shadow: 0 0 0 4px rgba(16, 185, 129, 0); }
 }
