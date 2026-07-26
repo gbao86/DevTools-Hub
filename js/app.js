@@ -86,7 +86,7 @@
         tools.forEach(tool => {
             const slug = toSlug(tool.name);
             html += `
-                <div class="tool-card" data-tool="${slug}">
+                <div class="tool-card spotlight-card card-shine" data-tool="${slug}">
                     <span class="tool-card-icon">${tool.icon}</span>
                     <div class="tool-card-title">${tool.name}</div>
                     <div class="tool-card-desc">${tool.description || ''}</div>
@@ -244,6 +244,7 @@
 
         // Render tool
         toolContent.innerHTML = '';
+        toolContent.classList.add('scale-in');
         try {
             tool.render(toolContent);
         } catch (err) {

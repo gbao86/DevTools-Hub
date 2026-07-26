@@ -134,7 +134,8 @@ body {
     top: 0;
     bottom: 0;
     width: var(--sidebar-width);
-    background: var(--bg-sidebar);
+    background: rgba(12, 18, 33, 0.85);
+    backdrop-filter: blur(20px);
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
@@ -281,6 +282,8 @@ body {
 .nav-item:hover {
     background: rgba(99, 102, 241, 0.06);
     color: var(--text-primary);
+    border-radius: 0 8px 8px 0;
+    transform: translateX(2px);
 }
 
 .nav-item.active {
@@ -311,6 +314,14 @@ body {
 .sidebar-footer {
     padding: var(--space-md) var(--space-lg);
     border-top: 1px solid var(--border-color);
+}
+
+.sidebar-version {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: var(--space-sm);
+    font-family: var(--font-mono);
 }
 
 .security-badge {
@@ -349,6 +360,12 @@ body {
     text-align: center;
     padding: var(--space-2xl) 0;
     position: relative;
+    z-index: 1;
+}
+
+.welcome-hero > * {
+    position: relative;
+    z-index: 1;
 }
 
 .welcome-glow {
@@ -375,11 +392,12 @@ body {
 }
 
 .welcome-title {
-    font-size: var(--fs-3xl);
+    font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 800;
     letter-spacing: -0.03em;
     margin-bottom: var(--space-md);
     position: relative;
+    line-height: 1.1;
 }
 
 .welcome-title .accent {
@@ -403,6 +421,54 @@ body {
     flex-wrap: wrap;
 }
 
+.welcome-stats {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2xl);
+    margin-top: var(--space-2xl);
+}
+
+.welcome-stat {
+    text-align: center;
+}
+
+.welcome-stat-value {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+}
+
+.welcome-stat-label {
+    font-size: var(--fs-sm);
+    color: var(--text-tertiary);
+    margin-top: var(--space-xs);
+    display: block;
+}
+
+.particles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+}
+
 .badge {
     display: inline-flex;
     align-items: center;
@@ -421,6 +487,7 @@ body {
     color: var(--text-primary);
     transform: translateY(-2px);
     box-shadow: var(--shadow-glow);
+    background: rgba(99, 102, 241, 0.1);
 }
 
 .badge-icon {
@@ -441,9 +508,12 @@ body {
     border-radius: var(--radius-md);
     padding: var(--space-xl);
     cursor: pointer;
-    transition: var(--transition-base);
+    transition: transform 0.4s cubic-bezier(0.03, 0.98, 0.52, 0.99), box-shadow 0.4s ease, border-color 0.3s ease;
     position: relative;
     overflow: hidden;
+    perspective: 1000px;
+    will-change: transform;
+    transform-style: preserve-3d;
 }
 
 .tool-card::before {
@@ -459,9 +529,9 @@ body {
 }
 
 .tool-card:hover {
-    border-color: var(--border-hover);
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    border-color: rgba(99, 102, 241, 0.3);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(99, 102, 241, 0.1);
     background: var(--bg-card-hover);
 }
 
@@ -709,6 +779,7 @@ body {
     border-color: var(--accent-primary-hover);
     color: white;
     box-shadow: var(--shadow-glow);
+    transform: translateY(-1px);
 }
 
 .tool-btn-success {
