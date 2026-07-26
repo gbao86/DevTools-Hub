@@ -4,10 +4,12 @@
 
 ### _All the developer tools you need. One page. Zero BS._
 
+**[🌐 Live Demo](https://dev-tools-hub-tan.vercel.app)** · **[📦 GitHub](https://github.com/gbao86/DevTools-Hub)**
+
 [![MIT License](https://img.shields.io/badge/License-MIT-6366f1?style=for-the-badge)](LICENSE)
 [![Made with JS](https://img.shields.io/badge/Made_with-JavaScript-f7df1e?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![100% Offline](https://img.shields.io/badge/100%25-Offline-10b981?style=for-the-badge)](#-privacy--security)
-[![Deploy with Vercel](https://img.shields.io/badge/Deploy-Vercel-000?style=for-the-badge&logo=vercel)](https://vercel.com)
+[![Vercel](https://img.shields.io/badge/Live-Vercel-000?style=for-the-badge&logo=vercel)](https://dev-tools-hub-tan.vercel.app)
 
 <br/>
 
