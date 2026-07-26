@@ -39,34 +39,6 @@
     --btn-primary-text: #000000;
 }
 
-/* --- Light Theme Overrides --- */
-[data-theme="light"] {
-    --bg-primary: #ffffff;
-    --bg-secondary: #f4f4f5;
-    --bg-tertiary: #e4e4e7;
-    --bg-card: #ffffff;
-    --bg-card-hover: #fafafa;
-    --bg-input: #ffffff;
-    --bg-sidebar: #fcfcfc;
-
-    --text-primary: #09090b;
-    --text-secondary: #52525b;
-    --text-tertiary: #71717a;
-    --text-muted: #a1a1aa;
-
-    --accent-primary: #09090b;
-    --accent-primary-hover: #27272a;
-    --accent-primary-glow: rgba(0, 0, 0, 0.05);
-    --accent-secondary: #09090b;
-    --accent-tertiary: #52525b;
-    
-    --border-color: #e4e4e7;
-    --border-hover: #d4d4d8;
-    --border-focus: #09090b;
-
-    --gradient-primary: #09090b;
-    --btn-primary-text: #ffffff;
-}
 
     /* Typography */
     --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -107,6 +79,35 @@
     --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Light Theme Overrides --- */
+[data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f4f4f5;
+    --bg-tertiary: #e4e4e7;
+    --bg-card: #ffffff;
+    --bg-card-hover: #fafafa;
+    --bg-input: #ffffff;
+    --bg-sidebar: #fcfcfc;
+
+    --text-primary: #09090b;
+    --text-secondary: #52525b;
+    --text-tertiary: #71717a;
+    --text-muted: #a1a1aa;
+
+    --accent-primary: #09090b;
+    --accent-primary-hover: #27272a;
+    --accent-primary-glow: rgba(0, 0, 0, 0.05);
+    --accent-secondary: #09090b;
+    --accent-tertiary: #52525b;
+    
+    --border-color: #e4e4e7;
+    --border-hover: #d4d4d8;
+    --border-focus: #09090b;
+
+    --gradient-primary: #09090b;
+    --btn-primary-text: #ffffff;
 }
 
 /* --- Reset & Base --- */
