@@ -129,7 +129,6 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     overflow-x: hidden;
-    display: flex;
     min-height: 100vh;
 }
 
@@ -431,7 +430,6 @@ body {
 
 /* --- Main Content --- */
 .main-content {
-    flex: 1;
     margin-left: var(--sidebar-width);
     min-height: 100vh;
     transition: margin-left var(--transition-base);
