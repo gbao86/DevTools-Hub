@@ -797,15 +797,15 @@ body {
 .tool-btn-primary {
     background: var(--accent-primary);
     border-color: var(--accent-primary);
-    color: white;
+    color: #000000;
+    font-weight: 600;
 }
 
 .tool-btn-primary:hover {
     background: var(--accent-primary-hover);
     border-color: var(--accent-primary-hover);
-    color: white;
-    box-shadow: var(--shadow-glow);
-    transform: translateY(-1px);
+    color: #000000;
+    box-shadow: none;
 }
 
 .tool-btn-success {
@@ -857,13 +857,13 @@ body {
 .tool-copy-btn:hover {
     background: var(--accent-primary);
     border-color: var(--accent-primary);
-    color: white;
+    color: #000000;
 }
 
 .tool-copy-btn.copied {
     background: var(--accent-success);
     border-color: var(--accent-success);
-    color: white;
+    color: #000000;
 }
 
 /* Layout helpers */
