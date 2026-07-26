@@ -367,6 +367,23 @@ body {
     z-index: 1;
 }
 
+.cubes-container {
+    position: absolute !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    z-index: 0 !important;
+    opacity: 0.6; /* Subdued opacity */
+    pointer-events: none; /* Let clicks pass through if needed, though js makes it interactive. We'll set pointer-events: auto on the wrapper in JS if we want interactions, or leave it none so it doesn't block clicks */
+}
+
+/* Let the cubes capture pointer events */
+.cubes-container .cubes-wrapper {
+    pointer-events: auto;
+}
+
 .welcome-glow {
     position: absolute;
     top: 50%;
