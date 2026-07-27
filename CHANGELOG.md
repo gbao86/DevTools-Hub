@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.1] - 2026-07-27
+
+### Added
+- **Regex Tester Pro Upgrade**: Massively upgraded the existing Regex Tester tool to include 4 new professional features:
+  - **Substitution (Regex Replace)**: Real-time string replacement using captured groups (e.g. `$1`, `$2`).
+  - **Match Information & Capture Groups**: Detailed breakdown of full matches and all capture groups (including named groups) using `String.prototype.matchAll()`.
+  - **Regex Explainer**: Built-in parser that translates the meaning of each regex token into natural language (Vietnamese).
+  - **Cheatsheet Sidebar**: Interactive quick-reference sidebar to easily insert common regex tokens (`\d`, `\w`, etc.) at the cursor position.
+
+### Fixed
+- **JSON ↔ YAML Converter**: Fixed parsing errors (`Invalid key:value format`) when dealing with complex YAML structures (like multiline strings and nested arrays/objects) by replacing the custom parser with the robust `js-yaml` library (included offline).
+
+---
+
 ## [0.2] - 2026-07-27
 
 ### 🚀 Major UI Overhaul & 10 New Tools

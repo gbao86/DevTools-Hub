@@ -75,7 +75,7 @@ Every developer's browser has 20+ bookmarks to random tool websites — most of 
 ### Text
 | Tool | Description |
 |:-----|:------------|
-| 🧪 **Regex Tester** | Test regex patterns with real-time match highlighting |
+| 🧪 **Regex Tester** | Test, Replace, Explainer & Cheatsheet for Regular Expressions |
 | 🔍 **Diff Checker** | LCS-based side-by-side text comparison |
 | 🔢 **Text Counter** | Word, character, sentence & paragraph statistics |
 | 📝 **String Case Converter** | Convert between 13 case formats (camelCase, snake_case, kebab-case, etc.) |
