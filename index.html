@@ -32,42 +32,54 @@
     <!-- Lightweight CSS Background -->
     <div class="bg-grid"></div>
     <div class="bg-glow"></div>
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <span class="logo-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span>
+
+    <!-- Top Navbar -->
+    <header class="topbar" id="topbar">
+        <div class="topbar-inner">
+            <!-- Logo -->
+            <a class="topbar-logo" href="#" id="topbar-home">
+                <span class="logo-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span>
                 <span class="logo-text">DevTools<span class="logo-accent">Hub</span></span>
-            </div>
-            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
-                <span></span><span></span><span></span>
-            </button>
-        </div>
+            </a>
 
-        <div class="search-box">
-            <span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
-            <input type="text" id="search-input" placeholder="Tìm công cụ... (Ctrl+K)" autocomplete="off">
-            <kbd class="search-kbd">Ctrl+K</kbd>
-        </div>
+            <!-- Center: Current Tool Breadcrumb -->
+            <div class="topbar-breadcrumb" id="topbar-breadcrumb"></div>
 
-        <nav class="sidebar-nav" id="sidebar-nav">
-            <!-- Categories and tools will be rendered by JS -->
-        </nav>
+            <!-- Right Actions -->
+            <div class="topbar-actions">
+                <!-- Tools Menu Button -->
+                <button class="topbar-menu-btn" id="tools-menu-btn" title="Mở menu công cụ (Ctrl+K)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    <span class="menu-btn-text">Công cụ</span>
+                    <kbd class="topbar-kbd">Ctrl+K</kbd>
+                </button>
 
-        <div class="sidebar-footer">
-            <div class="security-badge">
-                <span class="security-icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
-                <span>100% Offline · Bảo mật</span>
-            </div>
-            <div class="sidebar-bottom-row">
-                <div class="sidebar-version">v0.0.1</div>
+                <!-- Theme Toggle -->
                 <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme">
                     <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                     <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                 </button>
             </div>
         </div>
-    </aside>
+    </header>
+
+    <!-- Command Palette / Tools Dropdown -->
+    <div class="cmd-overlay" id="cmd-overlay"></div>
+    <div class="cmd-palette" id="cmd-palette">
+        <div class="cmd-search">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="cmd-search-input" placeholder="Tìm công cụ..." autocomplete="off" spellcheck="false">
+            <kbd class="cmd-esc">ESC</kbd>
+        </div>
+        <div class="cmd-list" id="cmd-list">
+            <!-- Categories and tools rendered by JS -->
+        </div>
+        <div class="cmd-footer">
+            <span><kbd>↑↓</kbd> Di chuyển</span>
+            <span><kbd>↵</kbd> Chọn</span>
+            <span><kbd>ESC</kbd> Đóng</span>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <main class="main-content" id="main-content">
@@ -87,7 +99,7 @@
                 </div>
                 <div class="welcome-stats stagger-in">
                     <div class="welcome-stat">
-                        <span class="welcome-stat-value" data-count="15">0</span>
+                        <span class="welcome-stat-value" data-count="25">0</span>
                         <span class="welcome-stat-label">Công cụ</span>
                     </div>
                     <div class="welcome-stat">
@@ -108,18 +120,15 @@
 
         <!-- Tool Container -->
         <div class="tool-container" id="tool-container" style="display: none;">
-            <div class="tool-breadcrumb" id="tool-breadcrumb"></div>
             <div class="tool-content" id="tool-content">
                 <!-- Active tool will render here -->
             </div>
         </div>
     </main>
 
-    <!-- Mobile overlay -->
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
-
     <!-- Scripts -->
     <script src="js/effects.js"></script>
+    <!-- Existing Tools -->
     <script src="js/tools/json-formatter.js"></script>
     <script src="js/tools/base64.js"></script>
     <script src="js/tools/url-encoder.js"></script>
@@ -135,6 +144,18 @@
     <script src="js/tools/text-counter.js"></script>
     <script src="js/tools/css-unit-converter.js"></script>
     <script src="js/tools/number-base-converter.js"></script>
+    <!-- New Tools -->
+    <script src="js/tools/json-yaml-converter.js"></script>
+    <script src="js/tools/sql-formatter.js"></script>
+    <script src="js/tools/cron-parser.js"></script>
+    <script src="js/tools/password-generator.js"></script>
+    <script src="js/tools/html-entity.js"></script>
+    <script src="js/tools/string-case-converter.js"></script>
+    <script src="js/tools/css-gradient-generator.js"></script>
+    <script src="js/tools/placeholder-image.js"></script>
+    <script src="js/tools/chmod-calculator.js"></script>
+    <script src="js/tools/code-beautifier.js"></script>
+    <!-- App Controller -->
     <script src="js/app.js"></script>
 </body>
 </html>

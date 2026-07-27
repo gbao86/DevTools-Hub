@@ -7,7 +7,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.0.1] - 2026-07-26
+## [0.2] - 2026-07-27
+
+### 🚀 Major UI Overhaul & 10 New Tools
+
+Complete navigation redesign and significant tool expansion — from 15 to 25 developer utilities.
+
+### Added
+
+- **Navigation — Command Palette**
+  - Replaced fixed sidebar with a compact top navigation bar (56px, glassmorphism blur)
+  - Introduced a centered Command Palette overlay (inspired by VS Code / Linear / Raycast)
+  - Keyboard-driven workflow: `Ctrl+K` to open, `↑↓` to navigate, `Enter` to select, `Escape` to dismiss
+  - Fuzzy search across all tools with real-time filtering
+  - Breadcrumb trail in the top bar when a tool is active
+  - Full-width content area — no permanent sidebar consuming horizontal space
+
+- **New Tools (10)**
+  - 🔀 **JSON ↔ YAML Converter** — bidirectional conversion with built-in mini YAML parser/serializer (no external dependencies)
+  - ✨ **SQL Formatter** — format, beautify & minify SQL queries with keyword casing and configurable indentation
+  - ⏰ **Cron Expression Parser** — human-readable cron descriptions, next-10-runs calculator, visual field builder & common presets
+  - 🔑 **Password Generator** — cryptographically secure (`crypto.getRandomValues`), configurable charset, entropy meter, bulk generation
+  - 🔗 **HTML Entity Encoder/Decoder** — named & numeric entity support, encoding mode toggle, common entity reference table
+  - 📝 **String Case Converter** — real-time conversion across 13 formats (camelCase, snake_case, kebab-case, PascalCase, SCREAMING_SNAKE, dot.case, path/case, Title Case, etc.)
+  - 🎨 **CSS Gradient Generator** — visual builder for linear/radial/conic gradients, adjustable color stops, preset gallery, random gradient, live CSS output
+  - 🆔 **Placeholder Image Generator** — customizable SVG placeholders with dimension presets, color pickers, text overlay, PNG/SVG export
+  - 🔐 **Chmod Calculator** — numeric ↔ symbolic permission conversion, interactive 3×3 checkbox grid (Owner/Group/Others × rwx), common presets, command output
+  - ✨ **Code Snippet Beautifier** — Carbon-style code screenshot tool with 6 themes, 14 languages, macOS window chrome, customizable padding/radius, PNG export via Canvas
+
+### Changed
+
+- **Layout architecture**: migrated from a fixed 260px left sidebar to a top-bar + on-demand command palette model, reclaiming 100% viewport width for tool content
+- **CSS design system**: rewrote `style.css` to support the new layout — added command palette styles, topbar component, range input theming, responsive breakpoints for the overlay
+- **App controller** (`app.js`): refactored tool navigation from sidebar click handlers to a full command palette system with keyboard navigation, focus management, and filtered item tracking
+- **Tool count stat** on welcome screen updated from 15 → 25
+- **Version identifier** updated from `v0.0.1` → `v0.2`
+
+### Fixed
+
+- Hardcoded hex color values in Cron Parser error styles replaced with CSS variable references (`var(--accent-danger)`, `rgba()` fallbacks) for correct rendering in both dark and light themes
+
+### Security
+
+- All 10 new tools run entirely client-side — zero network requests, zero data exfiltration
+- Password Generator uses the Web Crypto API (`crypto.getRandomValues()`) for cryptographically secure randomness
+
+---
+
+## [0.1] - 2026-07-26
 
 ### 🎉 Initial Release
 
@@ -15,7 +62,7 @@ First public release of DevTools Hub — a collection of 15 developer tools runn
 
 ### Added
 
-- **Core & UI Overhaul**
+- **Core & UI**
   - Linear/Vercel-inspired professional Design System
   - Global Light / Dark mode switcher with `localStorage` persistence
   - Crisp, thin-line SVG icons replacing all emojis across the UI
@@ -58,4 +105,5 @@ First public release of DevTools Hub — a collection of 15 developer tools runn
 
 ---
 
-[0.0.1]: https://github.com/gbao86/DevTools-Hub/releases/tag/v0.0.1
+[0.2]: https://github.com/gbao86/DevTools-Hub/compare/v0.1...v0.2
+[0.1]: https://github.com/gbao86/DevTools-Hub/releases/tag/v0.1

@@ -1,5 +1,6 @@
 /* ============================================
    DevTools Hub - Main Application Controller
+   V2: Command Palette Navigation
    ============================================ */
 
 (function () {
@@ -42,6 +43,8 @@
         '❌': '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>',
         'ℹ️': '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>',
         '⚠️': '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>',
+        '🔒': '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',
+        '🔓': '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',
         'default': '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>'
     };
 
@@ -53,30 +56,35 @@
     const tools = window.DevTools || [];
 
     // DOM elements
-    const sidebarNav = document.getElementById('sidebar-nav');
     const toolsGrid = document.getElementById('tools-grid');
-    const searchInput = document.getElementById('search-input');
     const welcomeScreen = document.getElementById('welcome-screen');
     const toolContainer = document.getElementById('tool-container');
     const toolContent = document.getElementById('tool-content');
-    const toolBreadcrumb = document.getElementById('tool-breadcrumb');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebar-toggle');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const topbarBreadcrumb = document.getElementById('topbar-breadcrumb');
     const themeToggleBtn = document.getElementById('theme-toggle');
 
+    // Command palette elements
+    const cmdOverlay = document.getElementById('cmd-overlay');
+    const cmdPalette = document.getElementById('cmd-palette');
+    const cmdSearchInput = document.getElementById('cmd-search-input');
+    const cmdList = document.getElementById('cmd-list');
+    const toolsMenuBtn = document.getElementById('tools-menu-btn');
+    const topbarHome = document.getElementById('topbar-home');
+
     let activeTool = null;
+    let focusedIndex = -1;
+    let visibleItems = [];
 
     // --- Initialization ---
     function init() {
-        renderSidebar();
+        renderCommandPalette();
         renderToolsGrid();
         bindEvents();
         handleRoute();
     }
 
-    // --- Render Sidebar Navigation ---
-    function renderSidebar() {
+    // --- Render Command Palette Items ---
+    function renderCommandPalette() {
         // Group tools by category
         const grouped = {};
         tools.forEach(tool => {
@@ -96,22 +104,23 @@
         sortedCategories.forEach(cat => {
             const catInfo = CATEGORIES[cat] || { icon: '📁' };
             html += `
-                <div class="nav-category">
-                    <div class="nav-category-title"><span class="cat-icon">${getIcon(catInfo.icon)}</span> ${cat}</div>
+                <div class="cmd-category" data-category="${cat}">
+                    <div class="cmd-category-title">${getIcon(catInfo.icon)} ${cat}</div>
                 </div>
             `;
             grouped[cat].forEach(tool => {
                 const slug = toSlug(tool.name);
                 html += `
-                    <div class="nav-item" data-tool="${slug}" title="${tool.name}">
-                        <span class="nav-item-icon">${getIcon(tool.icon)}</span>
-                        <span class="nav-item-name">${tool.name}</span>
+                    <div class="cmd-item" data-tool="${slug}" data-category="${cat}" data-name="${tool.name.toLowerCase()}">
+                        <span class="cmd-item-icon">${getIcon(tool.icon)}</span>
+                        <span class="cmd-item-name">${tool.name}</span>
+                        <span class="cmd-item-badge">${cat}</span>
                     </div>
                 `;
             });
         });
 
-        sidebarNav.innerHTML = html;
+        cmdList.innerHTML = html;
     }
 
     // --- Render Tools Grid on Welcome Page ---
@@ -131,17 +140,96 @@
         toolsGrid.innerHTML = html;
     }
 
-    // --- Bind Events ---
-    function bindEvents() {
-        // Tool navigation (sidebar)
-        sidebarNav.addEventListener('click', (e) => {
-            const item = e.target.closest('.nav-item');
-            if (item) {
-                const slug = item.dataset.tool;
-                navigateToTool(slug);
-            }
+    // --- Command Palette Controls ---
+    function openCommandPalette() {
+        cmdOverlay.classList.add('active');
+        cmdPalette.classList.add('active');
+        cmdSearchInput.value = '';
+        filterCommandPalette('');
+        focusedIndex = -1;
+        updateFocus();
+
+        // Delay focus to after animation
+        requestAnimationFrame(() => {
+            cmdSearchInput.focus();
+        });
+    }
+
+    function closeCommandPalette() {
+        cmdOverlay.classList.remove('active');
+        cmdPalette.classList.remove('active');
+        cmdSearchInput.blur();
+        focusedIndex = -1;
+    }
+
+    function isCommandPaletteOpen() {
+        return cmdPalette.classList.contains('active');
+    }
+
+    function filterCommandPalette(query) {
+        const items = cmdList.querySelectorAll('.cmd-item');
+        const categories = cmdList.querySelectorAll('.cmd-category');
+        const q = query.toLowerCase().trim();
+
+        items.forEach(item => {
+            const name = item.dataset.name;
+            const cat = item.dataset.category.toLowerCase();
+            const match = !q || name.includes(q) || cat.includes(q);
+            item.classList.toggle('hidden', !match);
         });
 
+        // Show/hide category headers
+        categories.forEach(catEl => {
+            const catName = catEl.dataset.category;
+            let nextEl = catEl.nextElementSibling;
+            let hasVisible = false;
+            while (nextEl && nextEl.classList.contains('cmd-item')) {
+                if (!nextEl.classList.contains('hidden')) hasVisible = true;
+                nextEl = nextEl.nextElementSibling;
+            }
+            catEl.classList.toggle('hidden', !hasVisible);
+        });
+
+        // Show empty state if no results
+        const existingEmpty = cmdList.querySelector('.cmd-empty');
+        if (existingEmpty) existingEmpty.remove();
+
+        const anyVisible = cmdList.querySelector('.cmd-item:not(.hidden)');
+        if (!anyVisible && q) {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.className = 'cmd-empty';
+            emptyDiv.textContent = `Không tìm thấy "${query}"`;
+            cmdList.appendChild(emptyDiv);
+        }
+
+        // Update visible items list for keyboard navigation
+        visibleItems = Array.from(cmdList.querySelectorAll('.cmd-item:not(.hidden)'));
+        focusedIndex = visibleItems.length > 0 ? 0 : -1;
+        updateFocus();
+    }
+
+    function updateFocus() {
+        const items = cmdList.querySelectorAll('.cmd-item');
+        items.forEach(item => item.classList.remove('focused'));
+
+        if (focusedIndex >= 0 && focusedIndex < visibleItems.length) {
+            const focused = visibleItems[focusedIndex];
+            focused.classList.add('focused');
+            // Scroll into view
+            focused.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+    }
+
+    function selectFocusedItem() {
+        if (focusedIndex >= 0 && focusedIndex < visibleItems.length) {
+            const slug = visibleItems[focusedIndex].dataset.tool;
+            closeCommandPalette();
+            navigateToTool(slug);
+        }
+    }
+
+    // --- Bind Events ---
+    function bindEvents() {
         // Tool navigation (grid cards)
         toolsGrid.addEventListener('click', (e) => {
             const card = e.target.closest('.tool-card');
@@ -151,9 +239,72 @@
             }
         });
 
-        // Search
-        searchInput.addEventListener('input', (e) => {
-            filterTools(e.target.value.trim().toLowerCase());
+        // Open command palette
+        toolsMenuBtn.addEventListener('click', () => {
+            if (isCommandPaletteOpen()) {
+                closeCommandPalette();
+            } else {
+                openCommandPalette();
+            }
+        });
+
+        // Close command palette on overlay click
+        cmdOverlay.addEventListener('click', closeCommandPalette);
+
+        // Command palette search
+        cmdSearchInput.addEventListener('input', (e) => {
+            filterCommandPalette(e.target.value);
+        });
+
+        // Command palette keyboard navigation
+        cmdSearchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (visibleItems.length > 0) {
+                    focusedIndex = Math.min(focusedIndex + 1, visibleItems.length - 1);
+                    updateFocus();
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (visibleItems.length > 0) {
+                    focusedIndex = Math.max(focusedIndex - 1, 0);
+                    updateFocus();
+                }
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                selectFocusedItem();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                closeCommandPalette();
+            }
+        });
+
+        // Command palette item click
+        cmdList.addEventListener('click', (e) => {
+            const item = e.target.closest('.cmd-item');
+            if (item) {
+                const slug = item.dataset.tool;
+                closeCommandPalette();
+                navigateToTool(slug);
+            }
+        });
+
+        // Command palette item hover -> update focused index
+        cmdList.addEventListener('mousemove', (e) => {
+            const item = e.target.closest('.cmd-item');
+            if (item && !item.classList.contains('hidden')) {
+                const idx = visibleItems.indexOf(item);
+                if (idx !== -1 && idx !== focusedIndex) {
+                    focusedIndex = idx;
+                    updateFocus();
+                }
+            }
+        });
+
+        // Home button
+        topbarHome.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigateHome();
         });
 
         // Theme Toggle
@@ -172,72 +323,29 @@
             });
         }
 
-        // Keyboard shortcut Ctrl+K
+        // Keyboard shortcut Ctrl+K to open command palette
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
-                searchInput.focus();
-                searchInput.select();
+                if (isCommandPaletteOpen()) {
+                    closeCommandPalette();
+                } else {
+                    openCommandPalette();
+                }
             }
-            // Escape to go back to home
+
+            // Escape to close palette or go home
             if (e.key === 'Escape') {
-                if (document.activeElement === searchInput) {
-                    searchInput.blur();
-                    searchInput.value = '';
-                    filterTools('');
+                if (isCommandPaletteOpen()) {
+                    closeCommandPalette();
                 } else if (activeTool) {
                     navigateHome();
                 }
             }
         });
 
-        // Mobile sidebar toggle
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
-                sidebarOverlay.classList.toggle('active');
-            });
-        }
-
-        if (sidebarOverlay) {
-            sidebarOverlay.addEventListener('click', () => {
-                sidebar.classList.remove('open');
-                sidebarOverlay.classList.remove('active');
-            });
-        }
-
         // Hash change
         window.addEventListener('hashchange', handleRoute);
-    }
-
-    // --- Filter Tools (Search) ---
-    function filterTools(query) {
-        const navItems = sidebarNav.querySelectorAll('.nav-item');
-        const gridCards = toolsGrid.querySelectorAll('.tool-card');
-
-        navItems.forEach(item => {
-            const name = item.querySelector('.nav-item-name').textContent.toLowerCase();
-            item.classList.toggle('hidden', query && !name.includes(query));
-        });
-
-        gridCards.forEach(card => {
-            const name = card.querySelector('.tool-card-title').textContent.toLowerCase();
-            const desc = card.querySelector('.tool-card-desc').textContent.toLowerCase();
-            const match = !query || name.includes(query) || desc.includes(query);
-            card.style.display = match ? '' : 'none';
-        });
-
-        // Show/hide category headers if all their tools are hidden
-        const categories = sidebarNav.querySelectorAll('.nav-category');
-        categories.forEach(cat => {
-            let nextEl = cat.nextElementSibling;
-            let hasVisible = false;
-            while (nextEl && nextEl.classList.contains('nav-item')) {
-                if (!nextEl.classList.contains('hidden')) hasVisible = true;
-                nextEl = nextEl.nextElementSibling;
-            }
-            cat.style.display = hasVisible ? '' : 'none';
-        });
     }
 
     // --- Navigate to a Tool ---
@@ -268,8 +376,11 @@
         welcomeScreen.style.display = '';
         toolContainer.style.display = 'none';
 
-        // Remove active state from sidebar
-        sidebarNav.querySelectorAll('.nav-item').forEach(item => {
+        // Clear breadcrumb
+        topbarBreadcrumb.innerHTML = '';
+
+        // Update active state in command palette
+        cmdList.querySelectorAll('.cmd-item').forEach(item => {
             item.classList.remove('active');
         });
 
@@ -285,9 +396,9 @@
         welcomeScreen.style.display = 'none';
         toolContainer.style.display = '';
 
-        // Breadcrumb
-        toolBreadcrumb.innerHTML = `
-            <a onclick="window.location.hash=''" class="breadcrumb-home">${getIcon('🏠')} Trang chủ</a>
+        // Breadcrumb in topbar
+        topbarBreadcrumb.innerHTML = `
+            <a onclick="window.location.hash=''" style="cursor:pointer;">${getIcon('🏠')} Trang chủ</a>
             <span class="separator">/</span>
             <span class="current"><span class="breadcrumb-icon">${getIcon(tool.icon)}</span> ${tool.name}</span>
         `;
@@ -306,14 +417,10 @@
             console.error('Tool render error:', err);
         }
 
-        // Update active state in sidebar
-        sidebarNav.querySelectorAll('.nav-item').forEach(item => {
+        // Update active state in command palette
+        cmdList.querySelectorAll('.cmd-item').forEach(item => {
             item.classList.toggle('active', item.dataset.tool === slug);
         });
-
-        // Close mobile sidebar
-        sidebar.classList.remove('open');
-        sidebarOverlay.classList.remove('active');
 
         // Update title
         document.title = `${tool.name} - DevTools Hub`;

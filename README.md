@@ -4,16 +4,16 @@
 
 ### _All the developer tools you need. One page. Zero BS._
 
-**[🌐 Live Demo](https://dev-tools-hub-tan.vercel.app)** · **[📦 GitHub](https://github.com/gbao86/DevTools-Hub)**
+**[🌐 Live Demo](https://dev-tools-hub-tan.vercel.app)** · **[📦 GitHub](https://github.com/gbao86/DevTools-Hub)** · **[📝 Changelog](CHANGELOG.md)**
 
 [![MIT License](https://img.shields.io/badge/License-MIT-6366f1?style=for-the-badge)](LICENSE)
 [![Made with JS](https://img.shields.io/badge/Made_with-JavaScript-f7df1e?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![100% Offline](https://img.shields.io/badge/100%25-Offline-10b981?style=for-the-badge)](#-privacy--security)
-[![Vercel](https://img.shields.io/badge/Live-Vercel-000?style=for-the-badge&logo=vercel)](https://dev-tools-hub-tan.vercel.app)
+[![25 Tools](https://img.shields.io/badge/25-Tools-a855f7?style=for-the-badge)](#-25-tools)
 
 <br/>
 
-<img src="https://img.shields.io/badge/📋_JSON_Formatter-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/🔐_Base64-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/🔗_URL_Encoder-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/🔑_Hash_Generator-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/🧪_Regex_Tester-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/🎨_Color_Picker-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/📝_Lorem_Ipsum-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/⏰_Timestamp-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/🎫_JWT_Decoder-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/🔍_Diff_Checker-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/📖_Markdown-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/🆔_UUID-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/🔢_Text_Counter-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/📐_CSS_Units-1a2235?style=flat-square" /> <img src="https://img.shields.io/badge/🔢_Number_Base-1a2235?style=flat-square" />
+<img src="https://img.shields.io/badge/JSON_Formatter-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Base64-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/URL_Encoder-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Hash_Generator-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Regex_Tester-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Color_Picker-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Lorem_Ipsum-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Timestamp-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/JWT_Decoder-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Diff_Checker-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Markdown_Preview-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/UUID_Generator-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Text_Counter-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/CSS_Units-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Number_Base-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/JSON↔YAML-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/SQL_Formatter-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Cron_Parser-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Password_Gen-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/HTML_Entity-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/String_Case-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/CSS_Gradient-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Placeholder_Image-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Chmod_Calc-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Code_Beautifier-0a0a0a?style=flat-square" />
 
 </div>
 
@@ -27,30 +27,72 @@ Every developer's browser has 20+ bookmarks to random tool websites — most of 
 
 - 🔒 **Your data never leaves your browser.** Everything runs client-side.
 - ⚡ **Instant.** No loading spinners. No server round-trips. No sign-ups.
-- 🎨 **Beautiful.** Linear/Vercel-inspired professional UI. High contrast, perfect typography.
-- 📦 **Zero dependencies.** Pure HTML + CSS + Vanilla JS. Absolutely no external libraries.
+- 🎨 **Beautiful.** Linear/Vercel-inspired minimal UI. Dark & light themes with flawless contrast.
+- 📦 **Zero dependencies.** Pure HTML + CSS + Vanilla JS. No frameworks. No build step.
+- ⌨️ **Keyboard-first.** Press `Ctrl+K` to search and launch any tool instantly.
 
 ---
 
-## 🛠️ 15 Tools & Counting
+## 🛠️ 25 Tools
 
-| Tool | What it does |
-|:-----|:-------------|
-| 📋 **JSON Formatter** | Format, validate, minify & tree-view JSON |
-| 🔐 **Base64 Encode/Decode** | Encode & decode Base64 with full UTF-8 support |
-| 🔗 **URL Encode/Decode** | Encode/decode URLs + parse query parameters |
+### Encode / Decode
+| Tool | Description |
+|:-----|:------------|
+| 🔐 **Base64 Encode/Decode** | Encode & decode Base64 with full UTF-8 Unicode support, URL-safe mode |
+| 🔗 **URL Encode/Decode** | Encode/decode URL components + parse query parameters |
 | 🔑 **Hash Generator** | Generate MD5, SHA-1, SHA-256, SHA-512 hashes |
-| 🧪 **Regex Tester** | Test regex patterns with real-time highlighting |
-| 🎨 **Color Picker** | Pick colors, convert HEX/RGB/HSL + WCAG contrast |
-| 📝 **Lorem Ipsum** | Generate placeholder text for designs |
-| ⏰ **Timestamp Converter** | Convert Unix timestamps ↔ human dates |
-| 🎫 **JWT Decoder** | Decode & inspect JWT tokens |
-| 🔍 **Diff Checker** | Compare two texts side-by-side |
-| 📖 **Markdown Preview** | Live markdown editor with instant preview |
+| 🎫 **JWT Decoder** | Decode & inspect JWT header, payload and expiration |
+| 🔗 **HTML Entity Encoder/Decoder** | Encode/decode HTML entities — named, numeric & hex formats |
+
+### Formatter
+| Tool | Description |
+|:-----|:------------|
+| 📋 **JSON Formatter** | Format, validate, minify & tree-view JSON |
+| ✨ **SQL Formatter** | Beautify & minify SQL queries with keyword casing options |
+| 📖 **Markdown Preview** | Live editor with instant rendered preview |
+| ✨ **Code Snippet Beautifier** | Carbon-style code screenshots — 6 themes, 14 languages, PNG export |
+
+### Generator
+| Tool | Description |
+|:-----|:------------|
 | 🆔 **UUID Generator** | Generate UUID v4 in bulk |
-| 🔢 **Text Counter** | Count words, chars, sentences + case converter |
-| 📐 **CSS Unit Converter** | Convert between px, rem, em, %, vw, vh |
+| 🔑 **Password Generator** | Cryptographically secure passwords with entropy meter & strength analysis |
+| 🎨 **CSS Gradient Generator** | Visual builder for linear/radial/conic gradients with presets & live preview |
+| 📝 **Lorem Ipsum** | Generate placeholder text — paragraphs, sentences or words |
+| 🆔 **Placeholder Image Generator** | Generate SVG/PNG placeholder images with custom dimensions, colors & text |
+
+### Converter
+| Tool | Description |
+|:-----|:------------|
+| 🎨 **Color Picker** | Pick colors, convert HEX/RGB/HSL + WCAG contrast checker |
+| ⏰ **Timestamp Converter** | Convert Unix timestamps ↔ human-readable dates |
+| 📐 **CSS Unit Converter** | Convert between px, rem, em, %, vw, vh, pt |
 | 🔢 **Number Base Converter** | Convert between decimal, binary, octal, hex |
+| 🔀 **JSON ↔ YAML Converter** | Bidirectional JSON/YAML conversion with built-in parser |
+| ⏰ **Cron Expression Parser** | Parse cron expressions, show next runs & visual builder |
+| 🔐 **Chmod Calculator** | Interactive Unix permission calculator (numeric ↔ symbolic) |
+
+### Text
+| Tool | Description |
+|:-----|:------------|
+| 🧪 **Regex Tester** | Test regex patterns with real-time match highlighting |
+| 🔍 **Diff Checker** | LCS-based side-by-side text comparison |
+| 🔢 **Text Counter** | Word, character, sentence & paragraph statistics |
+| 📝 **String Case Converter** | Convert between 13 case formats (camelCase, snake_case, kebab-case, etc.) |
+
+---
+
+## ⌨️ Navigation
+
+DevTools Hub uses a **Command Palette** for navigation — no sidebar cluttering your workspace.
+
+| Shortcut | Action |
+|:---------|:-------|
+| `Ctrl+K` | Open/close command palette |
+| `↑` `↓` | Navigate between tools |
+| `Enter` | Select focused tool |
+| `Escape` | Close palette / return home |
+| Type anything | Fuzzy search across all tools |
 
 ---
 
@@ -77,14 +119,14 @@ Every developer's browser has 20+ bookmarks to random tool websites — most of 
 
 ```
 DevTools-Hub/
-├── index.html              # Entry point
+├── index.html                    # Single-page entry point
 ├── css/
-│   ├── style.css           # Core design system
-│   └── animations.css      # Smooth transitions & micro-interactions
+│   ├── style.css                 # Design system — topbar, command palette, tool components
+│   └── animations.css            # Stagger, scale-in, spotlight & micro-interactions
 ├── js/
-│   ├── app.js              # Core app controller & routing
-│   ├── effects.js          # Interactive UI effects (spotlight, etc.)
-│   └── tools/              # Each tool is a self-contained module
+│   ├── app.js                    # App controller, command palette, routing
+│   ├── effects.js                # Spotlight glow, stagger observer, counter animations
+│   └── tools/                    # 25 self-contained tool modules
 │       ├── json-formatter.js
 │       ├── base64.js
 │       ├── url-encoder.js
@@ -99,24 +141,35 @@ DevTools-Hub/
 │       ├── uuid-generator.js
 │       ├── text-counter.js
 │       ├── css-unit-converter.js
-│       └── number-base-converter.js
+│       ├── number-base-converter.js
+│       ├── json-yaml-converter.js    # v0.2
+│       ├── sql-formatter.js          # v0.2
+│       ├── cron-parser.js            # v0.2
+│       ├── password-generator.js     # v0.2
+│       ├── html-entity.js            # v0.2
+│       ├── string-case-converter.js  # v0.2
+│       ├── css-gradient-generator.js # v0.2
+│       ├── placeholder-image.js      # v0.2
+│       ├── chmod-calculator.js       # v0.2
+│       └── code-beautifier.js        # v0.2
+├── CHANGELOG.md
 ├── LICENSE
-├── README.md
-└── .gitignore
+└── README.md
 ```
 
 ---
 
 ## 🧩 Adding a New Tool
 
-Creating a new tool is dead simple. Create a file in `js/tools/`:
+Create a file in `js/tools/`:
 
 ```javascript
 const MyTool = {
     name: 'My Tool',
-    icon: '🔧',
-    category: 'Converter',       // Encode / Decode | Formatter | Generator | Converter | Text | Web | Tester
+    icon: '🔧',                     // Emoji key → mapped to SVG icon by app.js
+    category: 'Converter',           // Encode / Decode | Formatter | Generator | Converter | Text | Web | Tester
     description: 'What it does',
+
     render(container) {
         container.innerHTML = `
             <div class="tool-panel">
@@ -125,11 +178,29 @@ const MyTool = {
                     <p class="tool-description">What it does</p>
                 </div>
                 <div class="tool-body">
-                    <!-- Your UI here -->
+                    <div class="tool-group">
+                        <label class="tool-label">Input</label>
+                        <textarea class="tool-textarea" id="my-input" placeholder="Enter text..."></textarea>
+                    </div>
+                    <div class="tool-actions">
+                        <button class="tool-btn tool-btn-primary" id="my-btn">Process</button>
+                    </div>
+                    <div class="tool-group">
+                        <label class="tool-label">Output</label>
+                        <div class="tool-result">
+                            <textarea class="tool-textarea" id="my-output" readonly></textarea>
+                            <button class="tool-copy-btn" id="my-copy">📋</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
-        // Set up event listeners here
+
+        // Bind events directly — DOM is ready after innerHTML assignment
+        container.querySelector('#my-btn').addEventListener('click', () => { /* ... */ });
+        container.querySelector('#my-copy').addEventListener('click', () => {
+            window.copyToClipboard(container.querySelector('#my-output').value, container.querySelector('#my-copy'));
+        });
     }
 };
 
@@ -137,7 +208,33 @@ window.DevTools = window.DevTools || [];
 window.DevTools.push(MyTool);
 ```
 
-Then add a `<script>` tag in `index.html`. Done.
+Then add a `<script>` tag in `index.html` before `app.js`. Done — the tool automatically appears in the command palette and welcome grid.
+
+### Available UI Components
+
+| Class | Purpose |
+|:------|:--------|
+| `.tool-panel` | Main wrapper |
+| `.tool-header` / `.tool-description` | Title & subtitle |
+| `.tool-body` | Content container (flex column) |
+| `.tool-group` / `.tool-label` | Form group with label |
+| `.tool-textarea` / `.tool-input` / `.tool-select` / `.tool-number` | Themed form controls |
+| `.tool-btn` / `.tool-btn-primary` / `.tool-btn-danger` | Action buttons |
+| `.tool-actions` | Button row |
+| `.tool-result` / `.tool-copy-btn` | Output area with copy button |
+| `.tool-split` / `.tool-row` / `.tool-col` | Layout helpers |
+| `.tool-tabs` / `.tool-tab` | Tab navigation |
+| `.tool-stats` / `.tool-stat` | Statistics grid |
+| `.tool-badge` / `.tool-info` | Badges & info boxes |
+
+### Global Utilities
+
+```javascript
+window.showToast(message, type)        // type: 'info' | 'success' | 'error' | 'warning'
+window.copyToClipboard(text, btnEl)    // Copies text, shows ✅ feedback on button
+```
+
+> ⚠️ **Important**: Always use CSS variables (`var(--text-primary)`, `var(--bg-secondary)`, etc.) for colors. Never hardcode hex values in UI styles — both dark and light themes must work correctly.
 
 ---
 
