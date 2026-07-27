@@ -163,9 +163,9 @@ const RegexTester = {
                             <div class="tool-group">
                                 <label class="tool-label">⚡ Mẫu phổ biến</label>
                                 <div class="tool-actions" id="regex-presets">
-                                    <button class="tool-btn tool-btn-sm" data-pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$" data-flags="g" data-sample="Email hợp lệ: support@devtools.hub và admin@test.com">Email</button>
-                                    <button class="tool-btn tool-btn-sm" data-pattern="https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)" data-flags="gi" data-sample="Web URL: https://google.com hoặc http://sub.domain.org/path?query=123">URL</button>
-                                    <button class="tool-btn tool-btn-sm" data-pattern="(\\d{4})-(\\d{2})-(\\d{2})" data-flags="g" data-sample="Ngày khởi tạo: 2026-07-27 và Ngày kết thúc: 2026-12-31" data-replace="$3/$2/$1">Ngày (Bóc tách)</button>
+                                    <button class="tool-btn tool-btn-sm" data-pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$" data-flags="g" data-sample="Email hợp lệ: support@devtools.hub và admin@test.com">Email</button>
+                                    <button class="tool-btn tool-btn-sm" data-pattern="https?://(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}b([-a-zA-Z0-9()@:%_+.~#?&//=]*)" data-flags="gi" data-sample="Web URL: https://google.com hoặc http://sub.domain.org/path?query=123">URL</button>
+                                    <button class="tool-btn tool-btn-sm" data-pattern="(d{4})-(d{2})-(d{2})" data-flags="g" data-sample="Ngày khởi tạo: 2026-07-27 và Ngày kết thúc: 2026-12-31" data-replace="$3/$2/$1">Ngày (Bóc tách)</button>
                                     <button class="tool-btn tool-btn-sm" data-pattern="^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" data-flags="gm" data-sample="#6366f1\n#fff">Mã màu Hex</button>
                                 </div>
                             </div>
@@ -176,7 +176,7 @@ const RegexTester = {
                                 <div class="tool-row" style="align-items: center; gap: var(--space-sm);">
                                     <span style="font-family: var(--font-mono); font-size: 1.2rem; color: var(--text-tertiary);">/</span>
                                     <div style="flex: 1;">
-                                        <input type="text" class="tool-input" id="regex-pattern-input" value="(\\d{4})-(\\d{2})-(\\d{2})" placeholder="Nhập regex pattern..." style="font-family: var(--font-mono);">
+                                        <input type="text" class="tool-input" id="regex-pattern-input" value="(d{4})-(d{2})-(d{2})" placeholder="Nhập regex pattern..." style="font-family: var(--font-mono);">
                                     </div>
                                     <span style="font-family: var(--font-mono); font-size: 1.2rem; color: var(--text-tertiary);">/</span>
                                     <div class="tool-inline" style="gap: var(--space-sm); flex-wrap: wrap;">
@@ -236,12 +236,12 @@ const RegexTester = {
                             <div style="font-size: var(--fs-xs); color: var(--text-tertiary); margin-bottom: 12px;">Nhấp để chèn vào pattern</div>
                             
                             <ul class="cheatsheet-list" id="regex-cheatsheet">
-                                <li class="cheatsheet-item" data-insert="\\d"><code>\\d</code> <span>Khớp một chữ số (0-9)</span></li>
-                                <li class="cheatsheet-item" data-insert="\\w"><code>\\w</code> <span>Chữ cái, số, gạch dưới</span></li>
-                                <li class="cheatsheet-item" data-insert="\\s"><code>\\s</code> <span>Khoảng trắng</span></li>
+                                <li class="cheatsheet-item" data-insert="d"><code>d</code> <span>Khớp một chữ số (0-9)</span></li>
+                                <li class="cheatsheet-item" data-insert="w"><code>w</code> <span>Chữ cái, số, gạch dưới</span></li>
+                                <li class="cheatsheet-item" data-insert="s"><code>s</code> <span>Khoảng trắng</span></li>
                                 <li class="cheatsheet-item" data-insert="^"><code>^</code> <span>Bắt đầu chuỗi</span></li>
                                 <li class="cheatsheet-item" data-insert="$"><code>$</code> <span>Kết thúc chuỗi</span></li>
-                                <li class="cheatsheet-item" data-insert="\\b"><code>\\b</code> <span>Ranh giới từ</span></li>
+                                <li class="cheatsheet-item" data-insert="b"><code>b</code> <span>Ranh giới từ</span></li>
                                 <li class="cheatsheet-item" data-insert="*"><code>*</code> <span>0 hoặc nhiều lần</span></li>
                                 <li class="cheatsheet-item" data-insert="+"><code>+</code> <span>1 hoặc nhiều lần</span></li>
                                 <li class="cheatsheet-item" data-insert="?"><code>?</code> <span>0 hoặc 1 lần</span></li>
@@ -303,15 +303,15 @@ const RegexTester = {
             if (!pattern) return '<div style="color: var(--text-tertiary);">Nhập biểu thức để xem giải thích...</div>';
             
             const tokens = [
-                { re: /^\\d/, desc: "Khớp một chữ số (0-9)" },
-                { re: /^\\D/, desc: "Khớp ký tự KHÔNG phải chữ số" },
-                { re: /^\\w/, desc: "Khớp ký tự chữ cái, số, hoặc dấu gạch dưới" },
-                { re: /^\\W/, desc: "Khớp ký tự KHÔNG phải chữ cái, số, hoặc dấu gạch dưới" },
-                { re: /^\\s/, desc: "Khớp khoảng trắng (space, tab, xuống dòng)" },
-                { re: /^\\S/, desc: "Khớp ký tự KHÔNG phải khoảng trắng" },
-                { re: /^\\b/, desc: "Khớp ranh giới từ (word boundary)" },
+                { re: /^d/, desc: "Khớp một chữ số (0-9)" },
+                { re: /^D/, desc: "Khớp ký tự KHÔNG phải chữ số" },
+                { re: /^w/, desc: "Khớp ký tự chữ cái, số, hoặc dấu gạch dưới" },
+                { re: /^W/, desc: "Khớp ký tự KHÔNG phải chữ cái, số, hoặc dấu gạch dưới" },
+                { re: /^s/, desc: "Khớp khoảng trắng (space, tab, xuống dòng)" },
+                { re: /^S/, desc: "Khớp ký tự KHÔNG phải khoảng trắng" },
+                { re: /^b/, desc: "Khớp ranh giới từ (word boundary)" },
                 { re: /^\^/, desc: "Khớp điểm bắt đầu của chuỗi văn bản (hoặc dòng)" },
-                { re: /^\$/, desc: "Khớp điểm kết thúc của chuỗi văn bản (hoặc dòng)" },
+                { re: /^$/, desc: "Khớp điểm kết thúc của chuỗi văn bản (hoặc dòng)" },
                 { re: /^\./, desc: "Khớp bất kỳ ký tự nào (ngoại trừ ký tự xuống dòng)" },
                 { re: /^\*/, desc: "Lặp lại 0 hoặc nhiều lần (Cơ chế tìm kiếm tham lam - Greedy)" },
                 { re: /^\+/, desc: "Lặp lại 1 hoặc nhiều lần (Cơ chế tìm kiếm tham lam - Greedy)" },
@@ -328,7 +328,7 @@ const RegexTester = {
                 { re: /^\(/, desc: "Bắt đầu Nhóm bắt giữ (Capture Group)" },
                 { re: /^\)/, desc: "Kết thúc Nhóm" },
                 { re: /^\|/, desc: "Toán tử HOẶC (OR)" },
-                { re: /^\\[^\\]/, desc: "Ký tự được escape" }
+                { re: /^[^]/, desc: "Ký tự được escape" }
             ];
 
             let html = '';
@@ -388,9 +388,9 @@ const RegexTester = {
                 regex = new RegExp(patternStr, flags);
             } catch (err) {
                 errorMsg.style.display = 'block';
-                errorMsg.textContent = \`❌ Lỗi Regex: \${err.message}\`;
+                errorMsg.textContent = `❌ Lỗi Regex: ${err.message}`;
                 highlightContainer.innerHTML = escapeHtml(text);
-                matchesListEl.innerHTML = \`<div style="color: var(--accent-danger); font-size: var(--fs-sm);">⚠️ Pattern không hợp lệ: \${escapeHtml(err.message)}</div>\`;
+                matchesListEl.innerHTML = `<div style="color: var(--accent-danger); font-size: var(--fs-sm);">⚠️ Pattern không hợp lệ: ${escapeHtml(err.message)}</div>`;
                 replaceResult.value = text;
                 return;
             }
@@ -429,9 +429,9 @@ const RegexTester = {
                 // Matched text
                 const matchedText = m[0];
                 if (matchedText.length === 0) {
-                    highlightHtml += \`<span class="highlight-match" style="border-left: 2px solid var(--accent-warning); padding: 0 1px;" title="Zero-width match at index \${start}"></span>\`;
+                    highlightHtml += `<span class="highlight-match" style="border-left: 2px solid var(--accent-warning); padding: 0 1px;" title="Zero-width match at index ${start}"></span>`;
                 } else {
-                    highlightHtml += \`<span class="highlight-match">\${escapeHtml(matchedText)}</span>\`;
+                    highlightHtml += `<span class="highlight-match">${escapeHtml(matchedText)}</span>`;
                 }
 
                 lastIndex = end;
@@ -461,27 +461,27 @@ const RegexTester = {
                 const matchEnd = matchStart + m[0].length;
                 const groups = m.slice(1);
 
-                listHtml += \`
+                listHtml += `
                     <div class="match-card">
                         <div class="match-header">
-                            <span>Match \${idx + 1} <span class="match-meta">(Vị trí: index \${matchStart} - \${matchEnd})</span></span>
+                            <span>Match ${idx + 1} <span class="match-meta">(Vị trí: index ${matchStart} - ${matchEnd})</span></span>
                         </div>
                         <div class="match-group-row" style="background: var(--bg-input); border: 1px solid var(--border-color);">
                             <span class="match-group-label" style="color: var(--text-primary);">Full Match:</span>
-                            <span class="match-group-val" style="color: var(--accent-warning);">\${escapeHtml(m[0] || '(chuỗi rỗng)')}</span>
+                            <span class="match-group-val" style="color: var(--accent-warning);">${escapeHtml(m[0] || '(chuỗi rỗng)')}</span>
                         </div>
-                \`;
+                `;
 
                 // Captured Groups
                 if (groups.length > 0) {
                     groups.forEach((gVal, gIdx) => {
                         const valStr = gVal !== undefined ? escapeHtml(gVal) : '<em style="color:var(--text-tertiary)">undefined</em>';
-                        listHtml += \`
+                        listHtml += `
                             <div class="match-group-row">
-                                <span class="match-group-label">Group \${gIdx + 1}:</span>
-                                <span class="match-group-val">\${valStr}</span>
+                                <span class="match-group-label">Group ${gIdx + 1}:</span>
+                                <span class="match-group-val">${valStr}</span>
                             </div>
-                        \`;
+                        `;
                     });
                 }
                 
@@ -489,20 +489,20 @@ const RegexTester = {
                 if (m.groups && Object.keys(m.groups).length > 0) {
                     Object.keys(m.groups).forEach(gName => {
                         const valStr = m.groups[gName] !== undefined ? escapeHtml(m.groups[gName]) : '<em style="color:var(--text-tertiary)">undefined</em>';
-                        listHtml += \`
+                        listHtml += `
                             <div class="match-group-row">
-                                <span class="match-group-label" style="color: var(--accent-tertiary);">Group ?&lt;\${escapeHtml(gName)}&gt;:</span>
-                                <span class="match-group-val">\${valStr}</span>
+                                <span class="match-group-label" style="color: var(--accent-tertiary);">Group ?&lt;${escapeHtml(gName)}&gt;:</span>
+                                <span class="match-group-val">${valStr}</span>
                             </div>
-                        \`;
+                        `;
                     });
                 }
 
-                listHtml += \`</div>\`;
+                listHtml += `</div>`;
             });
 
             if (matches.length > 50) {
-                listHtml += \`<div style="color: var(--text-tertiary); font-size: var(--fs-xs); text-align: center; padding: 4px;">... và \${matches.length - 50} kết quả khác.</div>\`;
+                listHtml += `<div style="color: var(--text-tertiary); font-size: var(--fs-xs); text-align: center; padding: 4px;">... và ${matches.length - 50} kết quả khác.</div>`;
             }
 
             matchesListEl.innerHTML = listHtml;
@@ -540,7 +540,7 @@ const RegexTester = {
 
             runRegexTester();
             if (window.showToast) {
-                window.showToast(\`Đã áp dụng mẫu regex: \${btn.textContent.trim()}\`, 'success');
+                window.showToast(`Đã áp dụng mẫu regex: ${btn.textContent.trim()}`, 'success');
             }
         });
 
@@ -576,3 +576,4 @@ const RegexTester = {
 
 window.DevTools = window.DevTools || [];
 window.DevTools.push(RegexTester);
+
