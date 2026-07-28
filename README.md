@@ -9,11 +9,11 @@
 [![MIT License](https://img.shields.io/badge/License-MIT-6366f1?style=for-the-badge)](LICENSE)
 [![Made with JS](https://img.shields.io/badge/Made_with-JavaScript-f7df1e?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![100% Offline](https://img.shields.io/badge/100%25-Offline-10b981?style=for-the-badge)](#-privacy--security)
-[![25 Tools](https://img.shields.io/badge/25-Tools-a855f7?style=for-the-badge)](#-25-tools)
+[![35 Tools](https://img.shields.io/badge/35-Tools-a855f7?style=for-the-badge)](#-35-tools)
 
 <br/>
 
-<img src="https://img.shields.io/badge/JSON_Formatter-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Base64-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/URL_Encoder-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Hash_Generator-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Regex_Tester-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Color_Picker-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Lorem_Ipsum-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Timestamp-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/JWT_Decoder-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Diff_Checker-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Markdown_Preview-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/UUID_Generator-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Text_Counter-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/CSS_Units-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Number_Base-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/JSON↔YAML-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/SQL_Formatter-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Cron_Parser-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Password_Gen-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/HTML_Entity-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/String_Case-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/CSS_Gradient-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Placeholder_Image-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Chmod_Calc-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Code_Beautifier-0a0a0a?style=flat-square" />
+<img src="https://img.shields.io/badge/JSON_Formatter-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/JSON_Path_Finder-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Base64-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/URL_Encoder-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Hash_Generator-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Regex_Tester-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Color_Picker-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Lorem_Ipsum-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Timestamp-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/JWT_Decoder-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Diff_Checker-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Markdown_Preview-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/UUID_Generator-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Text_Counter-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/CSS_Units-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Number_Base-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/JSON↔YAML-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/SQL_Formatter-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Cron_Parser-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Password_Gen-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/HTML_Entity-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/String_Case-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/CSS_Gradient-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Placeholder_Image-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Chmod_Calc-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Code_Beautifier-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Image_to_Base64-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/cURL_Converter-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Box_Shadow-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Meta_Tag_Gen-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/API_Tester-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/HTTP_Status-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Unicode_Table-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/Keyboard_Shortcuts-0a0a0a?style=flat-square" /> <img src="https://img.shields.io/badge/.env_Viewer-0a0a0a?style=flat-square" />
 
 </div>
 
@@ -33,7 +33,7 @@ Every developer's browser has 20+ bookmarks to random tool websites — most of 
 
 ---
 
-## 🛠️ 25 Tools
+## 🛠️ 35 Tools
 
 ### Encode / Decode
 | Tool | Description |
@@ -43,14 +43,17 @@ Every developer's browser has 20+ bookmarks to random tool websites — most of 
 | 🔑 **Hash Generator** | Generate MD5, SHA-1, SHA-256, SHA-512 hashes |
 | 🎫 **JWT Decoder** | Decode & inspect JWT header, payload and expiration |
 | 🔗 **HTML Entity Encoder/Decoder** | Encode/decode HTML entities — named, numeric & hex formats |
+| 🔄 **Image to Base64** | Drag & drop images/SVG → Base64 Data URL, CSS, HTML, Markdown output |
 
 ### Formatter
 | Tool | Description |
 |:-----|:------------|
 | 📋 **JSON Formatter** | Format, validate, minify & tree-view JSON |
+| 📋 **JSON Path Finder** | Interactive JSON tree view — click any key to copy its JSONPath |
 | ✨ **SQL Formatter** | Beautify & minify SQL queries with keyword casing options |
 | 📖 **Markdown Preview** | Live editor with instant rendered preview |
 | ✨ **Code Snippet Beautifier** | Carbon-style code screenshots — 6 themes, 14 languages, PNG export |
+| ✨ **.env Viewer** | Parse & display .env files as table — auto-detect types, mask secrets |
 
 ### Generator
 | Tool | Description |
@@ -71,6 +74,7 @@ Every developer's browser has 20+ bookmarks to random tool websites — most of 
 | 🔀 **JSON ↔ YAML Converter** | Bidirectional JSON/YAML conversion with built-in parser |
 | ⏰ **Cron Expression Parser** | Parse cron expressions, show next runs & visual builder |
 | 🔐 **Chmod Calculator** | Interactive Unix permission calculator (numeric ↔ symbolic) |
+| 🔀 **cURL Converter** | Convert cURL commands → JavaScript (fetch/axios), Python, Go, PHP code |
 
 ### Text
 | Tool | Description |
@@ -79,6 +83,24 @@ Every developer's browser has 20+ bookmarks to random tool websites — most of 
 | 🔍 **Diff Checker** | LCS-based side-by-side text comparison |
 | 🔢 **Text Counter** | Word, character, sentence & paragraph statistics |
 | 📝 **String Case Converter** | Convert between 13 case formats (camelCase, snake_case, kebab-case, etc.) |
+
+### Web
+| Tool | Description |
+|:-----|:------------|
+| 🎨 **Box Shadow Generator** | Visual CSS box-shadow editor with multi-layer support & presets |
+| 🌐 **Meta Tag Generator** | Generate SEO, Open Graph & Twitter Card meta tags with live preview |
+
+### Tester
+| Tool | Description |
+|:-----|:------------|
+| 🌐 **API Tester** | Send HTTP requests, inspect responses, headers & timing |
+
+### Reference
+| Tool | Description |
+|:-----|:------------|
+| 🌐 **HTTP Status Codes** | Comprehensive HTTP status code reference with search & filtering |
+| 📝 **ASCII / Unicode Table** | ASCII & Unicode lookup — character ↔ code point converter |
+| 📝 **Keyboard Shortcuts** | Searchable shortcut reference for VS Code, IntelliJ, Vim, Terminal, Git |
 
 ---
 
@@ -126,12 +148,13 @@ DevTools-Hub/
 ├── js/
 │   ├── app.js                    # App controller, command palette, routing
 │   ├── effects.js                # Spotlight glow, stagger observer, counter animations
-│   └── tools/                    # 25 self-contained tool modules
+│   └── tools/                    # 35 self-contained tool modules
 │       ├── json-formatter.js
+│       ├── json-path-finder.js       # v0.3
 │       ├── base64.js
 │       ├── url-encoder.js
 │       ├── hash-generator.js
-│       ├── regex-tester.js
+│       ├── regex-tester.js           # v0.3 rewrite
 │       ├── color-picker.js
 │       ├── lorem-ipsum.js
 │       ├── timestamp-converter.js
@@ -151,7 +174,16 @@ DevTools-Hub/
 │       ├── css-gradient-generator.js # v0.2
 │       ├── placeholder-image.js      # v0.2
 │       ├── chmod-calculator.js       # v0.2
-│       └── code-beautifier.js        # v0.2
+│       ├── code-beautifier.js        # v0.2
+│       ├── image-to-base64.js        # v0.3
+│       ├── curl-converter.js         # v0.3
+│       ├── box-shadow-generator.js   # v0.3
+│       ├── meta-tag-generator.js     # v0.3
+│       ├── api-tester.js             # v0.3
+│       ├── env-viewer.js             # v0.3
+│       ├── http-status-codes.js      # v0.3
+│       ├── unicode-table.js          # v0.3
+│       └── keyboard-shortcuts.js     # v0.3
 ├── CHANGELOG.md
 ├── LICENSE
 └── README.md
@@ -167,7 +199,7 @@ Create a file in `js/tools/`:
 const MyTool = {
     name: 'My Tool',
     icon: '🔧',                     // Emoji key → mapped to SVG icon by app.js
-    category: 'Converter',           // Encode / Decode | Formatter | Generator | Converter | Text | Web | Tester
+    category: 'Converter',           // Encode / Decode | Formatter | Generator | Converter | Text | Web | Tester | Reference
     description: 'What it does',
 
     render(container) {

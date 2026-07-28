@@ -7,6 +7,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3] - 2026-07-28
+
+### 🚀 10 New Tools & Regex Tester Rewrite
+
+Major expansion from 25 to 35 developer tools, plus a complete rewrite of the Regex Tester with critical bug fixes.
+
+### Added
+
+- **New Category: Reference** — added a new tool category for quick-lookup reference tools
+
+- **New Tools (10)**
+  - 📋 **JSON Path Finder** — interactive JSON tree view, click any key/value to copy its JSONPath (`$.data[0].name`), search by key, type-colored values
+  - 🌐 **HTTP Status Codes** — comprehensive reference for all HTTP status codes (100–511), grouped by category, color-coded, searchable, with detailed explanations
+  - 🔀 **cURL Converter** — paste cURL commands → generate code in JavaScript (fetch/axios), Python (requests), Go (net/http), PHP (cURL), with parsed request breakdown
+  - 🔄 **Image to Base64** — drag & drop images/SVG → Base64 Data URL, CSS background, HTML img, Markdown output, with reverse decode mode
+  - 🎨 **Box Shadow Generator** — visual CSS box-shadow editor with multi-layer support, preset shadows (Subtle, Neumorphism, Material, etc.), live preview
+  - 📝 **ASCII / Unicode Table** — full ASCII table (0–127), character ↔ code point converter, common symbols, grid/list view toggle
+  - ✨ **.env Viewer** — parse & display .env files as sortable/searchable table, auto-detect value types, mask sensitive keys (PASSWORD, SECRET, TOKEN, etc.)
+  - 🌐 **API Tester** — HTTP request builder with method/headers/body/params, response viewer with timing, status codes, auto-formatted JSON, request history
+  - 🌐 **Meta Tag Generator** — generate SEO, Open Graph & Twitter Card meta tags, Google search preview, social card preview, completeness score
+  - 📝 **Keyboard Shortcuts** — searchable reference for VS Code, IntelliJ, Vim, Terminal, Chrome DevTools & Git shortcuts, OS toggle (Win/Mac), favorites
+
+### Changed
+
+- **Regex Tester — Complete V3 Rewrite**
+  - Replaced cluttered 2-column layout (main + sidebar) with clean single-column flow
+  - Reorganized output into 3 tabs: Matches & Groups / Replace / Giải thích
+  - Replaced checkboxes with toggle buttons for regex flags (g, i, m, s, u)
+  - Added real-time match count badge (green for matches, red for no match)
+  - Converted cheatsheet from always-visible sidebar to collapsible panel
+  - Added more preset patterns: IPv4 addresses, Vietnamese phone numbers
+  - Redesigned pattern input bar with integrated `/pattern/flags` visual (similar to regex101)
+
+- **Navigation**: Added `Reference` category (order: 8) for lookup-style tools
+- **Script organization**: Reorganized `index.html` script tags by category with comments
+- **Tool count**: Updated welcome screen counter from 25 → 35
+
+### Fixed
+
+- **🔴 Regex Tester — Backslash escaping bug (CRITICAL)**: All `\d`, `\w`, `\s`, `\b` sequences were being consumed by JavaScript template literals, rendering as literal characters `d`, `w`, `s`, `b` instead of regex character classes. Affected: preset patterns, cheatsheet inserts, default pattern value, and the Regex Explainer token parser. Fixed by properly escaping all backslashes.
+- **🔴 Regex Explainer — Token matching (CRITICAL)**: Explainer regex tokens like `/^d/` incorrectly matched literal `d` instead of `\d`. All token patterns rewritten to correctly match backslash-prefixed sequences.
+- **🟡 Regex Tester — Invalid HTML**: Removed invalid `readonly` attribute from `<div>` element.
+- **🟡 Regex Tester — Height mismatch**: Fixed highlight box having fixed `max-height: 126px` while textarea was resizable, causing scroll desync.
+
+### Security
+
+- All 10 new tools run entirely client-side — zero data exfiltration
+- API Tester uses the browser's native Fetch API for HTTP requests (no proxy server)
+
+---
+
 ## [0.2.1] - 2026-07-27
 
 ### Added
@@ -119,5 +170,7 @@ First public release of DevTools Hub — a collection of 15 developer tools runn
 
 ---
 
+[0.3]: https://github.com/gbao86/DevTools-Hub/compare/v0.2.1...v0.3
+[0.2.1]: https://github.com/gbao86/DevTools-Hub/compare/v0.2...v0.2.1
 [0.2]: https://github.com/gbao86/DevTools-Hub/compare/v0.1...v0.2
 [0.1]: https://github.com/gbao86/DevTools-Hub/releases/tag/v0.1

@@ -1,5 +1,5 @@
 /* ============================================
-   DevTools Hub - Regex Tester Tool (V2)
+   DevTools Hub - Regex Tester Tool (V3 - Clean UI)
    ============================================ */
 
 const RegexTester = {
@@ -9,277 +9,583 @@ const RegexTester = {
     description: 'Test, Replace, Explainer & Cheatsheet cho Regular Expressions',
 
     render(container) {
-        if (!document.getElementById('regex-tester-style')) {
+        if (!document.getElementById('regex-tester-style-v3')) {
             const style = document.createElement('style');
-            style.id = 'regex-tester-style';
+            style.id = 'regex-tester-style-v3';
             style.textContent = `
-                .regex-layout {
+                /* ── Pattern Input Bar ── */
+                .rx-pattern-bar {
                     display: flex;
-                    gap: var(--space-lg);
-                    align-items: flex-start;
+                    align-items: center;
+                    gap: 0;
+                    background: var(--bg-input);
+                    border: 1px solid var(--border-color);
+                    border-radius: var(--radius-md);
+                    padding: 0;
+                    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+                    overflow: hidden;
                 }
-                .regex-main {
+                .rx-pattern-bar:focus-within {
+                    border-color: var(--accent-primary);
+                    box-shadow: 0 0 0 3px var(--accent-primary-glow);
+                }
+                .rx-pattern-slash {
+                    font-family: var(--font-mono);
+                    font-size: 1.1rem;
+                    color: var(--text-muted);
+                    padding: 0 10px;
+                    user-select: none;
+                    flex-shrink: 0;
+                }
+                .rx-pattern-input {
                     flex: 1;
                     min-width: 0;
-                    display: flex;
-                    flex-direction: column;
-                    gap: var(--space-lg);
+                    background: transparent;
+                    border: none;
+                    outline: none;
+                    color: var(--text-primary);
+                    font-family: var(--font-mono);
+                    font-size: var(--fs-base);
+                    padding: 12px 0;
                 }
-                .regex-sidebar {
-                    width: 300px;
+                .rx-pattern-input::placeholder { color: var(--text-muted); }
+                .rx-flags-group {
+                    display: flex;
+                    align-items: center;
+                    gap: 2px;
+                    padding: 0 8px;
+                    border-left: 1px solid var(--border-color);
                     flex-shrink: 0;
+                }
+                .rx-flag-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 30px;
+                    height: 30px;
+                    border-radius: var(--radius-sm);
+                    border: none;
+                    background: transparent;
+                    color: var(--text-muted);
+                    font-family: var(--font-mono);
+                    font-size: var(--fs-sm);
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all var(--transition-fast);
+                    user-select: none;
+                }
+                .rx-flag-btn:hover { background: var(--bg-tertiary); color: var(--text-secondary); }
+                .rx-flag-btn.active {
+                    background: var(--accent-primary);
+                    color: var(--btn-primary-text);
+                }
+                .rx-error {
+                    padding: 8px 12px;
+                    background: rgba(239, 68, 68, 0.08);
+                    border: 1px solid rgba(239, 68, 68, 0.25);
+                    border-radius: var(--radius-sm);
+                    color: var(--accent-danger);
+                    font-size: var(--fs-sm);
+                    font-family: var(--font-mono);
+                    display: none;
+                }
+                .rx-error.visible { display: block; }
+
+                /* ── Quick Presets ── */
+                .rx-presets {
+                    display: flex;
+                    gap: 6px;
+                    flex-wrap: wrap;
+                }
+                .rx-preset-btn {
+                    padding: 5px 12px;
+                    border-radius: 100px;
+                    border: 1px solid var(--border-color);
+                    background: var(--bg-secondary);
+                    color: var(--text-secondary);
+                    font-size: var(--fs-xs);
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all var(--transition-fast);
+                    white-space: nowrap;
+                }
+                .rx-preset-btn:hover {
+                    border-color: var(--accent-primary);
+                    color: var(--text-primary);
+                    background: var(--bg-tertiary);
+                }
+
+                /* ── Test Area ── */
+                .rx-test-area {
+                    position: relative;
+                }
+                .rx-test-textarea {
+                    width: 100%;
+                    min-height: 140px;
+                    padding: var(--space-md);
+                    background: var(--bg-input);
+                    border: 1px solid var(--border-color);
+                    border-radius: var(--radius-md);
+                    color: var(--text-primary);
+                    font-family: var(--font-mono);
+                    font-size: var(--fs-sm);
+                    line-height: 1.7;
+                    resize: vertical;
+                    outline: none;
+                    transition: border-color var(--transition-fast);
+                    box-sizing: border-box;
+                }
+                .rx-test-textarea:focus {
+                    border-color: var(--accent-primary);
+                    box-shadow: 0 0 0 3px var(--accent-primary-glow);
+                }
+                .rx-match-count {
+                    position: absolute;
+                    top: 10px;
+                    right: 12px;
+                    padding: 3px 10px;
+                    border-radius: 100px;
+                    font-size: var(--fs-xs);
+                    font-weight: 600;
+                    font-family: var(--font-mono);
+                    pointer-events: none;
+                    z-index: 1;
+                }
+                .rx-match-count.has-match {
+                    background: rgba(16, 185, 129, 0.15);
+                    color: var(--accent-success);
+                }
+                .rx-match-count.no-match {
+                    background: rgba(239, 68, 68, 0.1);
+                    color: var(--accent-danger);
+                }
+
+                /* ── Highlight Box ── */
+                .rx-highlight-box {
+                    min-height: 100px;
+                    max-height: 200px;
+                    padding: var(--space-md);
                     background: var(--bg-secondary);
                     border: 1px solid var(--border-color);
                     border-radius: var(--radius-md);
-                    padding: var(--space-md);
-                    position: sticky;
-                    top: var(--space-md);
+                    font-family: var(--font-mono);
+                    font-size: var(--fs-sm);
+                    line-height: 1.7;
+                    white-space: pre-wrap;
+                    word-break: break-word;
+                    overflow-y: auto;
+                    color: var(--text-primary);
                 }
-                .cheatsheet-list {
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
+                .rx-hl {
+                    background: rgba(245, 158, 11, 0.25);
+                    color: var(--accent-warning);
+                    border-radius: 2px;
+                    padding: 1px 3px;
+                    font-weight: 500;
+                }
+                .rx-hl-zero {
+                    border-left: 2px solid var(--accent-warning);
+                    padding: 0 1px;
+                }
+
+                /* ── Tabs ── */
+                .rx-tabs {
+                    display: flex;
+                    gap: 0;
+                    border-bottom: 1px solid var(--border-color);
+                    margin-bottom: var(--space-md);
+                }
+                .rx-tab {
+                    padding: 10px 20px;
+                    border: none;
+                    background: transparent;
+                    color: var(--text-tertiary);
+                    font-size: var(--fs-sm);
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all var(--transition-fast);
+                    border-bottom: 2px solid transparent;
+                    margin-bottom: -1px;
+                }
+                .rx-tab:hover { color: var(--text-secondary); }
+                .rx-tab.active {
+                    color: var(--accent-primary-hover);
+                    border-bottom-color: var(--accent-primary);
+                }
+                .rx-tab-panel { display: none; }
+                .rx-tab-panel.active { display: block; }
+
+                /* ── Replace Section ── */
+                .rx-replace-row {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: var(--space-md);
+                }
+                .rx-replace-input {
+                    width: 100%;
+                    padding: 10px var(--space-md);
+                    background: var(--bg-input);
+                    border: 1px solid var(--border-color);
+                    border-radius: var(--radius-md);
+                    color: var(--text-primary);
+                    font-family: var(--font-mono);
+                    font-size: var(--fs-sm);
+                    outline: none;
+                    transition: border-color var(--transition-fast);
+                    box-sizing: border-box;
+                }
+                .rx-replace-input:focus {
+                    border-color: var(--accent-primary);
+                    box-shadow: 0 0 0 3px var(--accent-primary-glow);
+                }
+                .rx-replace-result {
+                    position: relative;
+                }
+                .rx-replace-output {
+                    width: 100%;
+                    min-height: 80px;
+                    padding: var(--space-md);
+                    padding-right: 48px;
+                    background: var(--bg-secondary);
+                    border: 1px solid var(--border-color);
+                    border-radius: var(--radius-md);
+                    color: var(--text-primary);
+                    font-family: var(--font-mono);
+                    font-size: var(--fs-sm);
+                    line-height: 1.6;
+                    resize: none;
+                    box-sizing: border-box;
+                }
+
+                /* ── Match Cards ── */
+                .rx-match-list {
                     display: flex;
                     flex-direction: column;
                     gap: 8px;
+                    max-height: 400px;
+                    overflow-y: auto;
                 }
-                .cheatsheet-item {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                    padding: 6px 8px;
-                    border-radius: var(--radius-sm);
-                    cursor: pointer;
-                    transition: background 0.2s;
-                }
-                .cheatsheet-item:hover {
-                    background: var(--bg-tertiary);
-                }
-                .cheatsheet-item code {
-                    background: var(--bg-primary);
-                    color: var(--accent-primary-hover);
-                    padding: 2px 6px;
-                    border-radius: 4px;
-                    font-size: var(--fs-xs);
-                    min-width: 32px;
-                    text-align: center;
-                    border: 1px solid var(--border-color);
-                }
-                .cheatsheet-item span {
-                    font-size: var(--fs-sm);
-                    color: var(--text-secondary);
-                }
-                .explainer-box {
+                .rx-match-card {
                     background: var(--bg-secondary);
                     border: 1px solid var(--border-color);
                     border-radius: var(--radius-sm);
-                    padding: var(--space-md);
-                    max-height: 200px;
-                    overflow-y: auto;
+                    padding: 12px;
+                    transition: border-color var(--transition-fast);
+                }
+                .rx-match-card:hover { border-color: var(--border-hover); }
+                .rx-match-head {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 8px;
+                }
+                .rx-match-idx {
+                    font-weight: 600;
+                    font-size: var(--fs-sm);
+                    color: var(--accent-primary-hover);
+                }
+                .rx-match-pos {
+                    font-size: var(--fs-xs);
+                    color: var(--text-muted);
                     font-family: var(--font-mono);
                 }
-                .explainer-row {
+                .rx-group-row {
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                    padding: 5px 10px;
+                    border-radius: 4px;
+                    font-size: var(--fs-sm);
+                    font-family: var(--font-mono);
+                }
+                .rx-group-row:nth-child(even) { background: var(--bg-tertiary); }
+                .rx-group-lbl {
+                    color: var(--text-tertiary);
+                    font-weight: 600;
+                    min-width: 80px;
+                    flex-shrink: 0;
+                }
+                .rx-group-val {
+                    color: var(--accent-warning);
+                    word-break: break-all;
+                }
+                .rx-group-val.full { color: var(--text-primary); font-weight: 500; }
+
+                /* ── Explainer ── */
+                .rx-explainer {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    max-height: 350px;
+                    overflow-y: auto;
+                }
+                .rx-exp-row {
                     display: flex;
                     gap: 12px;
-                    margin-bottom: 8px;
-                    align-items: flex-start;
+                    align-items: center;
+                    padding: 6px 10px;
+                    border-radius: var(--radius-sm);
+                    transition: background var(--transition-fast);
                 }
-                .explainer-token {
+                .rx-exp-row:hover { background: var(--bg-tertiary); }
+                .rx-exp-token {
+                    font-family: var(--font-mono);
+                    font-weight: 600;
+                    font-size: var(--fs-sm);
                     color: var(--accent-primary-hover);
                     background: var(--bg-tertiary);
-                    padding: 2px 8px;
+                    border: 1px solid var(--border-color);
+                    padding: 2px 10px;
                     border-radius: 4px;
-                    font-weight: 600;
-                    min-width: 48px;
+                    min-width: 50px;
                     text-align: center;
                     flex-shrink: 0;
                 }
-                .explainer-desc {
+                .rx-exp-desc {
                     font-size: var(--fs-sm);
-                    color: var(--text-primary);
-                    line-height: 1.5;
-                    align-self: center;
+                    color: var(--text-secondary);
+                    line-height: 1.4;
                 }
-                .match-card {
+
+                /* ── Cheatsheet (Collapsible) ── */
+                .rx-cheatsheet-toggle {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 100%;
+                    padding: 10px 14px;
                     background: var(--bg-secondary);
                     border: 1px solid var(--border-color);
-                    border-radius: var(--radius-sm);
-                    padding: var(--space-md);
-                    margin-bottom: var(--space-sm);
-                }
-                .match-header {
-                    font-weight: 600;
-                    font-size: var(--fs-sm);
-                    color: var(--accent-primary-hover);
-                    margin-bottom: 8px;
-                    display: flex;
-                    justify-content: space-between;
-                }
-                .match-meta {
-                    color: var(--text-tertiary);
-                    font-weight: normal;
-                    font-size: var(--fs-xs);
-                }
-                .match-group-row {
-                    font-size: var(--fs-sm);
-                    font-family: var(--font-mono);
-                    display: flex;
-                    gap: 12px;
-                    background: var(--bg-tertiary);
-                    padding: 6px 10px;
-                    border-radius: 4px;
-                    margin-top: 4px;
-                    align-items: center;
-                }
-                .match-group-label {
-                    color: var(--accent-secondary);
-                    font-weight: 600;
-                    min-width: 70px;
-                }
-                .match-group-val {
+                    border-radius: var(--radius-md);
                     color: var(--text-primary);
-                    word-break: break-all;
+                    font-size: var(--fs-sm);
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all var(--transition-fast);
                 }
-                @media (max-width: 900px) {
-                    .regex-layout { flex-direction: column; }
-                    .regex-sidebar { width: 100%; position: static; }
+                .rx-cheatsheet-toggle:hover { border-color: var(--border-hover); }
+                .rx-cheatsheet-toggle .rx-chevron {
+                    transition: transform var(--transition-fast);
+                    color: var(--text-muted);
+                }
+                .rx-cheatsheet-toggle.open .rx-chevron { transform: rotate(180deg); }
+                .rx-cheatsheet-body {
+                    display: none;
+                    padding: var(--space-md);
+                    background: var(--bg-secondary);
+                    border: 1px solid var(--border-color);
+                    border-top: none;
+                    border-radius: 0 0 var(--radius-md) var(--radius-md);
+                }
+                .rx-cheatsheet-body.open { display: block; }
+                .rx-cheatsheet-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                    gap: 6px;
+                }
+                .rx-cs-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 6px 10px;
+                    border-radius: var(--radius-sm);
+                    cursor: pointer;
+                    transition: background var(--transition-fast);
+                }
+                .rx-cs-item:hover { background: var(--bg-tertiary); }
+                .rx-cs-item code {
+                    font-family: var(--font-mono);
+                    background: var(--bg-primary);
+                    color: var(--accent-primary-hover);
+                    padding: 2px 8px;
+                    border-radius: 4px;
+                    font-size: var(--fs-xs);
+                    min-width: 45px;
+                    text-align: center;
+                    border: 1px solid var(--border-color);
+                    flex-shrink: 0;
+                }
+                .rx-cs-item span {
+                    font-size: var(--fs-xs);
+                    color: var(--text-tertiary);
+                }
+
+                /* ── Misc ── */
+                .rx-empty {
+                    color: var(--text-muted);
+                    font-size: var(--fs-sm);
+                    padding: var(--space-md);
+                    text-align: center;
+                }
+
+                @media (max-width: 768px) {
+                    .rx-replace-row { grid-template-columns: 1fr; }
+                    .rx-cheatsheet-grid { grid-template-columns: 1fr; }
                 }
             `;
             document.head.appendChild(style);
         }
 
+        // Remove old style if present
+        const oldStyle = document.getElementById('regex-tester-style');
+        if (oldStyle) oldStyle.remove();
+
         container.innerHTML = `
             <div class="tool-panel">
                 <div class="tool-header">
-                    <h2>🧪 Regex Tester Pro</h2>
-                    <p class="tool-description">Kiểm tra, Bóc tách nhóm (Capture Groups), Thay thế chuỗi (Replace) và Giải thích Regex.</p>
+                    <h2>🧪 Regex Tester</h2>
+                    <p class="tool-description">Kiểm tra regex real-time, bóc tách nhóm, thay thế chuỗi và giải thích từng token.</p>
                 </div>
 
                 <div class="tool-body">
-                    <div class="regex-layout">
-                        <!-- Main Content Column -->
-                        <div class="regex-main">
-                            <!-- Preset Patterns -->
-                            <div class="tool-group">
-                                <label class="tool-label">⚡ Mẫu phổ biến</label>
-                                <div class="tool-actions" id="regex-presets">
-                                    <button class="tool-btn tool-btn-sm" data-pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$" data-flags="g" data-sample="Email hợp lệ: support@devtools.hub và admin@test.com">Email</button>
-                                    <button class="tool-btn tool-btn-sm" data-pattern="https?://(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}b([-a-zA-Z0-9()@:%_+.~#?&//=]*)" data-flags="gi" data-sample="Web URL: https://google.com hoặc http://sub.domain.org/path?query=123">URL</button>
-                                    <button class="tool-btn tool-btn-sm" data-pattern="(d{4})-(d{2})-(d{2})" data-flags="g" data-sample="Ngày khởi tạo: 2026-07-27 và Ngày kết thúc: 2026-12-31" data-replace="$3/$2/$1">Ngày (Bóc tách)</button>
-                                    <button class="tool-btn tool-btn-sm" data-pattern="^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" data-flags="gm" data-sample="#6366f1\n#fff">Mã màu Hex</button>
-                                </div>
-                            </div>
+                    <!-- Quick Presets -->
+                    <div class="tool-group">
+                        <label class="tool-label">⚡ Mẫu có sẵn</label>
+                        <div class="rx-presets" id="rx-presets">
+                            <button class="rx-preset-btn" data-pattern="^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$" data-flags="gm" data-sample="support@devtools.hub&#10;admin@test.com&#10;invalid-email">Email</button>
+                            <button class="rx-preset-btn" data-pattern="https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&\\/=]*)" data-flags="gi" data-sample="Trang chủ: https://google.com&#10;API: http://api.example.org/v2/users?id=123">URL</button>
+                            <button class="rx-preset-btn" data-pattern="(\\d{4})-(\\d{2})-(\\d{2})" data-flags="g" data-sample="Bắt đầu: 2026-07-27&#10;Kết thúc: 2026-12-31" data-replace="$3/$2/$1">Ngày YYYY-MM-DD</button>
+                            <button class="rx-preset-btn" data-pattern="^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" data-flags="gm" data-sample="#6366f1&#10;#fff&#10;abc123">Hex Color</button>
+                            <button class="rx-preset-btn" data-pattern="\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b" data-flags="g" data-sample="Server 1: 192.168.1.1&#10;Server 2: 10.0.0.255">IPv4</button>
+                            <button class="rx-preset-btn" data-pattern="(\\+84|0)(3|5|7|8|9)(\\d{8})" data-flags="g" data-sample="SĐT: 0901234567, +84912345678">SĐT VN</button>
+                        </div>
+                    </div>
 
-                            <!-- Regex Pattern & Flags -->
-                            <div class="tool-group">
-                                <label class="tool-label">Regular Expression Pattern & Flags</label>
-                                <div class="tool-row" style="align-items: center; gap: var(--space-sm);">
-                                    <span style="font-family: var(--font-mono); font-size: 1.2rem; color: var(--text-tertiary);">/</span>
-                                    <div style="flex: 1;">
-                                        <input type="text" class="tool-input" id="regex-pattern-input" value="(d{4})-(d{2})-(d{2})" placeholder="Nhập regex pattern..." style="font-family: var(--font-mono);">
+                    <!-- Pattern Input -->
+                    <div class="tool-group">
+                        <label class="tool-label">Pattern</label>
+                        <div class="rx-pattern-bar">
+                            <span class="rx-pattern-slash">/</span>
+                            <input type="text" class="rx-pattern-input" id="rx-pattern" placeholder="Nhập regex pattern..." value="(\\d{4})-(\\d{2})-(\\d{2})">
+                            <span class="rx-pattern-slash">/</span>
+                            <div class="rx-flags-group" id="rx-flags">
+                                <button class="rx-flag-btn active" data-flag="g" title="Global – tìm tất cả">g</button>
+                                <button class="rx-flag-btn" data-flag="i" title="Case-insensitive">i</button>
+                                <button class="rx-flag-btn" data-flag="m" title="Multiline – ^ và $ khớp đầu/cuối dòng">m</button>
+                                <button class="rx-flag-btn" data-flag="s" title="DotAll – dấu . khớp cả newline">s</button>
+                                <button class="rx-flag-btn" data-flag="u" title="Unicode">u</button>
+                            </div>
+                        </div>
+                        <div class="rx-error" id="rx-error"></div>
+                    </div>
+
+                    <!-- Test String + Highlight -->
+                    <div class="tool-group">
+                        <label class="tool-label">Test String</label>
+                        <div class="rx-test-area">
+                            <span class="rx-match-count" id="rx-match-count"></span>
+                            <textarea class="rx-test-textarea" id="rx-test" placeholder="Nhập chuỗi test ở đây...">Bắt đầu: 2026-07-27
+Kết thúc: 2026-12-31</textarea>
+                        </div>
+                    </div>
+
+                    <div class="tool-group">
+                        <label class="tool-label">Kết quả highlight</label>
+                        <div class="rx-highlight-box" id="rx-highlight"></div>
+                    </div>
+
+                    <!-- Output Tabs -->
+                    <div class="tool-group">
+                        <div class="rx-tabs" id="rx-tabs">
+                            <button class="rx-tab active" data-tab="matches">Matches & Groups</button>
+                            <button class="rx-tab" data-tab="replace">Replace</button>
+                            <button class="rx-tab" data-tab="explain">Giải thích</button>
+                        </div>
+
+                        <!-- Tab: Matches -->
+                        <div class="rx-tab-panel active" id="rx-panel-matches">
+                            <div class="rx-match-list" id="rx-matches"></div>
+                        </div>
+
+                        <!-- Tab: Replace -->
+                        <div class="rx-tab-panel" id="rx-panel-replace">
+                            <div class="rx-replace-row">
+                                <div class="tool-group" style="margin:0">
+                                    <label class="tool-label" style="margin-bottom:6px">Chuỗi thay thế</label>
+                                    <input type="text" class="rx-replace-input" id="rx-replace-input" placeholder="Ví dụ: $3/$2/$1" value="$3/$2/$1">
+                                </div>
+                                <div class="tool-group" style="margin:0">
+                                    <label class="tool-label" style="margin-bottom:6px">Kết quả</label>
+                                    <div class="rx-replace-result">
+                                        <textarea class="rx-replace-output" id="rx-replace-output" readonly></textarea>
+                                        <button class="tool-copy-btn" id="rx-copy-replace" style="position:absolute;top:8px;right:8px;">📋</button>
                                     </div>
-                                    <span style="font-family: var(--font-mono); font-size: 1.2rem; color: var(--text-tertiary);">/</span>
-                                    <div class="tool-inline" style="gap: var(--space-sm); flex-wrap: wrap;">
-                                        <label class="tool-checkbox" title="Global (tìm tất cả)"><input type="checkbox" id="flag-g" checked> <span>g</span></label>
-                                        <label class="tool-checkbox" title="Case-insensitive"><input type="checkbox" id="flag-i" checked> <span>i</span></label>
-                                        <label class="tool-checkbox" title="Multiline"><input type="checkbox" id="flag-m"> <span>m</span></label>
-                                        <label class="tool-checkbox" title="DotAll"><input type="checkbox" id="flag-s"> <span>s</span></label>
-                                        <label class="tool-checkbox" title="Unicode"><input type="checkbox" id="flag-u"> <span>u</span></label>
-                                    </div>
                                 </div>
-                                <div id="regex-error-msg" style="display: none; padding: 8px 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); color: var(--accent-danger); font-size: var(--fs-sm); font-family: var(--font-mono); margin-top: 6px;"></div>
-                            </div>
-
-                            <!-- Regex Explainer -->
-                            <div class="tool-group">
-                                <label class="tool-label">Giải thích biểu thức (Regex Explainer)</label>
-                                <div id="regex-explainer" class="explainer-box"></div>
-                            </div>
-
-                            <!-- Test Text Area & Highlight -->
-                            <div class="tool-split">
-                                <div class="tool-group" style="flex: 1;">
-                                    <label class="tool-label">Test String</label>
-                                    <textarea class="tool-textarea" id="regex-test-input" placeholder="Nhập chuỗi văn bản test ở đây..." rows="5">Ngày khởi tạo: 2026-07-27, Ngày hết hạn: 2026-12-31.</textarea>
-                                </div>
-                                <div class="tool-group" style="flex: 1;">
-                                    <label class="tool-label">Real-time Match Highlight</label>
-                                    <div id="regex-highlight-container" class="tool-textarea" style="height: 100%; white-space: pre-wrap; word-break: break-word; overflow-y: auto; max-height: 126px; background: var(--bg-input); line-height: 1.8;" readonly></div>
-                                </div>
-                            </div>
-
-                            <!-- Substitution -->
-                            <div class="tool-split">
-                                <div class="tool-group" style="flex: 1;">
-                                    <label class="tool-label">Substitution Text (Văn bản thay thế)</label>
-                                    <input type="text" class="tool-input" id="regex-replace-input" placeholder="Ví dụ: $3/$2/$1" value="$3/$2/$1" style="font-family: var(--font-mono);">
-                                </div>
-                                <div class="tool-group" style="flex: 1;">
-                                    <label class="tool-label">Result String (Kết quả)</label>
-                                    <div class="tool-result">
-                                        <textarea class="tool-textarea" id="regex-replace-result" readonly rows="3" style="font-family: var(--font-mono);"></textarea>
-                                        <button class="tool-copy-btn" id="regex-copy-replace">📋</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Match Info Panel -->
-                            <div class="tool-group">
-                                <label class="tool-label">Danh sách Match & Bóc tách nhóm (Capture Groups)</label>
-                                <div id="regex-matches-list"></div>
                             </div>
                         </div>
 
-                        <!-- Sidebar Cheatsheet -->
-                        <div class="regex-sidebar">
-                            <h3 style="margin-top: 0; font-size: var(--fs-md); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; color: var(--text-primary);">Cheatsheet</h3>
-                            <div style="font-size: var(--fs-xs); color: var(--text-tertiary); margin-bottom: 12px;">Nhấp để chèn vào pattern</div>
-                            
-                            <ul class="cheatsheet-list" id="regex-cheatsheet">
-                                <li class="cheatsheet-item" data-insert="d"><code>d</code> <span>Khớp một chữ số (0-9)</span></li>
-                                <li class="cheatsheet-item" data-insert="w"><code>w</code> <span>Chữ cái, số, gạch dưới</span></li>
-                                <li class="cheatsheet-item" data-insert="s"><code>s</code> <span>Khoảng trắng</span></li>
-                                <li class="cheatsheet-item" data-insert="^"><code>^</code> <span>Bắt đầu chuỗi</span></li>
-                                <li class="cheatsheet-item" data-insert="$"><code>$</code> <span>Kết thúc chuỗi</span></li>
-                                <li class="cheatsheet-item" data-insert="b"><code>b</code> <span>Ranh giới từ</span></li>
-                                <li class="cheatsheet-item" data-insert="*"><code>*</code> <span>0 hoặc nhiều lần</span></li>
-                                <li class="cheatsheet-item" data-insert="+"><code>+</code> <span>1 hoặc nhiều lần</span></li>
-                                <li class="cheatsheet-item" data-insert="?"><code>?</code> <span>0 hoặc 1 lần</span></li>
-                                <li class="cheatsheet-item" data-insert="{2,4}"><code>{2,4}</code> <span>Lặp 2 đến 4 lần</span></li>
-                                <li class="cheatsheet-item" data-insert="[a-z]"><code>[a-z]</code> <span>Tập hợp ký tự</span></li>
-                                <li class="cheatsheet-item" data-insert="[^a-z]"><code>[^a-z]</code> <span>Phủ định tập hợp</span></li>
-                                <li class="cheatsheet-item" data-insert="(...)"><code>(...)</code> <span>Nhóm bắt giữ (Capture)</span></li>
-                                <li class="cheatsheet-item" data-insert="(?:...)"><code>(?:...)</code> <span>Nhóm không bắt giữ</span></li>
-                                <li class="cheatsheet-item" data-insert="(?=...)"><code>(?=...)</code> <span>Lookahead dương</span></li>
-                            </ul>
+                        <!-- Tab: Explain -->
+                        <div class="rx-tab-panel" id="rx-panel-explain">
+                            <div class="rx-explainer" id="rx-explainer"></div>
+                        </div>
+                    </div>
+
+                    <!-- Cheatsheet (Collapsible) -->
+                    <div class="tool-group">
+                        <button class="rx-cheatsheet-toggle" id="rx-cs-toggle">
+                            <span>📖 Cheatsheet – Nhấp token để chèn vào pattern</span>
+                            <span class="rx-chevron">▼</span>
+                        </button>
+                        <div class="rx-cheatsheet-body" id="rx-cs-body">
+                            <div class="rx-cheatsheet-grid" id="rx-cheatsheet"></div>
                         </div>
                     </div>
                 </div>
             </div>
         `;
 
-        // DOM elements
-        const patternInput = container.querySelector('#regex-pattern-input');
-        const testInput = container.querySelector('#regex-test-input');
-        const replaceInput = container.querySelector('#regex-replace-input');
-        const replaceResult = container.querySelector('#regex-replace-result');
-        const flagG = container.querySelector('#flag-g');
-        const flagI = container.querySelector('#flag-i');
-        const flagM = container.querySelector('#flag-m');
-        const flagS = container.querySelector('#flag-s');
-        const flagU = container.querySelector('#flag-u');
-        const errorMsg = container.querySelector('#regex-error-msg');
-        const highlightContainer = container.querySelector('#regex-highlight-container');
-        const explainerContainer = container.querySelector('#regex-explainer');
-        const matchesListEl = container.querySelector('#regex-matches-list');
-        const presetsContainer = container.querySelector('#regex-presets');
-        const cheatsheet = container.querySelector('#regex-cheatsheet');
-        const copyReplaceBtn = container.querySelector('#regex-copy-replace');
+        // ── DOM refs ──
+        const patternInput = container.querySelector('#rx-pattern');
+        const testInput    = container.querySelector('#rx-test');
+        const replaceInput = container.querySelector('#rx-replace-input');
+        const replaceOutput= container.querySelector('#rx-replace-output');
+        const errorEl      = container.querySelector('#rx-error');
+        const highlightEl  = container.querySelector('#rx-highlight');
+        const matchCountEl = container.querySelector('#rx-match-count');
+        const matchesEl    = container.querySelector('#rx-matches');
+        const explainerEl  = container.querySelector('#rx-explainer');
+        const flagsEl      = container.querySelector('#rx-flags');
+        const presetsEl    = container.querySelector('#rx-presets');
+        const cheatsheetEl = container.querySelector('#rx-cheatsheet');
+        const csToogleBtn  = container.querySelector('#rx-cs-toggle');
+        const csBody       = container.querySelector('#rx-cs-body');
+        const tabBar       = container.querySelector('#rx-tabs');
+        const copyBtn      = container.querySelector('#rx-copy-replace');
 
-        // Helper: Escape HTML special characters
+        // ── Cheatsheet Data ──
+        const cheatsheetData = [
+            { token: '\\d',      desc: 'Chữ số (0-9)' },
+            { token: '\\D',      desc: 'Không phải chữ số' },
+            { token: '\\w',      desc: 'Chữ cái, số, _' },
+            { token: '\\W',      desc: 'Không phải \\w' },
+            { token: '\\s',      desc: 'Khoảng trắng' },
+            { token: '\\S',      desc: 'Không phải khoảng trắng' },
+            { token: '\\b',      desc: 'Ranh giới từ' },
+            { token: '.',        desc: 'Bất kỳ ký tự nào' },
+            { token: '^',        desc: 'Bắt đầu chuỗi/dòng' },
+            { token: '$',        desc: 'Kết thúc chuỗi/dòng' },
+            { token: '*',        desc: '0 hoặc nhiều lần' },
+            { token: '+',        desc: '1 hoặc nhiều lần' },
+            { token: '?',        desc: '0 hoặc 1 lần' },
+            { token: '{n,m}',    desc: 'Lặp từ n đến m lần' },
+            { token: '[abc]',    desc: 'Tập hợp ký tự' },
+            { token: '[^abc]',   desc: 'Phủ định tập hợp' },
+            { token: '(...)',    desc: 'Nhóm bắt giữ' },
+            { token: '(?:...)',  desc: 'Nhóm không bắt giữ' },
+            { token: '(?=...)',  desc: 'Lookahead dương' },
+            { token: '(?!...)',  desc: 'Lookahead âm' },
+            { token: '|',        desc: 'Toán tử HOẶC' },
+            { token: '\\n',      desc: 'Ký tự xuống dòng' },
+        ];
+
+        // Render cheatsheet grid
+        cheatsheetEl.innerHTML = cheatsheetData.map(item =>
+            `<div class="rx-cs-item" data-insert="${escapeAttr(item.token)}"><code>${escapeHtml(item.token)}</code><span>${item.desc}</span></div>`
+        ).join('');
+
+        // ── Helpers ──
         function escapeHtml(str) {
-            return (str || '')
-                .toString()
+            return (str || '').toString()
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
@@ -287,99 +593,114 @@ const RegexTester = {
                 .replace(/'/g, '&#039;');
         }
 
-        // Helper: Get active flag string
+        function escapeAttr(str) {
+            return (str || '').toString()
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
         function getFlags() {
             let flags = '';
-            if (flagG.checked) flags += 'g';
-            if (flagI.checked) flags += 'i';
-            if (flagM.checked) flags += 'm';
-            if (flagS.checked) flags += 's';
-            if (flagU.checked) flags += 'u';
+            flagsEl.querySelectorAll('.rx-flag-btn.active').forEach(btn => {
+                flags += btn.dataset.flag;
+            });
             return flags;
         }
 
-        // --- Regex Explainer Parser ---
+        // ── Regex Explainer ──
         function explainRegex(pattern) {
-            if (!pattern) return '<div style="color: var(--text-tertiary);">Nhập biểu thức để xem giải thích...</div>';
-            
-            const tokens = [
-                { re: /^d/, desc: "Khớp một chữ số (0-9)" },
-                { re: /^D/, desc: "Khớp ký tự KHÔNG phải chữ số" },
-                { re: /^w/, desc: "Khớp ký tự chữ cái, số, hoặc dấu gạch dưới" },
-                { re: /^W/, desc: "Khớp ký tự KHÔNG phải chữ cái, số, hoặc dấu gạch dưới" },
-                { re: /^s/, desc: "Khớp khoảng trắng (space, tab, xuống dòng)" },
-                { re: /^S/, desc: "Khớp ký tự KHÔNG phải khoảng trắng" },
-                { re: /^b/, desc: "Khớp ranh giới từ (word boundary)" },
-                { re: /^\^/, desc: "Khớp điểm bắt đầu của chuỗi văn bản (hoặc dòng)" },
-                { re: /^$/, desc: "Khớp điểm kết thúc của chuỗi văn bản (hoặc dòng)" },
-                { re: /^\./, desc: "Khớp bất kỳ ký tự nào (ngoại trừ ký tự xuống dòng)" },
-                { re: /^\*/, desc: "Lặp lại 0 hoặc nhiều lần (Cơ chế tìm kiếm tham lam - Greedy)" },
-                { re: /^\+/, desc: "Lặp lại 1 hoặc nhiều lần (Cơ chế tìm kiếm tham lam - Greedy)" },
-                { re: /^\?/, desc: "Lặp lại 0 hoặc 1 lần (Hoặc chuyển thành Non-greedy)" },
-                { re: /^\{\d+\,\d*\}/, desc: "Lặp lại số lần trong khoảng giới hạn" },
-                { re: /^\{\d+\}/, desc: "Lặp lại chính xác số lần" },
-                { re: /^\[\^[^\]]+\]/, desc: "Khớp bất kỳ ký tự nào KHÔNG có trong tập hợp" },
-                { re: /^\[[^\]]+\]/, desc: "Khớp một trong các ký tự trong tập hợp" },
-                { re: /^\(\?\:/, desc: "Bắt đầu nhóm KHÔNG bắt giữ (Non-capturing group)" },
-                { re: /^\(\?\=/, desc: "Lookahead dương (Chỉ khớp nếu theo sau bởi mẫu này)" },
-                { re: /^\(\?\!/, desc: "Lookahead âm (Chỉ khớp nếu KHÔNG theo sau bởi mẫu này)" },
-                { re: /^\(\?\<\=/, desc: "Lookbehind dương (Chỉ khớp nếu đứng trước là mẫu này)" },
-                { re: /^\(\?\<\!/, desc: "Lookbehind âm (Chỉ khớp nếu KHÔNG đứng trước là mẫu này)" },
-                { re: /^\(/, desc: "Bắt đầu Nhóm bắt giữ (Capture Group)" },
-                { re: /^\)/, desc: "Kết thúc Nhóm" },
-                { re: /^\|/, desc: "Toán tử HOẶC (OR)" },
-                { re: /^[^]/, desc: "Ký tự được escape" }
+            if (!pattern) {
+                return '<div class="rx-empty">Nhập biểu thức regex để xem giải thích chi tiết...</div>';
+            }
+
+            const tokenDefs = [
+                { re: /^\\d/, desc: 'Khớp một chữ số (0-9)' },
+                { re: /^\\D/, desc: 'Khớp ký tự KHÔNG phải chữ số' },
+                { re: /^\\w/, desc: 'Khớp chữ cái, số, hoặc dấu gạch dưới' },
+                { re: /^\\W/, desc: 'Khớp ký tự KHÔNG phải chữ/số/gạch dưới' },
+                { re: /^\\s/, desc: 'Khớp khoảng trắng (space, tab, newline)' },
+                { re: /^\\S/, desc: 'Khớp ký tự KHÔNG phải khoảng trắng' },
+                { re: /^\\b/, desc: 'Khớp ranh giới từ (word boundary)' },
+                { re: /^\\B/, desc: 'Khớp vị trí KHÔNG phải ranh giới từ' },
+                { re: /^\\n/, desc: 'Khớp ký tự xuống dòng (newline)' },
+                { re: /^\\t/, desc: 'Khớp ký tự tab' },
+                { re: /^\\r/, desc: 'Khớp ký tự carriage return' },
+                { re: /^\\\./, desc: 'Khớp dấu chấm (literal dot)' },
+                { re: /^\\\\/, desc: 'Khớp dấu backslash' },
+                { re: /^\\\(/, desc: 'Khớp dấu ngoặc mở' },
+                { re: /^\\\)/, desc: 'Khớp dấu ngoặc đóng' },
+                { re: /^\\\[/, desc: 'Khớp dấu ngoặc vuông mở' },
+                { re: /^\\\]/, desc: 'Khớp dấu ngoặc vuông đóng' },
+                { re: /^\\[^\\]/, desc: 'Ký tự đặc biệt được escape' },
+                { re: /^\^/, desc: 'Bắt đầu chuỗi (hoặc dòng với flag m)' },
+                { re: /^\$/, desc: 'Kết thúc chuỗi (hoặc dòng với flag m)' },
+                { re: /^\./, desc: 'Bất kỳ ký tự nào (trừ newline, nếu không bật flag s)' },
+                { re: /^\*\?/, desc: 'Lặp 0+ lần (lazy/non-greedy)' },
+                { re: /^\+\?/, desc: 'Lặp 1+ lần (lazy/non-greedy)' },
+                { re: /^\?\?/, desc: 'Lặp 0-1 lần (lazy/non-greedy)' },
+                { re: /^\*/, desc: 'Lặp 0 hoặc nhiều lần (greedy)' },
+                { re: /^\+/, desc: 'Lặp 1 hoặc nhiều lần (greedy)' },
+                { re: /^\?/, desc: 'Lặp 0 hoặc 1 lần (hoặc chuyển sang lazy)' },
+                { re: /^\{\d+,\d*\}/, desc: 'Lặp trong khoảng giới hạn' },
+                { re: /^\{\d+\}/, desc: 'Lặp chính xác số lần' },
+                { re: /^\[\^[^\]]+\]/, desc: 'Khớp ký tự KHÔNG có trong tập hợp' },
+                { re: /^\[[^\]]+\]/, desc: 'Khớp một trong các ký tự trong tập hợp' },
+                { re: /^\(\?<\w+>/, desc: 'Bắt đầu nhóm bắt giữ có tên (Named Capture Group)' },
+                { re: /^\(\?:/, desc: 'Bắt đầu nhóm KHÔNG bắt giữ (Non-capturing Group)' },
+                { re: /^\(\?=/, desc: 'Lookahead dương – chỉ khớp nếu theo sau bởi mẫu' },
+                { re: /^\(\?!/, desc: 'Lookahead âm – chỉ khớp nếu KHÔNG theo sau bởi mẫu' },
+                { re: /^\(\?<=/, desc: 'Lookbehind dương – chỉ khớp nếu đứng trước là mẫu' },
+                { re: /^\(\?<!/, desc: 'Lookbehind âm – chỉ khớp nếu KHÔNG đứng trước là mẫu' },
+                { re: /^\(/, desc: 'Bắt đầu nhóm bắt giữ (Capture Group)' },
+                { re: /^\)/, desc: 'Kết thúc nhóm' },
+                { re: /^\|/, desc: 'Toán tử HOẶC (OR)' },
             ];
 
             let html = '';
             let i = 0;
-            while(i < pattern.length) {
+            while (i < pattern.length) {
                 let matched = false;
-                let str = pattern.slice(i);
-                for(let token of tokens) {
-                    let m = str.match(token.re);
-                    if(m) {
-                        let text = m[0];
-                        html += `
-                            <div class="explainer-row">
-                                <code class="explainer-token">${escapeHtml(text)}</code>
-                                <div class="explainer-desc">${token.desc}</div>
-                            </div>
-                        `;
+                const str = pattern.slice(i);
+                for (const tDef of tokenDefs) {
+                    const m = str.match(tDef.re);
+                    if (m) {
+                        const text = m[0];
+                        html += `<div class="rx-exp-row"><code class="rx-exp-token">${escapeHtml(text)}</code><div class="rx-exp-desc">${tDef.desc}</div></div>`;
                         i += text.length;
                         matched = true;
                         break;
                     }
                 }
-                if(!matched) {
-                    html += `
-                        <div class="explainer-row">
-                            <code class="explainer-token">${escapeHtml(pattern[i])}</code>
-                            <div class="explainer-desc">Khớp ký tự '${escapeHtml(pattern[i])}' theo nghĩa đen (Literal)</div>
-                        </div>
-                    `;
+                if (!matched) {
+                    html += `<div class="rx-exp-row"><code class="rx-exp-token">${escapeHtml(pattern[i])}</code><div class="rx-exp-desc">Ký tự '${escapeHtml(pattern[i])}' (literal)</div></div>`;
                     i++;
                 }
             }
             return html;
         }
 
-        // Main regex processor
-        function runRegexTester() {
+        // ── Main Regex Runner ──
+        function runRegex() {
             const patternStr = patternInput.value;
             const text = testInput.value;
             const replaceStr = replaceInput.value;
             const flags = getFlags();
 
-            // Clear state
-            errorMsg.style.display = 'none';
-            errorMsg.textContent = '';
-            explainerContainer.innerHTML = explainRegex(patternStr);
+            // Reset error
+            errorEl.classList.remove('visible');
+            errorEl.textContent = '';
+
+            // Update explainer
+            explainerEl.innerHTML = explainRegex(patternStr);
 
             if (!patternStr) {
-                highlightContainer.innerHTML = escapeHtml(text);
-                matchesListEl.innerHTML = '<div style="color: var(--text-tertiary); font-size: var(--fs-sm);">Nhập regex pattern để test...</div>';
-                replaceResult.value = text;
+                highlightEl.innerHTML = escapeHtml(text) || '<span class="rx-empty">Kết quả highlight sẽ hiển thị ở đây</span>';
+                matchCountEl.textContent = '';
+                matchCountEl.className = 'rx-match-count';
+                matchesEl.innerHTML = '<div class="rx-empty">Nhập regex pattern để bắt đầu test...</div>';
+                replaceOutput.value = text;
                 return;
             }
 
@@ -387,193 +708,189 @@ const RegexTester = {
             try {
                 regex = new RegExp(patternStr, flags);
             } catch (err) {
-                errorMsg.style.display = 'block';
-                errorMsg.textContent = `❌ Lỗi Regex: ${err.message}`;
-                highlightContainer.innerHTML = escapeHtml(text);
-                matchesListEl.innerHTML = `<div style="color: var(--accent-danger); font-size: var(--fs-sm);">⚠️ Pattern không hợp lệ: ${escapeHtml(err.message)}</div>`;
-                replaceResult.value = text;
+                errorEl.textContent = '❌ ' + err.message;
+                errorEl.classList.add('visible');
+                highlightEl.innerHTML = escapeHtml(text);
+                matchCountEl.textContent = '⚠️ Error';
+                matchCountEl.className = 'rx-match-count no-match';
+                matchesEl.innerHTML = '<div class="rx-empty" style="color:var(--accent-danger)">Pattern không hợp lệ</div>';
+                replaceOutput.value = text;
                 return;
             }
 
-            // Perform matching
+            // Collect matches
             const matches = [];
             const isGlobal = flags.includes('g');
-            
             try {
                 if (isGlobal) {
-                    // Using matchAll for full group extraction
-                    const iterator = text.matchAll(regex);
-                    for (const m of iterator) {
+                    for (const m of text.matchAll(regex)) {
                         matches.push(m);
-                        if (matches.length >= 1000) break; // limit
+                        if (matches.length >= 500) break;
                     }
                 } else {
                     const m = regex.exec(text);
                     if (m) matches.push(m);
                 }
-            } catch(e) {
-                console.error(e);
+            } catch (e) { console.error(e); }
+
+            // Match count badge
+            if (matches.length > 0) {
+                matchCountEl.textContent = `${matches.length} match${matches.length > 1 ? 'es' : ''}`;
+                matchCountEl.className = 'rx-match-count has-match';
+            } else {
+                matchCountEl.textContent = 'No match';
+                matchCountEl.className = 'rx-match-count no-match';
             }
 
-            // Build Highlighted HTML (Real-time Match)
-            let highlightHtml = '';
-            let lastIndex = 0;
-
+            // Build highlight HTML
+            let hlHtml = '';
+            let lastIdx = 0;
             matches.forEach(m => {
                 const start = m.index;
                 const end = start + m[0].length;
-
-                // Non-matching text before this match
-                highlightHtml += escapeHtml(text.slice(lastIndex, start));
-
-                // Matched text
-                const matchedText = m[0];
-                if (matchedText.length === 0) {
-                    highlightHtml += `<span class="highlight-match" style="border-left: 2px solid var(--accent-warning); padding: 0 1px;" title="Zero-width match at index ${start}"></span>`;
+                hlHtml += escapeHtml(text.slice(lastIdx, start));
+                if (m[0].length === 0) {
+                    hlHtml += '<span class="rx-hl rx-hl-zero" title="Zero-width match"></span>';
                 } else {
-                    highlightHtml += `<span class="highlight-match">${escapeHtml(matchedText)}</span>`;
+                    hlHtml += `<span class="rx-hl">${escapeHtml(m[0])}</span>`;
                 }
-
-                lastIndex = end;
+                lastIdx = end;
             });
+            hlHtml += escapeHtml(text.slice(lastIdx));
+            highlightEl.innerHTML = hlHtml || '<span class="rx-empty">Không có nội dung</span>';
 
-            highlightHtml += escapeHtml(text.slice(lastIndex));
-            highlightContainer.innerHTML = highlightHtml;
-
-            // Perform Replacement
-            if (patternStr) {
-                try {
-                    replaceResult.value = text.replace(regex, replaceStr);
-                } catch(e) {
-                    replaceResult.value = 'Lỗi replace: ' + e.message;
-                }
+            // Replace result
+            try {
+                replaceOutput.value = text.replace(regex, replaceStr);
+            } catch (e) {
+                replaceOutput.value = 'Lỗi: ' + e.message;
             }
 
-            // Render Match Info Panel
+            // Render match cards
             if (matches.length === 0) {
-                matchesListEl.innerHTML = '<div style="color: var(--text-tertiary); font-size: var(--fs-sm);">Không tìm thấy kết quả khớp nào.</div>';
+                matchesEl.innerHTML = '<div class="rx-empty">Không tìm thấy kết quả khớp nào.</div>';
                 return;
             }
 
-            let listHtml = '';
-            matches.slice(0, 50).forEach((m, idx) => {
-                const matchStart = m.index;
-                const matchEnd = matchStart + m[0].length;
+            let cardsHtml = '';
+            const maxShow = Math.min(matches.length, 50);
+            for (let idx = 0; idx < maxShow; idx++) {
+                const m = matches[idx];
                 const groups = m.slice(1);
 
-                listHtml += `
-                    <div class="match-card">
-                        <div class="match-header">
-                            <span>Match ${idx + 1} <span class="match-meta">(Vị trí: index ${matchStart} - ${matchEnd})</span></span>
-                        </div>
-                        <div class="match-group-row" style="background: var(--bg-input); border: 1px solid var(--border-color);">
-                            <span class="match-group-label" style="color: var(--text-primary);">Full Match:</span>
-                            <span class="match-group-val" style="color: var(--accent-warning);">${escapeHtml(m[0] || '(chuỗi rỗng)')}</span>
-                        </div>
-                `;
+                cardsHtml += `<div class="rx-match-card">`;
+                cardsHtml += `<div class="rx-match-head"><span class="rx-match-idx">Match ${idx + 1}</span><span class="rx-match-pos">index ${m.index}–${m.index + m[0].length}</span></div>`;
+                cardsHtml += `<div class="rx-group-row"><span class="rx-group-lbl">Full</span><span class="rx-group-val full">${escapeHtml(m[0] || '(empty)')}</span></div>`;
 
-                // Captured Groups
                 if (groups.length > 0) {
                     groups.forEach((gVal, gIdx) => {
-                        const valStr = gVal !== undefined ? escapeHtml(gVal) : '<em style="color:var(--text-tertiary)">undefined</em>';
-                        listHtml += `
-                            <div class="match-group-row">
-                                <span class="match-group-label">Group ${gIdx + 1}:</span>
-                                <span class="match-group-val">${valStr}</span>
-                            </div>
-                        `;
-                    });
-                }
-                
-                // Named groups
-                if (m.groups && Object.keys(m.groups).length > 0) {
-                    Object.keys(m.groups).forEach(gName => {
-                        const valStr = m.groups[gName] !== undefined ? escapeHtml(m.groups[gName]) : '<em style="color:var(--text-tertiary)">undefined</em>';
-                        listHtml += `
-                            <div class="match-group-row">
-                                <span class="match-group-label" style="color: var(--accent-tertiary);">Group ?&lt;${escapeHtml(gName)}&gt;:</span>
-                                <span class="match-group-val">${valStr}</span>
-                            </div>
-                        `;
+                        const val = gVal !== undefined ? escapeHtml(gVal) : '<em style="color:var(--text-muted)">undefined</em>';
+                        cardsHtml += `<div class="rx-group-row"><span class="rx-group-lbl">Group ${gIdx + 1}</span><span class="rx-group-val">${val}</span></div>`;
                     });
                 }
 
-                listHtml += `</div>`;
-            });
+                if (m.groups && Object.keys(m.groups).length > 0) {
+                    Object.entries(m.groups).forEach(([name, val]) => {
+                        const v = val !== undefined ? escapeHtml(val) : '<em style="color:var(--text-muted)">undefined</em>';
+                        cardsHtml += `<div class="rx-group-row"><span class="rx-group-lbl" style="color:var(--accent-success)">‹${escapeHtml(name)}›</span><span class="rx-group-val">${v}</span></div>`;
+                    });
+                }
+
+                cardsHtml += `</div>`;
+            }
 
             if (matches.length > 50) {
-                listHtml += `<div style="color: var(--text-tertiary); font-size: var(--fs-xs); text-align: center; padding: 4px;">... và ${matches.length - 50} kết quả khác.</div>`;
+                cardsHtml += `<div class="rx-empty">...và ${matches.length - 50} kết quả khác</div>`;
             }
 
-            matchesListEl.innerHTML = listHtml;
+            matchesEl.innerHTML = cardsHtml;
         }
 
-        // Event listeners for inputs
-        patternInput.addEventListener('input', runRegexTester);
-        testInput.addEventListener('input', runRegexTester);
-        replaceInput.addEventListener('input', runRegexTester);
-
-        [flagG, flagI, flagM, flagS, flagU].forEach(cb => {
-            cb.addEventListener('change', runRegexTester);
+        // ── Event: Flag toggles ──
+        flagsEl.addEventListener('click', (e) => {
+            const btn = e.target.closest('.rx-flag-btn');
+            if (!btn) return;
+            btn.classList.toggle('active');
+            runRegex();
         });
 
-        // Preset patterns click handler
-        presetsContainer.addEventListener('click', (e) => {
-            const btn = e.target.closest('button[data-pattern]');
+        // ── Event: Inputs ──
+        patternInput.addEventListener('input', runRegex);
+        testInput.addEventListener('input', runRegex);
+        replaceInput.addEventListener('input', runRegex);
+
+        // ── Event: Tabs ──
+        tabBar.addEventListener('click', (e) => {
+            const tab = e.target.closest('.rx-tab');
+            if (!tab) return;
+            const target = tab.dataset.tab;
+
+            tabBar.querySelectorAll('.rx-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            container.querySelectorAll('.rx-tab-panel').forEach(p => p.classList.remove('active'));
+            container.querySelector(`#rx-panel-${target}`).classList.add('active');
+        });
+
+        // ── Event: Presets ──
+        presetsEl.addEventListener('click', (e) => {
+            const btn = e.target.closest('.rx-preset-btn');
             if (!btn) return;
 
-            const pattern = btn.dataset.pattern;
-            const flags = btn.dataset.flags || 'g';
-            const sample = btn.dataset.sample || '';
-            const replace = btn.dataset.replace || '';
+            patternInput.value = btn.dataset.pattern || '';
+            testInput.value = (btn.dataset.sample || '').replace(/&#10;/g, '\n');
+            replaceInput.value = btn.dataset.replace || '';
 
-            patternInput.value = pattern;
-            testInput.value = sample;
-            replaceInput.value = replace;
+            // Update flags
+            const flagStr = btn.dataset.flags || 'g';
+            flagsEl.querySelectorAll('.rx-flag-btn').forEach(fb => {
+                fb.classList.toggle('active', flagStr.includes(fb.dataset.flag));
+            });
 
-            // Set flags
-            flagG.checked = flags.includes('g');
-            flagI.checked = flags.includes('i');
-            flagM.checked = flags.includes('m');
-            flagS.checked = flags.includes('s');
-            flagU.checked = flags.includes('u');
-
-            runRegexTester();
+            runRegex();
             if (window.showToast) {
-                window.showToast(`Đã áp dụng mẫu regex: ${btn.textContent.trim()}`, 'success');
+                window.showToast(`Đã áp dụng mẫu: ${btn.textContent.trim()}`, 'success');
             }
         });
 
-        // Cheatsheet insert handler
-        cheatsheet.addEventListener('click', (e) => {
-            const item = e.target.closest('.cheatsheet-item');
+        // ── Event: Cheatsheet toggle ──
+        csToogleBtn.addEventListener('click', () => {
+            csToogleBtn.classList.toggle('open');
+            csBody.classList.toggle('open');
+        });
+
+        // ── Event: Cheatsheet insert ──
+        cheatsheetEl.addEventListener('click', (e) => {
+            const item = e.target.closest('.rx-cs-item');
             if (!item) return;
-            
+
             const insertText = item.dataset.insert;
-            const startPos = patternInput.selectionStart;
-            const endPos = patternInput.selectionEnd;
-            
-            patternInput.value = patternInput.value.substring(0, startPos) + 
-                                 insertText + 
-                                 patternInput.value.substring(endPos, patternInput.value.length);
-            
+            const start = patternInput.selectionStart;
+            const end = patternInput.selectionEnd;
+            const val = patternInput.value;
+
+            patternInput.value = val.substring(0, start) + insertText + val.substring(end);
             patternInput.focus();
-            patternInput.selectionStart = startPos + insertText.length;
-            patternInput.selectionEnd = startPos + insertText.length;
-            
-            runRegexTester();
+            const newPos = start + insertText.length;
+            patternInput.selectionStart = newPos;
+            patternInput.selectionEnd = newPos;
+
+            runRegex();
         });
 
-        copyReplaceBtn.addEventListener('click', () => {
-            if (window.copyToClipboard) window.copyToClipboard(replaceResult.value, copyReplaceBtn);
-            else { navigator.clipboard.writeText(replaceResult.value); }
+        // ── Event: Copy button ──
+        copyBtn.addEventListener('click', () => {
+            if (window.copyToClipboard) {
+                window.copyToClipboard(replaceOutput.value, copyBtn);
+            } else {
+                navigator.clipboard.writeText(replaceOutput.value);
+            }
         });
 
-        // Initial run
-        runRegexTester();
+        // ── Initial run ──
+        runRegex();
     }
 };
 
 window.DevTools = window.DevTools || [];
 window.DevTools.push(RegexTester);
-
