@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 📱 **QR Code Generator & Scanner** — generate custom QR codes for URLs/Text, Wi-Fi networks (SSID, Password, Security type), and vCard contacts with custom foreground/background colors, dimensions (200px–800px), and Error Correction Level (L/M/Q/H). Export to PNG, SVG, or copy Base64 image. Includes 100% client-side QR code decoder from uploaded images or clipboard (`Ctrl+V`).
 - **Tool count**: Updated tool counter and documentation from 35 → 36.
 
+### Fixed
+
+- **🔴 QR Code Generator — Infinite Recursion**: Fixed a fatal infinite recursion bug (Maximum Call Stack Size Exceeded) caused by an incorrect Galois Field (GF256) polynomial table initialization. Switched to the proven `qrcode.js` library for 100% generating reliability.
+- **🟡 QR Code Generator — UTF-8 Data Truncation**: Configured the internal byte encoder to use UTF-8 instead of 8-bit ASCII. This fixes an issue where Vietnamese characters (or any non-ASCII Unicode strings like emoji) were severely corrupted, resulting in QR codes that standard apps (Zalo, Google Lens) could not decode correctly.
+
 ---
 
 ## [0.3] - 2026-07-28
