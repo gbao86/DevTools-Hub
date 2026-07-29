@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.1] - 2026-07-29
+
+### Added
+
+- 📱 **QR Code Generator & Scanner** — generate custom QR codes for URLs/Text, Wi-Fi networks (SSID, Password, Security type), and vCard contacts with custom foreground/background colors, dimensions (200px–800px), and Error Correction Level (L/M/Q/H). Export to PNG, SVG, or copy Base64 image. Includes 100% client-side QR code decoder from uploaded images or clipboard (`Ctrl+V`).
+- **Tool count**: Updated tool counter and documentation from 35 → 36.
+
+---
+
 ## [0.3] - 2026-07-28
 
 ### 🚀 10 New Tools & Regex Tester Rewrite
