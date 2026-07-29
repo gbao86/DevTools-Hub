@@ -323,6 +323,10 @@
                 const fgColor = qrFgColor.value;
                 const bgColor = qrBgColor.value;
 
+                if (window.qrcode && window.qrcode.stringToBytesFuncs) {
+                    window.qrcode.stringToBytes = window.qrcode.stringToBytesFuncs['UTF-8'];
+                }
+
                 try {
                     const qrModel = window.qrcode(0, ecc);
                     qrModel.addData(payload);
