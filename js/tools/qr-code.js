@@ -8,10 +8,9 @@
     'use strict';
 
     // =========================================================================
-    // 1. Lightweight Pure JS QR Code Generator Engine (qrcode-generator algorithm)
+    // 1. Complete Pure JS QR Code Generator Engine (qrcode-generator by Kazuhiko Arase)
     // =========================================================================
     const QRCodeLib = (function () {
-        // Mode & Error Correction Level constants
         const PAD0 = 0xEC;
         const PAD1 = 0x11;
 
@@ -29,7 +28,9 @@
             multiply: function (e) {
                 const num = new Uint8Array(this.getLength() + e.getLength() - 1);
                 for (let i = 0; i < this.getLength(); i++) {
+                    if (this.getAt(i) === 0) continue;
                     for (let j = 0; j < e.getLength(); j++) {
+                        if (e.getAt(j) === 0) continue;
                         num[i + j] ^= QRMath.gexp(QRMath.glog(this.getAt(i)) + QRMath.glog(e.getAt(j)));
                     }
                 }
@@ -41,6 +42,7 @@
                 const num = new Uint8Array(this.getLength());
                 for (let i = 0; i < this.getLength(); i++) num[i] = this.getAt(i);
                 for (let i = 0; i < e.getLength(); i++) {
+                    if (e.getAt(i) === 0) continue;
                     num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i)) + ratio);
                 }
                 return new QRPolynomial(num, 0).mod(e);
@@ -67,19 +69,24 @@
         }
         for (let i = 0; i < 255; i++) QRMath.LOG_TABLE[QRMath.EXP_TABLE[i]] = i;
 
-        // RS Block specs for Type 1-10
+        // Complete Reed-Solomon Block table for QR Versions 1 to 15
         const RS_BLOCK_TABLE = [
             // L, M, Q, H
-            [1, 26, 19], [1, 26, 16], [1, 26, 13], [1, 26, 9],
-            [1, 44, 34], [1, 44, 28], [1, 44, 22], [1, 44, 16],
-            [1, 70, 55], [1, 70, 44], [2, 35, 17], [2, 35, 13],
-            [1, 100, 80], [2, 50, 32], [2, 50, 24], [4, 25, 9],
-            [1, 134, 108], [2, 67, 43], [2, 33, 15, 2, 34, 16], [2, 33, 11, 2, 34, 12],
-            [2, 86, 68], [4, 43, 27], [4, 43, 19], [4, 43, 15],
-            [2, 98, 78], [4, 61, 31], [2, 45, 14, 4, 46, 15], [4, 39, 13, 1, 40, 14],
-            [2, 121, 97], [2, 60, 38, 2, 61, 39], [4, 40, 18, 2, 41, 19], [4, 40, 14, 2, 41, 15],
-            [2, 146, 116], [3, 58, 36, 2, 59, 37], [4, 36, 16, 4, 37, 17], [4, 36, 12, 4, 37, 13],
-            [2, 86, 68, 2, 87, 69], [4, 69, 43, 1, 70, 44], [6, 43, 19, 2, 44, 20], [6, 43, 15, 2, 44, 16]
+            [1, 26, 19], [1, 26, 16], [1, 26, 13], [1, 26, 9], // V1
+            [1, 44, 34], [1, 44, 28], [1, 44, 22], [1, 44, 16], // V2
+            [1, 70, 55], [1, 70, 44], [2, 35, 17], [2, 35, 13], // V3
+            [1, 100, 80], [2, 50, 32], [2, 50, 24], [4, 25, 9], // V4
+            [1, 134, 108], [2, 67, 43], [2, 33, 15, 2, 34, 16], [2, 33, 11, 2, 34, 12], // V5
+            [2, 86, 68], [4, 43, 27], [4, 43, 19], [4, 43, 15], // V6
+            [2, 98, 78], [4, 61, 31], [2, 45, 14, 4, 46, 15], [4, 39, 13, 1, 40, 14], // V7
+            [2, 121, 97], [2, 60, 38, 2, 61, 39], [4, 40, 18, 2, 41, 19], [4, 40, 14, 2, 41, 15], // V8
+            [2, 146, 116], [3, 58, 36, 2, 59, 37], [4, 36, 16, 4, 37, 17], [4, 36, 12, 4, 37, 13], // V9
+            [2, 86, 68, 2, 87, 69], [4, 69, 43, 1, 70, 44], [6, 43, 19, 2, 44, 20], [6, 43, 15, 2, 44, 16], // V10
+            [4, 101, 81], [1, 80, 50, 4, 81, 51], [4, 50, 22, 4, 51, 23], [3, 36, 12, 8, 37, 13], // V11
+            [2, 116, 92, 2, 117, 93], [6, 58, 36, 2, 59, 37], [4, 46, 20, 6, 47, 21], [7, 42, 14, 4, 43, 15], // V12
+            [4, 133, 107], [8, 59, 37, 1, 60, 38], [8, 44, 20, 4, 45, 21], [12, 33, 11, 4, 34, 12], // V13
+            [3, 145, 115, 1, 146, 116], [4, 64, 40, 5, 65, 41], [11, 36, 16, 5, 37, 17], [11, 36, 12, 5, 37, 13], // V14
+            [5, 109, 87, 1, 110, 88], [5, 65, 41, 5, 66, 42], [5, 54, 24, 7, 55, 25], [11, 36, 12, 7, 37, 13] // V15
         ];
 
         function QRCodeModel(typeNumber, errorCorrectionLevel) {
@@ -107,7 +114,8 @@
             },
             make: function () {
                 if (this.typeNumber < 1) {
-                    for (var type = 1; type < 40; type++) {
+                    var maxType = Math.floor(RS_BLOCK_TABLE.length / 4);
+                    for (var type = 1; type <= maxType; type++) {
                         var rsBlocks = QRCodeModel.getRSBlocks(type, this.errorCorrectionLevel);
                         var buffer = new QRBitBuffer();
                         var totalDataCount = 0;
@@ -122,6 +130,9 @@
                             this.typeNumber = type;
                             break;
                         }
+                    }
+                    if (this.typeNumber < 1) {
+                        throw new Error("Dữ liệu quá dài so với giới hạn mã QR");
                     }
                 }
                 this.makeImpl(false, this.getBestMaskPattern());
@@ -390,9 +401,14 @@
             return lostPoint;
         };
 
+        QRCodeModel.PATTERN_POSITION_TABLE = [
+            [], [6, 18], [6, 22], [6, 26], [6, 30], [6, 34],
+            [6, 22, 38], [6, 24, 42], [6, 26, 46], [6, 28, 50], [6, 30, 54],
+            [6, 32, 58], [6, 34, 62], [6, 26, 46, 66], [6, 26, 48, 70]
+        ];
+
         QRCodeModel.getPatternPosition = function (typeNumber) {
-            if (typeNumber === 1) return [];
-            return [6, (typeNumber - 1) * 4 + 16];
+            return QRCodeModel.PATTERN_POSITION_TABLE[typeNumber - 1] || [];
         };
 
         QRCodeModel.getMask = function (maskPattern, row, col) {
@@ -435,9 +451,8 @@
         };
 
         function QR8BitByte(data) {
-            this.mode = 4; // 8-bit byte mode
+            this.mode = 4;
             this.data = data;
-            // UTF-8 encode string to byte array
             const bytes = [];
             for (let i = 0; i < data.length; i++) {
                 let code = data.charCodeAt(i);
@@ -514,33 +529,7 @@
     })();
 
     // =========================================================================
-    // 2. Pure JS Client-Side QR Decoder (BarcodeFinder & Pattern Recognizer)
-    // =========================================================================
-    const QRDecoderLib = {
-        decodeImageData: function (imageData) {
-            const width = imageData.width;
-            const height = imageData.height;
-            const data = imageData.data;
-
-            // Binarize image (grayscale + thresholding)
-            const gray = new Uint8Array(width * height);
-            for (let i = 0; i < data.length; i += 4) {
-                // Luminance formula
-                gray[i / 4] = (data[i] * 299 + data[i + 1] * 587 + data[i + 2] * 114) / 1000;
-            }
-
-            // Quick barcode detector attempt using BarcodeDetector API if supported by browser
-            if ('BarcodeDetector' in window) {
-                // Async detector handled separately in UI layer if available
-            }
-
-            // Simple pattern scanner fallback for standard QR codes
-            return null; // Handled dynamically in UI step using BarcodeDetector API or Canvas QR reader
-        }
-    };
-
-    // =========================================================================
-    // 3. DevTools Hub Module Definition
+    // 2. DevTools Hub Module Definition
     // =========================================================================
     const QRCodeTool = {
         name: 'QR Code Generator & Scanner',
@@ -680,7 +669,7 @@
                                     <canvas id="qr-canvas"></canvas>
                                 </div>
 
-                                <div id="qr-status-msg" style="margin-top: 12px; font-size: var(--fs-xs); color: var(--text-tertiary);"></div>
+                                <div id="qr-status-msg" style="margin-top: 12px; font-size: var(--fs-xs); color: var(--text-tertiary); text-align: center;"></div>
 
                                 <!-- Action Export Buttons -->
                                 <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; width: 100%; justify-content: center;">
@@ -703,7 +692,7 @@
                                 <div style="font-weight: var(--fw-semibold); font-size: var(--fs-lg); margin-bottom: 8px;">Kéo & thả ảnh chứa mã QR vào đây</div>
                                 <div style="font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 16px;">Hoặc nhấn để chọn file ảnh từ máy tính / Hoặc dán trực tiếp từ Clipboard (<kbd>Ctrl + V</kbd>)</div>
                                 <input type="file" id="qr-file-input" accept="image/*" style="display: none;">
-                                <button class="tool-btn tool-btn-primary" onclick="document.getElementById('qr-file-input').click()">📁 Chọn file ảnh</button>
+                                <button class="tool-btn tool-btn-primary" id="btn-browse-file">📁 Chọn file ảnh</button>
                             </div>
 
                             <!-- Preview of uploaded image -->
@@ -726,7 +715,7 @@
 
                             <!-- Scan Error -->
                             <div id="scan-error-msg" style="display: none; margin-top: 16px;" class="tool-info">
-                                ❌ Không tìm thấy mã QR hợp lệ trong hình ảnh này. Hãy thử ảnh có góc chụp rõ nét hơn.
+                                ❌ Không thể quét mã QR từ hình ảnh này. Trình duyệt của bạn có thể cần ảnh rõ nét hơn hoặc thử chọn ảnh có mã QR đơn giản hơn.
                             </div>
 
                         </div>
@@ -778,6 +767,7 @@
             // Scan Tab elements
             const dropzone = container.querySelector('#qr-dropzone');
             const fileInput = container.querySelector('#qr-file-input');
+            const btnBrowseFile = container.querySelector('#btn-browse-file');
             const scanPreviewImg = container.querySelector('#scan-preview-img');
             const scanPreviewContainer = container.querySelector('#scan-preview-container');
             const scanResultPanel = container.querySelector('#scan-result-panel');
@@ -793,6 +783,7 @@
                 tabBtnScan.classList.remove('tool-btn-primary');
                 tabGenerate.style.display = '';
                 tabScan.style.display = 'none';
+                updateQR();
             });
 
             tabBtnScan.addEventListener('click', () => {
@@ -817,7 +808,7 @@
                 });
             });
 
-            // --- Construct Content Payload based on active type ---
+            // --- Construct Content Payload ---
             function getPayload() {
                 if (activeType === 'text') {
                     return inputText.value.trim() || 'https://devtools-hub.com';
@@ -856,11 +847,14 @@
                 try {
                     const qrModel = QRCodeLib.createQR(payload, ecc);
                     const moduleCount = qrModel.getModuleCount();
-                    const margin = 2; // modules margin
-                    const cellSize = size / (moduleCount + margin * 2);
+                    const margin = 2; // quiet zone in modules
+                    const totalModules = moduleCount + margin * 2;
+                    const cellSize = size / totalModules;
 
                     canvas.width = size;
                     canvas.height = size;
+                    canvas.style.width = '240px';
+                    canvas.style.height = '240px';
 
                     const ctx = canvas.getContext('2d');
                     ctx.fillStyle = bgColor;
@@ -879,26 +873,33 @@
                         }
                     }
 
-                    statusMsg.textContent = `Ma trận: ${moduleCount}x${moduleCount} | Độ dài: ${payload.length} ký tự`;
+                    statusMsg.textContent = `Version ${qrModel.typeNumber} (${moduleCount}x${moduleCount}) | Độ dài: ${payload.length} ký tự`;
                     statusMsg.style.color = 'var(--text-tertiary)';
                 } catch (err) {
                     console.error('QR Render Error:', err);
-                    statusMsg.textContent = `❌ ${err.message || 'Dữ liệu quá dài'}`;
+                    statusMsg.textContent = `❌ ${err.message || 'Dữ liệu quá dài so với phiên bản QR hiện tại'}`;
                     statusMsg.style.color = 'var(--accent-danger)';
                 }
             }
 
-            // --- Bind input listeners for realtime update ---
-            [inputText, wifiSsid, wifiPass, wifiType, wifiHidden, vcardName, vcardPhone, vcardEmail, vcardCompany, qrFgColor, qrBgColor, qrSize, qrEcc].forEach(el => {
+            // --- Bind real-time input events ---
+            const inputsToBind = [
+                inputText, wifiSsid, wifiPass, wifiType, wifiHidden,
+                vcardName, vcardPhone, vcardEmail, vcardCompany,
+                qrFgColor, qrBgColor, qrSize, qrEcc
+            ];
+
+            inputsToBind.forEach(el => {
                 if (el) {
                     el.addEventListener('input', updateQR);
                     el.addEventListener('change', updateQR);
+                    el.addEventListener('keyup', updateQR);
                 }
             });
 
-            // Initial render
+            // Default initial value & render
             inputText.value = 'https://devtools-hub.com';
-            updateQR();
+            setTimeout(updateQR, 50);
 
             // --- Export Actions ---
             btnPng.addEventListener('click', () => {
@@ -906,7 +907,7 @@
                 link.download = 'qrcode.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                window.showToast('Đã tải xuống file qrcode.png!', 'success');
+                if (window.showToast) window.showToast('Đã tải xuống file qrcode.png!', 'success');
             });
 
             btnSvg.addEventListener('click', () => {
@@ -942,20 +943,33 @@
                     link.href = url;
                     link.click();
                     URL.revokeObjectURL(url);
-                    window.showToast('Đã tải xuống file qrcode.svg!', 'success');
+                    if (window.showToast) window.showToast('Đã tải xuống file qrcode.svg!', 'success');
                 } catch (e) {
-                    window.showToast('Lỗi khi tạo SVG', 'error');
+                    if (window.showToast) window.showToast('Lỗi khi tạo file SVG', 'error');
                 }
             });
 
             btnCopyBase64.addEventListener('click', () => {
                 const base64 = canvas.toDataURL('image/png');
-                window.copyToClipboard(base64, btnCopyBase64);
+                if (window.copyToClipboard) window.copyToClipboard(base64, btnCopyBase64);
             });
 
             // =========================================================================
             // SCAN / DECODE LOGIC
             // =========================================================================
+            if (btnBrowseFile) {
+                btnBrowseFile.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    fileInput.click();
+                });
+            }
+
+            dropzone.addEventListener('click', (e) => {
+                if (e.target !== btnBrowseFile) {
+                    fileInput.click();
+                }
+            });
+
             function processScanImage(imageSource) {
                 scanErrorMsg.style.display = 'none';
                 scanResultPanel.style.display = 'none';
@@ -972,7 +986,7 @@
                     const ctx = tempCanvas.getContext('2d');
                     ctx.drawImage(img, 0, 0);
 
-                    // 1. Attempt Native BarcodeDetector API if available
+                    // Native BarcodeDetector API if available in browser
                     if ('BarcodeDetector' in window) {
                         try {
                             const barcodeDetector = new BarcodeDetector({ formats: ['qr_code'] });
@@ -982,26 +996,11 @@
                                 return;
                             }
                         } catch (e) {
-                            console.warn('BarcodeDetector error, using fallback:', e);
+                            console.warn('BarcodeDetector fallback:', e);
                         }
                     }
 
-                    // 2. Fallback scan using image analysis (Try finding URL or QR text data pattern in metadata/canvas)
-                    // If image natural sizes work, we search for embedded text strings or QR code
-                    try {
-                        const imgData = ctx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-                        // Scan sample pixels
-                        let decodedText = null;
-                        
-                        // Check if browser native image decoder can extract
-                        if (!decodedText) {
-                            scanErrorMsg.style.display = '';
-                            return;
-                        }
-                        displayScanResult(decodedText);
-                    } catch (err) {
-                        scanErrorMsg.style.display = '';
-                    }
+                    scanErrorMsg.style.display = '';
                 };
                 img.onerror = () => {
                     scanErrorMsg.style.display = '';
@@ -1014,7 +1013,6 @@
                 scanResultPanel.style.display = '';
                 scanResultText.value = text;
 
-                // Check if text is URL
                 const isUrl = /^https?:\/\/[^\s]+$/i.test(text.trim());
                 if (isUrl) {
                     btnOpenScanUrl.style.display = '';
@@ -1022,10 +1020,10 @@
                 } else {
                     btnOpenScanUrl.style.display = 'none';
                 }
-                window.showToast('Đã giải mã QR thành công!', 'success');
+                if (window.showToast) window.showToast('Đã giải mã QR thành công!', 'success');
             }
 
-            // Drag and Drop
+            // Drag & Drop
             dropzone.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 dropzone.style.background = 'var(--bg-hover)';
@@ -1045,7 +1043,6 @@
                 }
             });
 
-            // File selection
             fileInput.addEventListener('change', (e) => {
                 if (e.target.files && e.target.files[0]) {
                     const reader = new FileReader();
@@ -1054,7 +1051,6 @@
                 }
             });
 
-            // Paste Clipboard (Ctrl + V)
             document.addEventListener('paste', (e) => {
                 if (tabScan.style.display === 'none') return;
                 const items = (e.clipboardData || e.originalEvent.clipboardData).items;
@@ -1071,7 +1067,7 @@
             });
 
             btnCopyScanResult.addEventListener('click', () => {
-                window.copyToClipboard(scanResultText.value, btnCopyScanResult);
+                if (window.copyToClipboard) window.copyToClipboard(scanResultText.value, btnCopyScanResult);
             });
 
             btnClearScan.addEventListener('click', () => {
