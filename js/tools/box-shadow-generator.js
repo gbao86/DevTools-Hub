@@ -42,7 +42,11 @@ const BoxShadowGenerator = {
         let boxShape = 'rounded';
 
         function hexToRgb(hex) {
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            let cleaned = hex.replace(/^#/, '');
+            if (cleaned.length === 3) {
+                cleaned = cleaned[0]+cleaned[0] + cleaned[1]+cleaned[1] + cleaned[2]+cleaned[2];
+            }
+            const result = /^([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(cleaned);
             return result ? {
                 r: parseInt(result[1], 16),
                 g: parseInt(result[2], 16),
@@ -385,7 +389,11 @@ const BoxShadowGenerator = {
                     e.stopPropagation();
                     if(shadows.length > 1) {
                         shadows.splice(idx, 1);
-                        if(activeLayer >= shadows.length) activeLayer = shadows.length - 1;
+                        if (idx < activeLayer) {
+                            activeLayer--;
+                        } else if (activeLayer >= shadows.length) {
+                            activeLayer = Math.max(0, shadows.length - 1);
+                        }
                         updateControlsFromActive();
                         updateAll();
                     }
@@ -525,7 +533,7 @@ const BoxShadowGenerator = {
                         if(p === 'inset') {
                             inset = true;
                         } else if(p.startsWith('#') || p.startsWith('rgb') || p.match(/^[a-z]+$/)) {
-                            if(p.startsWith('rgba')) {
+                            if(p.startsWith('rgb')) {
                                 const rgba = p.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
                                 if(rgba) {
                                     const r = parseInt(rgba[1]).toString(16).padStart(2, '0');

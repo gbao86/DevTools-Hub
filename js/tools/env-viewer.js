@@ -4,6 +4,10 @@ const EnvViewer = {
     category: 'Formatter',
     description: 'Đọc và hiển thị file .env dạng bảng trực quan',
     render(container) {
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
         const defaultSample = `# Application Configuration
 APP_NAME="My Awesome App"
 APP_ENV=production
@@ -281,7 +285,7 @@ multiline string"
                     let val = match[2].trim();
                     
                     if (keysSeen.has(key)) {
-                        parseIssues.push({ type: 'warning', msg: `Trùng lặp key: <strong>${key}</strong> ở dòng ${i+1}` });
+                        parseIssues.push({ type: 'warning', msg: `Trùng lặp key: <strong>${escapeHtml(key)}</strong> ở dòng ${i+1}` });
                     }
                     keysSeen.add(key);
                     
@@ -301,7 +305,7 @@ multiline string"
                     parsedVars.push({ key, value: val, raw: processLine, type: detectType(val, key) });
                     if (val === '') stats.empty++;
                 } else {
-                    parseIssues.push({ type: 'error', msg: `Cú pháp không hợp lệ ở dòng ${i+1}: <strong>${trimmed}</strong>` });
+                    parseIssues.push({ type: 'error', msg: `Cú pháp không hợp lệ ở dòng ${i+1}: <strong>${escapeHtml(trimmed)}</strong>` });
                 }
             }
             
@@ -359,8 +363,8 @@ multiline string"
                 
                 return `
                 <tr>
-                    <td class="env-key-cell">${v.key}</td>
-                    <td class="env-val-cell"><span class="${isHidden ? 'env-val-hidden' : ''}" title="${isHidden ? 'Hover để xem' : ''}">${valDisplay}</span></td>
+                    <td class="env-key-cell">${escapeHtml(v.key)}</td>
+                    <td class="env-val-cell"><span class="${isHidden ? 'env-val-hidden' : ''}" title="${isHidden ? 'Hover để xem' : ''}">${escapeHtml(valDisplay)}</span></td>
                     <td><span class="env-type-badge">${v.type}</span></td>
                 </tr>
                 `;
@@ -400,7 +404,7 @@ multiline string"
         container.querySelector('#copy-table').addEventListener('click', (e) => {
             if (!parsedVars.length) return window.showToast('Không có dữ liệu', 'warning');
             const txt = ['Key\tValue\tType'].concat(
-                parsedVars.map(v => `${v.key}\t${v.value.replace(/\\n/g, '\\n')}\t${v.type}`)
+                parsedVars.map(v => `${v.key}\t${v.value.replace(/\n/g, '\\n')}\t${v.type}`)
             ).join('\n');
             window.copyToClipboard(txt, e.target);
         });

@@ -5,6 +5,10 @@ const UnicodeTableTool = {
     description: 'Tra bảng mã ASCII, Unicode, chuyển đổi Character ↔ Code Point',
     
     render(container) {
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
         // --- Data Generation ---
         const getAsciiData = () => {
             const data = [];
@@ -319,11 +323,11 @@ const UnicodeTableTool = {
                 `;
                 filtered.forEach(item => {
                     html += `
-                        <tr data-char="${item.actualChar.replace(/"/g, '&quot;')}">
+                        <tr data-char="${escapeHtml(item.actualChar)}">
                             <td class="dec-cell">${item.dec}</td>
                             <td class="hex-cell">${item.hex}</td>
-                            <td class="char-cell type-${item.type}">${item.char}</td>
-                            <td class="desc-cell">${item.desc}</td>
+                            <td class="char-cell type-${item.type}">${escapeHtml(item.char)}</td>
+                            <td class="desc-cell">${escapeHtml(item.desc)}</td>
                         </tr>
                     `;
                 });
@@ -333,8 +337,8 @@ const UnicodeTableTool = {
                 let html = '<div class="unicode-grid-view">';
                 filtered.forEach(item => {
                     html += `
-                        <div class="grid-item" data-char="${item.actualChar.replace(/"/g, '&quot;')}" title="Dec: ${item.dec} | ${item.desc}">
-                            <div class="grid-char type-${item.type}">${item.char}</div>
+                        <div class="grid-item" data-char="${escapeHtml(item.actualChar)}" title="Dec: ${item.dec} | ${escapeHtml(item.desc)}">
+                            <div class="grid-char type-${item.type}">${escapeHtml(item.char)}</div>
                             <div class="grid-hex">${item.hex}</div>
                         </div>
                     `;

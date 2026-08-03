@@ -294,11 +294,11 @@
                 }
                 if (activeType === 'wifi') {
                     const ssid = wifiSsid.value.trim();
-                    if (!ssid) return 'WIFI:S:MyWifiNetwork;T:WPA;P:Password123;;';
+                    if (!ssid) return 'WIFI:S:MyWifiNetwork;T:WPA;P:Password123;';
                     const pass = wifiPass.value;
                     const type = wifiType.value;
                     const hidden = wifiHidden.checked ? 'H:true;' : '';
-                    return `WIFI:S:${ssid};T:${type};P:${pass};${hidden};`;
+                    return `WIFI:S:${ssid};T:${type};P:${pass};${hidden}`;
                 }
                 if (activeType === 'vcard') {
                     const name = vcardName.value.trim() || 'Nguyen Van A';
@@ -397,30 +397,12 @@
             });
 
             btnSvg.addEventListener('click', () => {
-                const payload = getPayload();
-                const ecc = qrEcc.value;
-                const fgColor = qrFgColor.value;
-                const bgColor = qrBgColor.value;
-
                 try {
-                    const qrModel = QRCodeLib.createQR(payload, ecc);
-                    const moduleCount = qrModel.getModuleCount();
-                    const margin = 2;
-                    const totalSize = moduleCount + margin * 2;
+                    const dataUrl = canvas.toDataURL('image/png');
+                    const width = canvas.width;
+                    const height = canvas.height;
 
-                    let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalSize} ${totalSize}" width="500" height="500">`;
-                    svg += `<rect width="${totalSize}" height="${totalSize}" fill="${bgColor}"/>`;
-                    svg += `<path fill="${fgColor}" d="`;
-
-                    let pathData = '';
-                    for (let r = 0; r < moduleCount; r++) {
-                        for (let c = 0; c < moduleCount; c++) {
-                            if (qrModel.isDark(r, c)) {
-                                pathData += `M${c + margin},${r + margin}h1v1h-1z `;
-                            }
-                        }
-                    }
-                    svg += `${pathData}"/>\n</svg>`;
+                    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><image href="${dataUrl}" width="${width}" height="${height}"/></svg>`;
 
                     const blob = new Blob([svg], { type: 'image/svg+xml' });
                     const url = URL.createObjectURL(blob);
@@ -502,7 +484,7 @@
                 const isUrl = /^https?:\/\/[^\s]+$/i.test(text.trim());
                 if (isUrl) {
                     btnOpenScanUrl.style.display = '';
-                    btnOpenScanUrl.onclick = () => window.open(text.trim(), '_blank');
+                    btnOpenScanUrl.onclick = () => window.open(text.trim(), '_blank', 'noopener,noreferrer');
                 } else {
                     btnOpenScanUrl.style.display = 'none';
                 }
@@ -537,9 +519,13 @@
                 }
             });
 
-            document.addEventListener('paste', (e) => {
+            if (window._qrPasteHandler) {
+                document.removeEventListener('paste', window._qrPasteHandler);
+            }
+            window._qrPasteHandler = (e) => {
                 if (tabScan.style.display === 'none') return;
-                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+                if (!e.clipboardData) return;
+                const items = e.clipboardData.items;
                 for (let index = 0; index < items.length; index++) {
                     const item = items[index];
                     if (item.kind === 'file' && item.type.startsWith('image/')) {
@@ -550,7 +536,8 @@
                         break;
                     }
                 }
-            });
+            };
+            document.addEventListener('paste', window._qrPasteHandler);
 
             btnCopyScanResult.addEventListener('click', () => {
                 if (window.copyToClipboard) window.copyToClipboard(scanResultText.value, btnCopyScanResult);

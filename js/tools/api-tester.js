@@ -296,7 +296,7 @@ const ApiTesterTool = {
         container.querySelector('#preset-jp-get').addEventListener('click', () => loadPreset('https://jsonplaceholder.typicode.com/posts', 'GET'));
         container.querySelector('#preset-jp-users').addEventListener('click', () => loadPreset('https://jsonplaceholder.typicode.com/users', 'GET'));
         container.querySelector('#preset-hb-get').addEventListener('click', () => loadPreset('https://httpbin.org/get', 'GET'));
-        container.querySelector('#preset-hb-post').addEventListener('click', () => loadPreset('https://httpbin.org/post', 'POST', '{\\n  "test": "value"\\n}'));
+        container.querySelector('#preset-hb-post').addEventListener('click', () => loadPreset('https://httpbin.org/post', 'POST', '{\n  "test": "value"\n}'));
 
         // History
         const loadHistory = () => {
@@ -316,8 +316,8 @@ const ApiTesterTool = {
                 el.className = 'history-item';
                 el.innerHTML = `
                     <div style="display:flex; align-items:center; overflow:hidden;">
-                        <span class="history-method" style="color: ${getMethodColor(item.method)}">${item.method}</span>
-                        <span class="history-url" title="${item.url}">${item.url}</span>
+                        <span class="history-method" style="color: ${getMethodColor(item.method)}">${escapeHtml(item.method)}</span>
+                        <span class="history-url" title="${escapeHtml(item.url)}">${escapeHtml(item.url)}</span>
                     </div>
                     <span class="history-time">${new Date(item.timestamp).toLocaleTimeString()}</span>
                 `;
@@ -405,7 +405,12 @@ const ApiTesterTool = {
             }
             const formatted = JSON.stringify(obj, null, 2);
             // Simple regex based highlighting
-            return escapeHtml(formatted)
+            const escapedHtml = formatted
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;");
+                 
+            return escapedHtml
                 .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
                     let cls = 'var(--accent-primary)'; // default string
                     if (/^"/.test(match)) {
@@ -421,7 +426,7 @@ const ApiTesterTool = {
                     } else {
                         cls = '#f97316'; // number
                     }
-                    return '<span style="color:' + cls + '">' + match + '</span>';
+                    return '<span style="color:' + cls + '">' + match.replace(/"/g, "&quot;") + '</span>';
                 });
         };
 
@@ -444,7 +449,13 @@ const ApiTesterTool = {
 
             // Extract Params
             const params = [];
-            const urlObj = new URL(baseUrl);
+            let urlObj;
+            try {
+                urlObj = new URL(baseUrl);
+            } catch(e) {
+                window.showToast('Invalid URL format', 'error');
+                return;
+            }
             paramsContainer.querySelectorAll('.api-tester-kv-row').forEach(row => {
                 const k = row.children[0].value.trim();
                 const v = row.children[1].value;
@@ -550,7 +561,7 @@ const ApiTesterTool = {
                 
                 let errorMsg = err.message;
                 if(errorMsg.includes('Failed to fetch') || errorMsg.includes('NetworkError')) {
-                    errorMsg += "\\n\\nPossible causes:\\n- The URL is unreachable\\n- CORS (Cross-Origin Resource Sharing) is not enabled on the server for this origin\\n- Network connection issue";
+                    errorMsg += "\n\nPossible causes:\n- The URL is unreachable\n- CORS (Cross-Origin Resource Sharing) is not enabled on the server for this origin\n- Network connection issue";
                 }
                 
                 responseBodyRaw = errorMsg;

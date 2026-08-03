@@ -459,6 +459,10 @@ const MetaTagGenerator = {
     },
 
     updateCode() {
+        function escapeAttr(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+        
         // Get values
         const title = document.querySelector('#meta-title').value.trim();
         const desc = document.querySelector('#meta-desc').value.trim();
@@ -491,31 +495,31 @@ const MetaTagGenerator = {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">\n`;
 
-        if (title) html += `<title>${title}</title>\n`;
-        if (desc) html += `<meta name="description" content="${desc}">\n`;
-        if (keywords) html += `<meta name="keywords" content="${keywords}">\n`;
-        if (author) html += `<meta name="author" content="${author}">\n`;
-        html += `<meta name="robots" content="${robots}">\n`;
-        if (canonical) html += `<link rel="canonical" href="${canonical}">\n`;
-        if (themeColor && themeColor !== '#ffffff') html += `<meta name="theme-color" content="${themeColor}">\n`;
-        if (favicon) html += `<link rel="icon" href="${favicon}">\n`;
+        if (title) html += `<title>${escapeAttr(title)}</title>\n`;
+        if (desc) html += `<meta name="description" content="${escapeAttr(desc)}">\n`;
+        if (keywords) html += `<meta name="keywords" content="${escapeAttr(keywords)}">\n`;
+        if (author) html += `<meta name="author" content="${escapeAttr(author)}">\n`;
+        html += `<meta name="robots" content="${escapeAttr(robots)}">\n`;
+        if (canonical) html += `<link rel="canonical" href="${escapeAttr(canonical)}">\n`;
+        if (themeColor) html += `<meta name="theme-color" content="${escapeAttr(themeColor)}">\n`;
+        if (favicon) html += `<link rel="icon" href="${escapeAttr(favicon)}">\n`;
 
         html += `\n<!-- Open Graph / Facebook -->
-<meta property="og:type" content="${ogType}">\n`;
-        if (ogUrl) html += `<meta property="og:url" content="${ogUrl}">\n`;
-        if (ogTitle) html += `<meta property="og:title" content="${ogTitle}">\n`;
-        if (ogDesc) html += `<meta property="og:description" content="${ogDesc}">\n`;
-        if (ogImage) html += `<meta property="og:image" content="${ogImage}">\n`;
-        if (ogSiteName) html += `<meta property="og:site_name" content="${ogSiteName}">\n`;
+<meta property="og:type" content="${escapeAttr(ogType)}">\n`;
+        if (ogUrl) html += `<meta property="og:url" content="${escapeAttr(ogUrl)}">\n`;
+        if (ogTitle) html += `<meta property="og:title" content="${escapeAttr(ogTitle)}">\n`;
+        if (ogDesc) html += `<meta property="og:description" content="${escapeAttr(ogDesc)}">\n`;
+        if (ogImage) html += `<meta property="og:image" content="${escapeAttr(ogImage)}">\n`;
+        if (ogSiteName) html += `<meta property="og:site_name" content="${escapeAttr(ogSiteName)}">\n`;
 
         html += `\n<!-- Twitter -->
-<meta name="twitter:card" content="${twCard}">\n`;
-        if (twSite) html += `<meta name="twitter:site" content="${twSite}">\n`;
-        if (twCreator) html += `<meta name="twitter:creator" content="${twCreator}">\n`;
-        if (ogUrl) html += `<meta name="twitter:url" content="${ogUrl}">\n`;
-        if (twTitle) html += `<meta name="twitter:title" content="${twTitle}">\n`;
-        if (twDesc) html += `<meta name="twitter:description" content="${twDesc}">\n`;
-        if (twImage) html += `<meta name="twitter:image" content="${twImage}">\n`;
+<meta name="twitter:card" content="${escapeAttr(twCard)}">\n`;
+        if (twSite) html += `<meta name="twitter:site" content="${escapeAttr(twSite)}">\n`;
+        if (twCreator) html += `<meta name="twitter:creator" content="${escapeAttr(twCreator)}">\n`;
+        if (ogUrl) html += `<meta name="twitter:url" content="${escapeAttr(ogUrl)}">\n`;
+        if (twTitle) html += `<meta name="twitter:title" content="${escapeAttr(twTitle)}">\n`;
+        if (twDesc) html += `<meta name="twitter:description" content="${escapeAttr(twDesc)}">\n`;
+        if (twImage) html += `<meta name="twitter:image" content="${escapeAttr(twImage)}">\n`;
 
         document.querySelector('#html-output').textContent = html;
     },

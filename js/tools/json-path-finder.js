@@ -413,6 +413,7 @@ const JsonPathFinderTool = {
                 inputEl.style.borderBottom = 'none';
                 renderTree();
             } catch (e) {
+                treeEl.innerHTML = '';
                 errorEl.textContent = `Invalid JSON: ${e.message}`;
                 errorEl.style.display = 'block';
                 inputEl.style.borderBottom = '1px solid var(--accent-danger)';

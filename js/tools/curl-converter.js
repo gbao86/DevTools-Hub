@@ -134,7 +134,7 @@ const CurlConverter = {
             if (!curlStr || typeof curlStr !== 'string') return null;
             
             // Normalize backslash line continuations
-            curlStr = curlStr.replace(/\\\\\\r?\\n/g, ' ').replace(/\\n/g, ' ');
+            curlStr = curlStr.replace(/\\\r?\n/g, ' ').replace(/\\n/g, ' ');
             
             const tokens = [];
             let currentToken = '';
@@ -150,7 +150,7 @@ const CurlConverter = {
                     continue;
                 }
                 
-                if (char === '\\\\') {
+                if (char === '\\') {
                     if (inQuote !== "'") {
                         escapeNext = true;
                         continue;
@@ -263,13 +263,13 @@ const CurlConverter = {
                 let c = `fetch('${p.url}', {\n  method: '${p.method}',\n`;
                 
                 const h = {...p.headers};
-                if (p.auth) h['Authorization'] = `Basic ${btoa(p.auth)}`;
+                if (p.auth) h['Authorization'] = `Basic ${btoa(unescape(encodeURIComponent(p.auth)))}`;
                 if (p.cookies) h['Cookie'] = p.cookies;
                 
                 if (Object.keys(h).length > 0) {
                     c += `  headers: {\n`;
                     for (const [k, v] of Object.entries(h)) {
-                        if (k === 'Authorization' && p.auth) c += `    '${k}': 'Basic ' + btoa('${p.auth}'),\n`;
+                        if (k === 'Authorization' && p.auth) c += `    '${k}': 'Basic ' + btoa(unescape(encodeURIComponent('${p.auth}'))),\n`;
                         else c += `    '${k}': '${v}',\n`;
                     }
                     c += `  },\n`;
@@ -291,7 +291,7 @@ const CurlConverter = {
                 let c = `const axios = require('axios');\n\nlet config = {\n  method: '${p.method.toLowerCase()}',\n  maxBodyLength: Infinity,\n  url: '${p.url}',\n`;
                 
                 const h = {...p.headers};
-                if (p.auth) h['Authorization'] = `Basic ${btoa(p.auth)}`;
+                if (p.auth) h['Authorization'] = `Basic ${btoa(unescape(encodeURIComponent(p.auth)))}`;
                 if (p.cookies) h['Cookie'] = p.cookies;
                 
                 if (Object.keys(h).length > 0) {
@@ -413,8 +413,14 @@ const CurlConverter = {
             }
         };
 
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
         // Simple syntax highlighting
         function highlightSyntax(code, lang) {
+            code = escapeHtml(code);
             if (lang === 'js-fetch' || lang === 'js-axios') {
                 return code
                     .replace(/(const|let|var|function|return|new|async|await|if|else|for|while)\b/g, '<span class="syntax-keyword">$1</span>')
@@ -448,28 +454,28 @@ const CurlConverter = {
 
             // Render parsed details
             let html = `<table class="parsed-table"><tbody>`;
-            html += `<tr><th style="width: 100px;">Method</th><td>${parsed.method}</td></tr>`;
-            html += `<tr><th>URL</th><td class="break-word">${parsed.url}</td></tr>`;
+            html += `<tr><th style="width: 100px;">Method</th><td>${escapeHtml(parsed.method)}</td></tr>`;
+            html += `<tr><th>URL</th><td class="break-word">${escapeHtml(parsed.url)}</td></tr>`;
             
             if (Object.keys(parsed.headers).length > 0) {
                 html += `<tr><th>Headers</th><td><pre style="margin:0;font-family:inherit;font-size:inherit;">`;
-                for (const [k, v] of Object.entries(parsed.headers)) html += `${k}: ${v}\n`;
+                for (const [k, v] of Object.entries(parsed.headers)) html += `${escapeHtml(k)}: ${escapeHtml(v)}\n`;
                 html += `</pre></td></tr>`;
             }
             
             if (parsed.data) {
-                html += `<tr><th>Data</th><td class="break-word"><pre style="margin:0;font-family:inherit;font-size:inherit;white-space:pre-wrap;">${parsed.data}</pre></td></tr>`;
+                html += `<tr><th>Data</th><td class="break-word"><pre style="margin:0;font-family:inherit;font-size:inherit;white-space:pre-wrap;">${escapeHtml(parsed.data)}</pre></td></tr>`;
             } else if (parsed.formData.length > 0) {
                 html += `<tr><th>Form Data</th><td><ul>`;
-                parsed.formData.forEach(f => html += `<li><strong>${f.key}</strong>: ${f.value}</li>`);
+                parsed.formData.forEach(f => html += `<li><strong>${escapeHtml(f.key)}</strong>: ${escapeHtml(f.value)}</li>`);
                 html += `</ul></td></tr>`;
             }
             
-            if (parsed.auth) html += `<tr><th>Auth</th><td>${parsed.auth}</td></tr>`;
-            if (parsed.cookies) html += `<tr><th>Cookies</th><td class="break-word">${parsed.cookies}</td></tr>`;
+            if (parsed.auth) html += `<tr><th>Auth</th><td>${escapeHtml(parsed.auth)}</td></tr>`;
+            if (parsed.cookies) html += `<tr><th>Cookies</th><td class="break-word">${escapeHtml(parsed.cookies)}</td></tr>`;
             
             let flagsStr = Object.entries(parsed.flags).filter(([_, v]) => v).map(([k]) => k).join(', ');
-            if (flagsStr) html += `<tr><th>Flags</th><td>${flagsStr}</td></tr>`;
+            if (flagsStr) html += `<tr><th>Flags</th><td>${escapeHtml(flagsStr)}</td></tr>`;
             
             html += `</tbody></table>`;
             parsedInfoEl.innerHTML = html;

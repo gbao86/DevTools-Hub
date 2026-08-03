@@ -7,6 +7,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.2] - 2026-08-03
+
+### 🔧 Comprehensive Bug Fix — 11 Tool Files, 33 Fixes
+
+Full code review and bug fix sweep across all tools added in v0.3 and v0.3.1. Addressed 13 critical crashes, 14 high-severity bugs, and 6 medium issues.
+
+### Fixed
+
+- **🔴 QR Code — SVG Export Crash**: Fixed `ReferenceError: QRCodeLib is not defined` that caused SVG download to fail 100% of the time. Replaced with canvas-to-SVG conversion.
+- **🔴 QR Code — Paste Scanner Crash**: Fixed `e.originalEvent` (jQuery-only pattern) causing `TypeError` on native browser `ClipboardEvent`.
+- **🔴 QR Code — Paste Listener Leak**: Replaced global `document` paste listener with named handler + unbind-before-bind pattern to prevent listener stacking on re-render.
+- **🟡 QR Code — Wi-Fi QR Malformed Payload**: Fixed double semicolons (`;;`) in generated Wi-Fi QR strings.
+- **🟡 QR Code — Security**: Added `noopener,noreferrer` to `window.open()` for scanned URLs.
+- **🔴 cURL Converter — Tokenizer Broken**: Fixed backslash comparison `char === '\\\\'` (2-char string) → `char === '\\'` (1-char) so escape logic actually executes.
+- **🔴 cURL Converter — Line Continuation Regex**: Fixed regex that matched 3 backslashes instead of 1, breaking multi-line cURL commands.
+- **🟠 cURL Converter — XSS & Invisible PHP**: Added `escapeHtml()` to all user-controlled output in parsed info and generated code display. Fixes `<?php` being parsed as HTML.
+- **🟠 cURL Converter — Unicode Auth Crash**: Replaced `btoa(p.auth)` with UTF-8 safe `btoa(unescape(encodeURIComponent(p.auth)))`.
+- **🔴 API Tester — URL Crash**: Wrapped `new URL(baseUrl)` in try-catch with user-friendly toast error on invalid URLs.
+- **🔴 API Tester — JSON Highlighter Broken**: Fixed `escapeHtml()` running before regex, converting `"` to `&quot;` and breaking all string/key pattern matching.
+- **🟠 API Tester — XSS in History**: Escaped `item.url` and `item.method` in history list `innerHTML`.
+- **🟡 API Tester — Double-Escaped Newlines**: Fixed `\\n` → `\n` in HTTPBin preset body and error messages.
+- **🔴 HTTP Status Codes — Copy Button SyntaxError**: Fixed inline `onclick` breaking for status 418 (`I'm a teapot`) by escaping single quotes.
+- **🟠 HTTP Status Codes — Duplicate Style Injection**: Added ID check to prevent duplicate `<style>` tags on re-render.
+- **🟢 HTTP Status Codes — Typo**: Fixed duplicate word `proxy proxy` → `proxy`.
+- **🔴 Box Shadow Generator — hexToRgb Returns Black for #fff**: Added 3-digit shorthand hex expansion before parsing.
+- **🔴 Box Shadow Generator — Layer Deletion Index Bug**: Fixed `activeLayer` not decrementing when deleting a layer before the active one.
+- **🔴 Box Shadow Generator — CSS Import Ignores rgb()**: Extended parser to handle both `rgb()` and `rgba()` color formats.
+- **🔴 Keyboard Shortcuts — JSON.parse Crash**: Added try-catch around `JSON.parse(localStorage)` for corrupted favorites data.
+- **🟠 Keyboard Shortcuts — Malformed HTML Attributes**: Escaped double quotes in `data-keys` attribute for commands like `git commit -m "msg"`.
+- **🟡 Keyboard Shortcuts — Deprecated API Safety**: Added fallback for `navigator.platform` with optional chaining.
+- **🔴 Image to Base64 — Paste Crash**: Fixed `e.originalEvent` crash (same as QR Code).
+- **🟠 Image to Base64 — Paste Listener Leak**: Scoped window paste listener with named handler + unbind pattern.
+- **🟠 Image to Base64 — DataTransferItemList Iteration**: Replaced `for...in` with standard `for` loop.
+- **🟡 Image to Base64 — Race Condition**: Moved `img.src` assignment after `onerror`/`onload` handlers.
+- **🔴 .env Viewer — XSS Vulnerability**: Added `escapeHtml()` to all user input interpolated into `innerHTML`.
+- **🟡 .env Viewer — No-Op Regex in Copy TSV**: Fixed `replace(/\\n/g, '\\n')` → `replace(/\n/g, '\\n')`.
+- **🟠 Unicode Table — HTML Corruption**: Added `escapeHtml()` for characters `<`, `>`, `&` (ASCII 38, 60, 62) in table cells.
+- **🟠 Meta Tag Generator — HTML Attribute Escaping**: Added `escapeAttr()` helper to prevent broken meta tags when values contain quotes.
+- **🟡 Meta Tag Generator — White Theme Color Suppressed**: Removed `!== '#ffffff'` check that prevented white theme color generation.
+- **🟠 JSON Path Finder — Stale Tree on Parse Error**: Clear tree HTML when JSON parsing fails.
+
+### Security
+
+- Fixed XSS vulnerabilities in 5 tools: cURL Converter, API Tester, .env Viewer, Unicode Table, Meta Tag Generator
+- Added `noopener,noreferrer` to QR Code scanner URL opener
+- Replaced unsafe `btoa()` with UTF-8 safe encoding in cURL Converter
+
+---
+
 ## [0.3.1] - 2026-07-29
 
 ### Added
@@ -184,6 +233,8 @@ First public release of DevTools Hub — a collection of 15 developer tools runn
 
 ---
 
+[0.3.2]: https://github.com/gbao86/DevTools-Hub/compare/v0.3.1...v0.3.2
+[0.3.1]: https://github.com/gbao86/DevTools-Hub/compare/v0.3...v0.3.1
 [0.3]: https://github.com/gbao86/DevTools-Hub/compare/v0.2.1...v0.3
 [0.2.1]: https://github.com/gbao86/DevTools-Hub/compare/v0.2...v0.2.1
 [0.2]: https://github.com/gbao86/DevTools-Hub/compare/v0.1...v0.2

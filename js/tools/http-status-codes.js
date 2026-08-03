@@ -37,7 +37,7 @@ const HttpStatusCodesTool = {
         { code: 404, name: 'Not Found', category: '4xx', isCommon: true, short: 'Không tìm thấy', desc: 'Tài nguyên không tồn tại.', useCase: 'Trang web hoặc endpoint API không tồn tại.' },
         { code: 405, name: 'Method Not Allowed', category: '4xx', isCommon: true, short: 'Phương thức không cho phép', desc: 'Phương thức HTTP không được hỗ trợ trên route này.', useCase: 'Gọi POST vào một route chỉ hỗ trợ GET.' },
         { code: 406, name: 'Not Acceptable', category: '4xx', isCommon: false, short: 'Không thể chấp nhận', desc: 'Máy chủ không thể tạo ra phản hồi phù hợp với Accept header của client.', useCase: 'Client yêu cầu XML nhưng server chỉ có JSON.' },
-        { code: 407, name: 'Proxy Authentication Required', category: '4xx', isCommon: false, short: 'Yêu cầu xác thực Proxy', desc: 'Giống 401 nhưng client phải xác thực với proxy.', useCase: 'Truy cập mạng nội bộ cần qua proxy proxy.' },
+        { code: 407, name: 'Proxy Authentication Required', category: '4xx', isCommon: false, short: 'Yêu cầu xác thực Proxy', desc: 'Giống 401 nhưng client phải xác thực với proxy.', useCase: 'Truy cập mạng nội bộ cần qua proxy.' },
         { code: 408, name: 'Request Timeout', category: '4xx', isCommon: false, short: 'Hết thời gian yêu cầu', desc: 'Máy chủ hết thời gian chờ yêu cầu từ client.', useCase: 'Mạng client quá chậm không gửi đủ payload trong thời gian cho phép.' },
         { code: 409, name: 'Conflict', category: '4xx', isCommon: true, short: 'Xung đột', desc: 'Yêu cầu xung đột với trạng thái hiện tại của máy chủ.', useCase: 'Tạo tài khoản với email/username đã tồn tại.' },
         { code: 410, name: 'Gone', category: '4xx', isCommon: false, short: 'Đã mất', desc: 'Tài nguyên không còn tồn tại và sẽ không quay lại.', useCase: 'API endpoint đã bị xóa vĩnh viễn (tốt hơn 404 cho SEO).' },
@@ -74,8 +74,10 @@ const HttpStatusCodesTool = {
     ],
 
     render(container) {
-        const style = document.createElement('style');
-        style.textContent = `
+        if (!document.getElementById('hsc-tool-styles')) {
+            const style = document.createElement('style');
+            style.id = 'hsc-tool-styles';
+            style.textContent = `
             .hsc-container {
                 display: flex;
                 flex-direction: column;
@@ -251,7 +253,8 @@ const HttpStatusCodesTool = {
                 grid-column: 1 / -1;
             }
         `;
-        document.head.appendChild(style);
+            document.head.appendChild(style);
+        }
 
         let activeFilter = 'All';
         let searchQuery = '';
@@ -282,7 +285,7 @@ const HttpStatusCodesTool = {
 
             grid.innerHTML = filteredCodes.map(item => `
                 <div class="hsc-card cat-${item.category}" data-code="${item.code}">
-                    <button class="hsc-copy-btn" title="Copy code" onclick="event.stopPropagation(); window.copyToClipboard('${item.code} ${item.name}', this)">
+                    <button class="hsc-copy-btn" title="Copy code" onclick="event.stopPropagation(); window.copyToClipboard('${item.code} ${item.name.replace(/'/g, "\\'")}', this)">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>

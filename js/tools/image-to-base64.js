@@ -282,11 +282,15 @@ const ImageToBase64Tool = {
         });
 
         // Paste event on window (when encode tab is active)
-        window.addEventListener('paste', (e) => {
+        if (window._i2bPasteHandler) {
+            window.removeEventListener('paste', window._i2bPasteHandler);
+        }
+        window._i2bPasteHandler = (e) => {
             if (encodeSection.style.display !== 'none') {
-                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
-                for (let index in items) {
-                    const item = items[index];
+                if (!e.clipboardData) return;
+                const items = e.clipboardData.items;
+                for (let i = 0; i < items.length; i++) {
+                    const item = items[i];
                     if (item.kind === 'file') {
                         const blob = item.getAsFile();
                         processFile(blob);
@@ -294,7 +298,8 @@ const ImageToBase64Tool = {
                     }
                 }
             }
-        });
+        };
+        window.addEventListener('paste', window._i2bPasteHandler);
 
         // Copy Buttons
         const setupCopy = (btnId, inputId) => {
@@ -326,7 +331,6 @@ const ImageToBase64Tool = {
                 input = 'data:image/png;base64,' + input;
             }
 
-            decodeImg.src = input;
             decodeImg.onerror = () => {
                 window.showToast('Chuỗi Base64 không hợp lệ hoặc không phải là ảnh', 'error');
                 decodePreviewContainer.style.display = 'none';
@@ -334,6 +338,7 @@ const ImageToBase64Tool = {
             decodeImg.onload = () => {
                 decodePreviewContainer.style.display = 'flex';
             };
+            decodeImg.src = input;
         });
 
         decodeClearBtn.addEventListener('click', () => {

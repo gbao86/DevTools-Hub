@@ -1,3 +1,10 @@
+let savedFavorites = [];
+try {
+    savedFavorites = JSON.parse(localStorage.getItem('devToolsHub_kbFavorites') || '[]');
+} catch (e) {
+    savedFavorites = [];
+}
+
 const KeyboardShortcuts = {
     name: 'Keyboard Shortcuts',
     icon: '📝',
@@ -270,9 +277,9 @@ const KeyboardShortcuts = {
 
     state: {
         activeTab: 'vscode',
-        os: navigator.platform.toLowerCase().includes('mac') ? 'mac' : 'win',
+        os: (navigator.platform || '').toLowerCase().includes('mac') ? 'mac' : 'win',
         searchQuery: '',
-        favorites: JSON.parse(localStorage.getItem('devToolsHub_kbFavorites') || '[]')
+        favorites: savedFavorites
     },
 
     render(container) {
@@ -447,7 +454,7 @@ const KeyboardShortcuts = {
                     <div class="kb-keys-display" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px;">
                         ${formattedKeys}
                     </div>
-                    <button class="tool-btn-sm kb-copy-btn" data-keys="${keys}" title="Copy" style="padding: 4px 8px; font-size: var(--fs-xs);">
+                    <button class="tool-btn-sm kb-copy-btn" data-keys="${keys.replace(/"/g, '&quot;')}" title="Copy" style="padding: 4px 8px; font-size: var(--fs-xs);">
                         📋
                     </button>
                 </div>
