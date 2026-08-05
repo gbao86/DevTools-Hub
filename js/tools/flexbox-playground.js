@@ -447,147 +447,147 @@ const FlexboxPlaygroundTool = {
         `;
 
         const renderSegmentedControl = (prop, label, options, currentValue) => {
-            return \`
-                <div class="\${CSS_PREFIX}group" data-prop="\${prop}">
-                    <div class="\${CSS_PREFIX}label">\${label}</div>
-                    <div class="\${CSS_PREFIX}segmented">
-                        \${options.map(opt => \`
-                            <div class="\${CSS_PREFIX}segment \${currentValue === opt ? 'active' : ''}" data-value="\${opt}">
-                                \${opt.replace('flex-', '')}
+            return `
+                <div class="${CSS_PREFIX}group" data-prop="${prop}">
+                    <div class="${CSS_PREFIX}label">${label}</div>
+                    <div class="${CSS_PREFIX}segmented">
+                        ${options.map(opt => `
+                            <div class="${CSS_PREFIX}segment ${currentValue === opt ? 'active' : ''}" data-value="${opt}">
+                                ${opt.replace('flex-', '')}
                             </div>
-                        \`).join('')}
+                        `).join('')}
                     </div>
                 </div>
-            \`;
+            `;
         };
 
         const renderControls = () => {
             const c = state.container;
             
-            let html = \`
-                <div class="\${CSS_PREFIX}controls-header">
+            let html = `
+                <div class="${CSS_PREFIX}controls-header">
                     Container Properties
                 </div>
-                <div class="\${CSS_PREFIX}controls-body">
-                    <div class="\${CSS_PREFIX}group">
-                        <div class="\${CSS_PREFIX}label">display</div>
-                        <input type="text" class="\${CSS_PREFIX}input" value="flex" disabled style="opacity: 0.7">
+                <div class="${CSS_PREFIX}controls-body">
+                    <div class="${CSS_PREFIX}group">
+                        <div class="${CSS_PREFIX}label">display</div>
+                        <input type="text" class="${CSS_PREFIX}input" value="flex" disabled style="opacity: 0.7">
                     </div>
                     
-                    \${renderSegmentedControl('flex-direction', 'flex-direction', getEnumOptions('flex-direction'), c['flex-direction'])}
-                    \${renderSegmentedControl('flex-wrap', 'flex-wrap', getEnumOptions('flex-wrap'), c['flex-wrap'])}
-                    \${renderSegmentedControl('justify-content', 'justify-content', getEnumOptions('justify-content'), c['justify-content'])}
-                    \${renderSegmentedControl('align-items', 'align-items', getEnumOptions('align-items'), c['align-items'])}
-            \`;
+                    ${renderSegmentedControl('flex-direction', 'flex-direction', getEnumOptions('flex-direction'), c['flex-direction'])}
+                    ${renderSegmentedControl('flex-wrap', 'flex-wrap', getEnumOptions('flex-wrap'), c['flex-wrap'])}
+                    ${renderSegmentedControl('justify-content', 'justify-content', getEnumOptions('justify-content'), c['justify-content'])}
+                    ${renderSegmentedControl('align-items', 'align-items', getEnumOptions('align-items'), c['align-items'])}
+            `;
 
             if (c['flex-wrap'] !== 'nowrap') {
                 html += renderSegmentedControl('align-content', 'align-content', getEnumOptions('align-content'), c['align-content']);
             }
 
-            html += \`
-                    <div class="\${CSS_PREFIX}group">
-                        <div class="\${CSS_PREFIX}label">
+            html += `
+                    <div class="${CSS_PREFIX}group">
+                        <div class="${CSS_PREFIX}label">
                             <span>gap</span>
-                            <span id="gap-val">\${c.gap}px</span>
+                            <span id="gap-val">${c.gap}px</span>
                         </div>
-                        <div class="\${CSS_PREFIX}range-container">
-                            <input type="range" id="gap-range" min="0" max="100" value="\${c.gap}">
-                            <input type="number" id="gap-number" min="0" max="100" value="\${c.gap}">
+                        <div class="${CSS_PREFIX}range-container">
+                            <input type="range" id="gap-range" min="0" max="100" value="${c.gap}">
+                            <input type="number" id="gap-number" min="0" max="100" value="${c.gap}">
                         </div>
                     </div>
                 </div>
                 
-                <div class="\${CSS_PREFIX}controls-header" style="border-top: 1px solid var(--border-color);">
-                    <span>Flex Items (\${state.items.length}/12)</span>
-                    <button class="tool-btn tool-btn-sm" id="btn-add-item" \${state.items.length >= 12 ? 'disabled' : ''}>+ Add</button>
+                <div class="${CSS_PREFIX}controls-header" style="border-top: 1px solid var(--border-color);">
+                    <span>Flex Items (${state.items.length}/12)</span>
+                    <button class="tool-btn tool-btn-sm" id="btn-add-item" ${state.items.length >= 12 ? 'disabled' : ''}>+ Add</button>
                 </div>
-                <div class="\${CSS_PREFIX}controls-body">
-                    <div class="\${CSS_PREFIX}item-list" id="item-list">
-            \`;
+                <div class="${CSS_PREFIX}controls-body">
+                    <div class="${CSS_PREFIX}item-list" id="item-list">
+            `;
 
             state.items.forEach(item => {
                 const isActive = state.activeItemId === item.id;
-                html += \`
-                    <div class="\${CSS_PREFIX}item-card \${isActive ? 'active' : ''}" data-id="\${item.id}">
-                        <div class="\${CSS_PREFIX}item-header">
-                            <span class="\${CSS_PREFIX}item-color-dot" style="background: \${getItemColor(item.id)}"></span>
-                            <span class="\${CSS_PREFIX}item-title">\${item.text}</span>
-                            <button class="\${CSS_PREFIX}item-delete" title="Delete item">✕</button>
+                html += `
+                    <div class="${CSS_PREFIX}item-card ${isActive ? 'active' : ''}" data-id="${item.id}">
+                        <div class="${CSS_PREFIX}item-header">
+                            <span class="${CSS_PREFIX}item-color-dot" style="background: ${getItemColor(item.id)}"></span>
+                            <span class="${CSS_PREFIX}item-title">${item.text}</span>
+                            <button class="${CSS_PREFIX}item-delete" title="Delete item">✕</button>
                         </div>
-                        <div class="\${CSS_PREFIX}item-body">
-                            <div class="\${CSS_PREFIX}input-grid">
-                                <div class="\${CSS_PREFIX}group">
-                                    <div class="\${CSS_PREFIX}label">flex-grow</div>
-                                    <input type="number" class="\${CSS_PREFIX}input item-prop" data-prop="flexGrow" value="\${item.flexGrow}" min="0" max="10">
+                        <div class="${CSS_PREFIX}item-body">
+                            <div class="${CSS_PREFIX}input-grid">
+                                <div class="${CSS_PREFIX}group">
+                                    <div class="${CSS_PREFIX}label">flex-grow</div>
+                                    <input type="number" class="${CSS_PREFIX}input item-prop" data-prop="flexGrow" value="${item.flexGrow}" min="0" max="10">
                                 </div>
-                                <div class="\${CSS_PREFIX}group">
-                                    <div class="\${CSS_PREFIX}label">flex-shrink</div>
-                                    <input type="number" class="\${CSS_PREFIX}input item-prop" data-prop="flexShrink" value="\${item.flexShrink}" min="0" max="10">
-                                </div>
-                            </div>
-                            <div class="\${CSS_PREFIX}input-grid">
-                                <div class="\${CSS_PREFIX}group">
-                                    <div class="\${CSS_PREFIX}label">flex-basis</div>
-                                    <input type="text" class="\${CSS_PREFIX}input item-prop" data-prop="flexBasis" value="\${item.flexBasis}">
-                                </div>
-                                <div class="\${CSS_PREFIX}group">
-                                    <div class="\${CSS_PREFIX}label">order</div>
-                                    <input type="number" class="\${CSS_PREFIX}input item-prop" data-prop="order" value="\${item.order}">
+                                <div class="${CSS_PREFIX}group">
+                                    <div class="${CSS_PREFIX}label">flex-shrink</div>
+                                    <input type="number" class="${CSS_PREFIX}input item-prop" data-prop="flexShrink" value="${item.flexShrink}" min="0" max="10">
                                 </div>
                             </div>
-                            <div class="\${CSS_PREFIX}group">
-                                <div class="\${CSS_PREFIX}label">align-self</div>
-                                <select class="\${CSS_PREFIX}input item-prop" data-prop="alignSelf">
-                                    \${getEnumOptions('align-self').map(opt => \`<option value="\${opt}" \${item.alignSelf === opt ? 'selected' : ''}>\${opt}</option>\`).join('')}
+                            <div class="${CSS_PREFIX}input-grid">
+                                <div class="${CSS_PREFIX}group">
+                                    <div class="${CSS_PREFIX}label">flex-basis</div>
+                                    <input type="text" class="${CSS_PREFIX}input item-prop" data-prop="flexBasis" value="${item.flexBasis}">
+                                </div>
+                                <div class="${CSS_PREFIX}group">
+                                    <div class="${CSS_PREFIX}label">order</div>
+                                    <input type="number" class="${CSS_PREFIX}input item-prop" data-prop="order" value="${item.order}">
+                                </div>
+                            </div>
+                            <div class="${CSS_PREFIX}group">
+                                <div class="${CSS_PREFIX}label">align-self</div>
+                                <select class="${CSS_PREFIX}input item-prop" data-prop="alignSelf">
+                                    ${getEnumOptions('align-self').map(opt => `<option value="${opt}" ${item.alignSelf === opt ? 'selected' : ''}>${opt}</option>`).join('')}
                                 </select>
                             </div>
-                            <div class="\${CSS_PREFIX}input-grid">
-                                <div class="\${CSS_PREFIX}group">
-                                    <div class="\${CSS_PREFIX}label">width</div>
-                                    <input type="text" class="\${CSS_PREFIX}input item-prop" data-prop="width" value="\${item.width}">
+                            <div class="${CSS_PREFIX}input-grid">
+                                <div class="${CSS_PREFIX}group">
+                                    <div class="${CSS_PREFIX}label">width</div>
+                                    <input type="text" class="${CSS_PREFIX}input item-prop" data-prop="width" value="${item.width}">
                                 </div>
-                                <div class="\${CSS_PREFIX}group">
-                                    <div class="\${CSS_PREFIX}label">height</div>
-                                    <input type="text" class="\${CSS_PREFIX}input item-prop" data-prop="height" value="\${item.height}">
+                                <div class="${CSS_PREFIX}group">
+                                    <div class="${CSS_PREFIX}label">height</div>
+                                    <input type="text" class="${CSS_PREFIX}input item-prop" data-prop="height" value="${item.height}">
                                 </div>
                             </div>
                         </div>
                     </div>
-                \`;
+                `;
             });
 
-            html += \`
+            html += `
                     </div>
                 </div>
-            \`;
+            `;
             return html;
         };
 
         const generateCSS = () => {
             const c = state.container;
-            let css = \`.flex-container {\\n  display: flex;\\n\`;
-            if (c['flex-direction'] !== 'row') css += \`  flex-direction: \${c['flex-direction']};\\n\`;
-            if (c['flex-wrap'] !== 'nowrap') css += \`  flex-wrap: \${c['flex-wrap']};\\n\`;
-            if (c['justify-content'] !== 'flex-start') css += \`  justify-content: \${c['justify-content']};\\n\`;
-            if (c['align-items'] !== 'stretch') css += \`  align-items: \${c['align-items']};\\n\`;
-            if (c['flex-wrap'] !== 'nowrap' && c['align-content'] !== 'flex-start') css += \`  align-content: \${c['align-content']};\\n\`;
-            if (c.gap !== '0') css += \`  gap: \${c.gap}px;\\n\`;
-            css += \`}\\n\\n\`;
+            let css = '.flex-container {\n  display: flex;\n';
+            if (c['flex-direction'] !== 'row') css += '  flex-direction: ' + c['flex-direction'] + ';\n';
+            if (c['flex-wrap'] !== 'nowrap') css += '  flex-wrap: ' + c['flex-wrap'] + ';\n';
+            if (c['justify-content'] !== 'flex-start') css += '  justify-content: ' + c['justify-content'] + ';\n';
+            if (c['align-items'] !== 'stretch') css += '  align-items: ' + c['align-items'] + ';\n';
+            if (c['flex-wrap'] !== 'nowrap' && c['align-content'] !== 'flex-start') css += '  align-content: ' + c['align-content'] + ';\n';
+            if (c.gap !== '0') css += '  gap: ' + c.gap + 'px;\n';
+            css += '}\n\n';
 
             state.items.forEach((item, index) => {
-                let itemCss = \`.item-\${index + 1} {\\n\`;
+                let itemCss = '.item-' + (index + 1) + ' {\n';
                 let hasProps = false;
                 
-                if (item.flexGrow !== 0) { itemCss += \`  flex-grow: \${item.flexGrow};\\n\`; hasProps = true; }
-                if (item.flexShrink !== 1) { itemCss += \`  flex-shrink: \${item.flexShrink};\\n\`; hasProps = true; }
-                if (item.flexBasis !== 'auto') { itemCss += \`  flex-basis: \${item.flexBasis};\\n\`; hasProps = true; }
-                if (item.alignSelf !== 'auto') { itemCss += \`  align-self: \${item.alignSelf};\\n\`; hasProps = true; }
-                if (item.order !== 0) { itemCss += \`  order: \${item.order};\\n\`; hasProps = true; }
+                if (item.flexGrow !== 0) { itemCss += '  flex-grow: ' + item.flexGrow + ';\n'; hasProps = true; }
+                if (item.flexShrink !== 1) { itemCss += '  flex-shrink: ' + item.flexShrink + ';\n'; hasProps = true; }
+                if (item.flexBasis !== 'auto') { itemCss += '  flex-basis: ' + item.flexBasis + ';\n'; hasProps = true; }
+                if (item.alignSelf !== 'auto') { itemCss += '  align-self: ' + item.alignSelf + ';\n'; hasProps = true; }
+                if (item.order !== 0) { itemCss += '  order: ' + item.order + ';\n'; hasProps = true; }
                 
-                if (item.width && item.width !== 'auto') { itemCss += \`  width: \${item.width};\\n\`; hasProps = true; }
-                if (item.height && item.height !== 'auto') { itemCss += \`  height: \${item.height};\\n\`; hasProps = true; }
+                if (item.width && item.width !== 'auto') { itemCss += '  width: ' + item.width + ';\n'; hasProps = true; }
+                if (item.height && item.height !== 'auto') { itemCss += '  height: ' + item.height + ';\n'; hasProps = true; }
                 
-                itemCss += \`}\\n\\n\`;
+                itemCss += '}\n\n';
                 
                 if (hasProps) {
                     css += itemCss;
@@ -613,20 +613,20 @@ const FlexboxPlaygroundTool = {
                 previewContainer.style.alignContent = c['align-content'];
                 previewContainer.style.gap = c.gap + 'px';
                 
-                previewContainer.innerHTML = state.items.map(item => \`
-                    <div class="\${CSS_PREFIX}preview-item" style="
-                        background-color: \${getItemColor(item.id)};
-                        flex-grow: \${item.flexGrow};
-                        flex-shrink: \${item.flexShrink};
-                        flex-basis: \${item.flexBasis};
-                        align-self: \${item.alignSelf};
-                        order: \${item.order};
-                        width: \${item.width};
-                        height: \${item.height};
+                previewContainer.innerHTML = state.items.map(item => `
+                    <div class="${CSS_PREFIX}preview-item" style="
+                        background-color: ${getItemColor(item.id)};
+                        flex-grow: ${item.flexGrow};
+                        flex-shrink: ${item.flexShrink};
+                        flex-basis: ${item.flexBasis};
+                        align-self: ${item.alignSelf};
+                        order: ${item.order};
+                        width: ${item.width};
+                        height: ${item.height};
                     ">
-                        \${item.text}
+                        ${item.text}
                     </div>
-                \`).join('');
+                `).join('');
             }
 
             // Update Code Output
@@ -640,10 +640,10 @@ const FlexboxPlaygroundTool = {
 
         const attachEventListeners = () => {
             // Container Segmented Controls
-            const segments = container.querySelectorAll(\`.\${CSS_PREFIX}segment\`);
+            const segments = container.querySelectorAll(`.${CSS_PREFIX}segment`);
             segments.forEach(seg => {
                 seg.addEventListener('click', (e) => {
-                    const prop = e.target.closest(\`.\${CSS_PREFIX}group\`).dataset.prop;
+                    const prop = e.target.closest(`.${CSS_PREFIX}group`).dataset.prop;
                     const value = e.target.dataset.value;
                     state.container[prop] = value;
                     updateView();
@@ -685,7 +685,7 @@ const FlexboxPlaygroundTool = {
                         const newId = state.nextId++;
                         state.items.push({
                             id: newId,
-                            text: \`Item \${newId}\`,
+                            text: `Item ${newId}`,
                             width: '80px',
                             height: '80px',
                             flexGrow: 0,
@@ -701,11 +701,11 @@ const FlexboxPlaygroundTool = {
             }
 
             // Item Headers (Accordion)
-            const itemHeaders = container.querySelectorAll(\`.\${CSS_PREFIX}item-header\`);
+            const itemHeaders = container.querySelectorAll(`.${CSS_PREFIX}item-header`);
             itemHeaders.forEach(header => {
                 header.addEventListener('click', (e) => {
-                    if (e.target.classList.contains(\`\${CSS_PREFIX}item-delete\`)) return;
-                    const card = e.target.closest(\`.\${CSS_PREFIX}item-card\`);
+                    if (e.target.classList.contains(`${CSS_PREFIX}item-delete`)) return;
+                    const card = e.target.closest(`.${CSS_PREFIX}item-card`);
                     const id = parseInt(card.dataset.id);
                     state.activeItemId = state.activeItemId === id ? null : id;
                     updateView();
@@ -713,10 +713,10 @@ const FlexboxPlaygroundTool = {
             });
 
             // Delete Item
-            const deleteBtns = container.querySelectorAll(\`.\${CSS_PREFIX}item-delete\`);
+            const deleteBtns = container.querySelectorAll(`.${CSS_PREFIX}item-delete`);
             deleteBtns.forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    const card = e.target.closest(\`.\${CSS_PREFIX}item-card\`);
+                    const card = e.target.closest(`.${CSS_PREFIX}item-card`);
                     const id = parseInt(card.dataset.id);
                     state.items = state.items.filter(item => item.id !== id);
                     if (state.activeItemId === id) state.activeItemId = null;
@@ -728,7 +728,7 @@ const FlexboxPlaygroundTool = {
             const itemInputs = container.querySelectorAll('.item-prop');
             itemInputs.forEach(input => {
                 input.addEventListener('change', (e) => {
-                    const card = e.target.closest(\`.\${CSS_PREFIX}item-card\`);
+                    const card = e.target.closest(`.${CSS_PREFIX}item-card`);
                     const id = parseInt(card.dataset.id);
                     const prop = e.target.dataset.prop;
                     const item = state.items.find(i => i.id === id);
@@ -742,50 +742,50 @@ const FlexboxPlaygroundTool = {
             });
         };
 
-        container.innerHTML = \`
-            <style>\${styleContent}</style>
+        container.innerHTML = `
+            <style>${styleContent}</style>
             <div class="tool-panel">
                 <div class="tool-header">
-                    <h2>\${this.icon} \${this.name}</h2>
-                    <p class="tool-description">\${this.description}</p>
+                    <h2>${this.icon} ${this.name}</h2>
+                    <p class="tool-description">${this.description}</p>
                 </div>
                 
-                <div class="\${CSS_PREFIX}layout">
-                    <div class="\${CSS_PREFIX}header-bar">
-                        \${Object.keys(presets).map(name => \`
-                            <button class="tool-btn preset-btn" data-preset="\${name}">\${name}</button>
-                        \`).join('')}
+                <div class="${CSS_PREFIX}layout">
+                    <div class="${CSS_PREFIX}header-bar">
+                        ${Object.keys(presets).map(name => `
+                            <button class="tool-btn preset-btn" data-preset="${name}">${name}</button>
+                        `).join('')}
                     </div>
 
-                    <div class="\${CSS_PREFIX}main">
-                        <div class="\${CSS_PREFIX}controls fbp-controls-container">
+                    <div class="${CSS_PREFIX}main">
+                        <div class="${CSS_PREFIX}controls fbp-controls-container">
                             <!-- Populated by JS -->
                         </div>
                         
-                        <div class="\${CSS_PREFIX}preview-panel">
-                            <div class="\${CSS_PREFIX}preview-header">Live Preview</div>
-                            <div class="\${CSS_PREFIX}preview-container-wrapper">
-                                <div class="\${CSS_PREFIX}preview-container" id="fbp-preview">
+                        <div class="${CSS_PREFIX}preview-panel">
+                            <div class="${CSS_PREFIX}preview-header">Live Preview</div>
+                            <div class="${CSS_PREFIX}preview-container-wrapper">
+                                <div class="${CSS_PREFIX}preview-container" id="fbp-preview">
                                     <!-- Populated by JS -->
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="\${CSS_PREFIX}code-panel">
-                        <div class="\${CSS_PREFIX}code-header">
+                    <div class="${CSS_PREFIX}code-panel">
+                        <div class="${CSS_PREFIX}code-header">
                             <span>Generated CSS</span>
                             <button class="tool-btn tool-btn-sm" id="btn-copy-css">Copy CSS</button>
                         </div>
-                        <div class="\${CSS_PREFIX}code-content">
-                            <div class="\${CSS_PREFIX}code-block-wrapper">
-                                <pre class="\${CSS_PREFIX}code-block" id="fbp-code-output"></pre>
+                        <div class="${CSS_PREFIX}code-content">
+                            <div class="${CSS_PREFIX}code-block-wrapper">
+                                <pre class="${CSS_PREFIX}code-block" id="fbp-code-output"></pre>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        \`;
+        `;
 
         container.querySelector('#btn-copy-css').addEventListener('click', (e) => {
             const css = generateCSS();

@@ -388,7 +388,7 @@ const CSSAnimationBuilder = {
             state.keyframes.forEach(kf => {
                 const el = document.createElement('div');
                 el.className = 'cab-kf-marker' + (kf.id === state.selectedKeyframeId ? ' selected' : '');
-                el.style.left = \`\${kf.percent}%\`;
+                el.style.left = `${kf.percent}%`;
                 el.dataset.id = kf.id;
                 
                 // Dragging logic
@@ -409,7 +409,7 @@ const CSSAnimationBuilder = {
                         // Prevent overlap with existing
                         if(!state.keyframes.find(k => k.id !== kf.id && k.percent === percent)) {
                             kf.percent = percent;
-                            el.style.left = \`\${percent}%\`;
+                            el.style.left = `${percent}%`;
                             DOM.lblKfPercent.textContent = percent;
                             DOM.inpKfPercent.value = percent;
                             updateLivePreview();
@@ -547,7 +547,7 @@ const CSSAnimationBuilder = {
             el.style.width = length + 'px';
             el.style.left = x1 + 'px';
             el.style.top = y1 + 'px';
-            el.style.transform = \`rotate(\${angle}deg)\`;
+            el.style.transform = `rotate(${angle}deg)`;
         };
 
         const setupBezierDragging = (handle, indexX, indexY) => {
