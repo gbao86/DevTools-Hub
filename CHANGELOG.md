@@ -26,6 +26,11 @@ Expanded the Web category from 2 to 5 tools with three powerful visual builders 
 - Updated tool count from 36 to 39 on welcome screen
 - Added SVG icon mappings for 🔲 (grid) and 🎬 (play) in icon system
 
+### Fixed
+
+- **🔴 Flexbox Playground — SyntaxError on load**: Fixed ~200 escaped backticks (`\``) and escaped dollars (`\$`) in template literals that prevented the tool from registering. Rewrote `generateCSS()` to use string concatenation.
+- **🔴 CSS Animation Builder — SyntaxError on load**: Fixed escaped backticks in template literal expressions (e.g., `el.style.left`) that caused the tool to fail silently on page load.
+
 ---
 
 ### 🔧 Comprehensive Bug Fix — 11 Tool Files, 33 Fixes
