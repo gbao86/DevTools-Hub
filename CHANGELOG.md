@@ -7,7 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.3.2] - 2026-08-03
+## [0.4.0] - 2026-08-05
+
+### 🌐 Web Category Expansion — 3 New Visual CSS Tools
+
+Expanded the Web category from 2 to 5 tools with three powerful visual builders that developers use daily. All tools are 100% client-side with real-time preview, presets, and CSS code export.
+
+### Added
+
+- **📐 Flexbox Playground**: Visual Flexbox builder with live preview — configure container properties (direction, wrap, justify-content, align-items, gap), manage up to 12 items with individual flex-grow/shrink/basis/order/align-self controls, 6 layout presets (Navigation Bar, Centered Content, Sidebar Layout, Card Grid, Holy Grail, Equal Heights), and instant CSS code generation.
+
+- **🔲 CSS Grid Generator**: Visual CSS Grid layout builder — define rows/columns with flexible sizing (fr, px, %, auto), row/column gap controls, alignment options (justify-items, align-items, justify-content, align-content), interactive grid preview with cell highlighting, 5 presets (Basic 3-Column, 12-Column Grid, Holy Grail, Dashboard, Gallery), and full CSS export.
+
+- **🎬 CSS Animation Builder**: Visual @keyframes editor with timeline — interactive keyframe timeline (click to add, drag to reposition), per-keyframe property controls (transform, opacity, background-color, border-radius), visual cubic-bezier curve editor with draggable control points, live animation preview with play/pause/restart and speed control (0.25x–2x), 5 presets (Fade In, Slide In, Bounce, Pulse, Spin), and complete @keyframes + animation class CSS output.
+
+### Changed
+
+- Updated tool count from 36 to 39 on welcome screen
+- Added SVG icon mappings for 🔲 (grid) and 🎬 (play) in icon system
+
+---
 
 ### 🔧 Comprehensive Bug Fix — 11 Tool Files, 33 Fixes
 
