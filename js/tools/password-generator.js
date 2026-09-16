@@ -261,7 +261,7 @@ window.DevTools.push({
 
         function updateStrength(password, poolSize) {
             const entropy = password.length * Math.log2(poolSize);
-            els.entropyLabel.textContent = \`Entropy: \${entropy.toFixed(1)} bits\`;
+            els.entropyLabel.textContent = `Entropy: ${entropy.toFixed(1)} bits`;
             
             let strength = 'Yếu';
             let color = '#ef4444'; // red
@@ -285,8 +285,8 @@ window.DevTools.push({
                 width = 35;
             }
             
-            els.strengthLabel.textContent = \`Độ mạnh: \${strength}\`;
-            els.strengthFill.style.width = \`\${width}%\`;
+            els.strengthLabel.textContent = `Độ mạnh: ${strength}`;
+            els.strengthFill.style.width = `${width}%`;
             els.strengthFill.style.backgroundColor = color;
         }
 

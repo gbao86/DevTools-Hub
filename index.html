@@ -99,7 +99,7 @@
                 </div>
                 <div class="welcome-stats stagger-in">
                     <div class="welcome-stat">
-                        <span class="welcome-stat-value" data-count="39">0</span>
+                        <span class="welcome-stat-value" data-count="45">0</span>
                         <span class="welcome-stat-label">Công cụ</span>
                     </div>
                     <div class="welcome-stat">
@@ -110,6 +110,25 @@
                         <span class="welcome-stat-value" data-count="100">0</span>
                         <span class="welcome-stat-label">% Offline</span>
                     </div>
+                </div>
+
+                <!-- Hero Search & Category Filter Controls -->
+                <div class="hero-controls">
+                    <div class="hero-search-bar">
+                        <span class="hero-search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+                        <input type="text" id="hero-search-input" class="hero-search-input" placeholder="Tìm nhanh trong 45 công cụ... (hoặc nhấn Ctrl+K)" autocomplete="off" spellcheck="false">
+                        <button id="hero-search-clear" class="hero-search-clear" title="Xóa tìm kiếm">✕</button>
+                        <kbd class="hero-search-kbd">Ctrl+K</kbd>
+                    </div>
+
+                    <div class="category-pills" id="category-pills">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="tools-status-bar" id="tools-status-bar">
+                    <span>Bộ công cụ nhà phát triển</span>
+                    <span>Hiển thị <span id="tools-count-badge" class="tools-count-badge">45</span> / 45 công cụ</span>
                 </div>
             </div>
 
@@ -142,6 +161,7 @@
     <script src="js/tools/markdown-preview.js"></script>
     <script src="js/tools/code-beautifier.js"></script>
     <script src="js/tools/env-viewer.js"></script>
+    <script src="js/tools/table-generator.js"></script>
     <!-- Generator -->
     <script src="js/tools/uuid-generator.js"></script>
     <script src="js/tools/password-generator.js"></script>
@@ -150,6 +170,7 @@
     <script src="js/tools/placeholder-image.js"></script>
     <script src="js/libs/qrcode.min.js"></script>
     <script src="js/tools/qr-code.js"></script>
+    <script src="js/tools/favicon-generator.js"></script>
     <!-- Converter -->
     <script src="js/tools/color-picker.js"></script>
     <script src="js/tools/timestamp-converter.js"></script>
@@ -160,11 +181,15 @@
     <script src="js/tools/cron-parser.js"></script>
     <script src="js/tools/chmod-calculator.js"></script>
     <script src="js/tools/curl-converter.js"></script>
+    <script src="js/tools/json-to-typescript.js"></script>
+    <script src="js/tools/html-to-jsx.js"></script>
+    <script src="js/tools/image-compressor.js"></script>
     <!-- Text -->
     <script src="js/tools/regex-tester.js"></script>
     <script src="js/tools/diff-checker.js"></script>
     <script src="js/tools/text-counter.js"></script>
     <script src="js/tools/string-case-converter.js"></script>
+    <script src="js/tools/slugify.js"></script>
     <!-- Web -->
     <script src="js/tools/box-shadow-generator.js"></script>
     <script src="js/tools/meta-tag-generator.js"></script>

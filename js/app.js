@@ -19,6 +19,15 @@
     };
 
     
+    const NEW_TOOL_SLUGS = new Set([
+        'json-to-typescript',
+        'html-to-jsx',
+        'image-compressor',
+        'slugify-text-sanitizer',
+        'table-generator',
+        'favicon-generator'
+    ]);
+
     const ICONS = {
         '📋': '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>',
         '🔐': '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',
@@ -50,6 +59,8 @@
         '📱': '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="9" y="9" width="6" height="6"></rect></svg>',
         '🔲': '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line></svg>',
         '🎬': '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>',
+        '🖼️': '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>',
+        '⭐': '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
         'default': '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>'
     };
 
@@ -68,6 +79,12 @@
     const topbarBreadcrumb = document.getElementById('topbar-breadcrumb');
     const themeToggleBtn = document.getElementById('theme-toggle');
 
+    // Hero search & filter elements
+    const heroSearchInput = document.getElementById('hero-search-input');
+    const heroSearchClear = document.getElementById('hero-search-clear');
+    const categoryPills = document.getElementById('category-pills');
+    const toolsCountBadge = document.getElementById('tools-count-badge');
+
     // Command palette elements
     const cmdOverlay = document.getElementById('cmd-overlay');
     const cmdPalette = document.getElementById('cmd-palette');
@@ -79,6 +96,8 @@
     let activeTool = null;
     let focusedIndex = -1;
     let visibleItems = [];
+    let currentCategory = 'all';
+    let currentSearch = '';
 
     // --- Initialization ---
     function init() {
@@ -86,6 +105,10 @@
         renderToolsGrid();
         bindEvents();
         handleRoute();
+    }
+
+    function escapeHtml(s) {
+        return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     // --- Render Command Palette Items ---
@@ -115,10 +138,12 @@
             `;
             grouped[cat].forEach(tool => {
                 const slug = toSlug(tool.name);
+                const isNew = NEW_TOOL_SLUGS.has(slug);
                 html += `
                     <div class="cmd-item" data-tool="${slug}" data-category="${cat}" data-name="${tool.name.toLowerCase()}">
                         <span class="cmd-item-icon">${getIcon(tool.icon)}</span>
                         <span class="cmd-item-name">${tool.name}</span>
+                        ${isNew ? '<span class="cmd-item-new">MỚI</span>' : ''}
                         <span class="cmd-item-badge">${cat}</span>
                     </div>
                 `;
@@ -128,21 +153,124 @@
         cmdList.innerHTML = html;
     }
 
+    // --- Category Filter Pills ---
+    function renderCategoryPills() {
+        if (!categoryPills) return;
+        const counts = { all: tools.length };
+        tools.forEach(t => {
+            const c = t.category || 'Other';
+            counts[c] = (counts[c] || 0) + 1;
+        });
+
+        const sortedCats = Object.keys(CATEGORIES).sort((a, b) => {
+            const orderA = (CATEGORIES[a] && CATEGORIES[a].order) || 99;
+            const orderB = (CATEGORIES[b] && CATEGORIES[b].order) || 99;
+            return orderA - orderB;
+        });
+
+        let html = `
+            <button class="category-pill ${currentCategory === 'all' ? 'active' : ''}" data-category="all">
+                <span>Tất cả</span>
+                <span class="pill-count">${counts.all || 0}</span>
+            </button>
+        `;
+
+        sortedCats.forEach(cat => {
+            if (!counts[cat]) return;
+            const catInfo = CATEGORIES[cat] || { icon: '📁' };
+            const isActive = currentCategory === cat ? 'active' : '';
+            html += `
+                <button class="category-pill ${isActive}" data-category="${cat}">
+                    <span class="pill-icon">${getIcon(catInfo.icon)}</span>
+                    <span>${cat}</span>
+                    <span class="pill-count">${counts[cat]}</span>
+                </button>
+            `;
+        });
+
+        categoryPills.innerHTML = html;
+    }
+
+    // --- Filter Tools Grid ---
+    function filterToolsGrid() {
+        const q = currentSearch.toLowerCase().trim();
+        const cat = currentCategory;
+        let visibleCount = 0;
+
+        const cards = toolsGrid.querySelectorAll('.tool-card');
+        cards.forEach(card => {
+            const name = card.dataset.name || '';
+            const desc = card.dataset.desc || '';
+            const cardCat = card.dataset.category || '';
+
+            const matchCat = (cat === 'all' || cardCat === cat);
+            const matchSearch = (!q || name.includes(q) || desc.includes(q) || cardCat.toLowerCase().includes(q));
+
+            if (matchCat && matchSearch) {
+                card.style.display = '';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Handle empty state
+        const existingEmpty = toolsGrid.querySelector('.tools-empty');
+        if (existingEmpty) existingEmpty.remove();
+
+        if (visibleCount === 0) {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.className = 'tools-empty';
+            emptyDiv.innerHTML = `
+                <div class="tools-empty-title">🔍 Không tìm thấy công cụ nào</div>
+                <p style="font-size: var(--fs-sm); margin-bottom: var(--space-md);">Không có kết quả nào khớp với "${escapeHtml(q)}".</p>
+                <button class="tool-btn tool-btn-sm" id="btn-reset-filters">Xóa bộ lọc</button>
+            `;
+            toolsGrid.appendChild(emptyDiv);
+
+            const resetBtn = emptyDiv.querySelector('#btn-reset-filters');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    if (heroSearchInput) heroSearchInput.value = '';
+                    if (heroSearchClear) heroSearchClear.style.display = 'none';
+                    currentSearch = '';
+                    currentCategory = 'all';
+                    if (categoryPills) {
+                        categoryPills.querySelectorAll('.category-pill').forEach(p => {
+                            p.classList.toggle('active', p.dataset.category === 'all');
+                        });
+                    }
+                    filterToolsGrid();
+                });
+            }
+        }
+
+        if (toolsCountBadge) {
+            toolsCountBadge.textContent = visibleCount;
+        }
+    }
+
     // --- Render Tools Grid on Welcome Page ---
     function renderToolsGrid() {
+        renderCategoryPills();
         let html = '';
         tools.forEach(tool => {
             const slug = toSlug(tool.name);
+            const isNew = NEW_TOOL_SLUGS.has(slug);
             html += `
-                <div class="tool-card spotlight-card card-shine" data-tool="${slug}">
+                <div class="tool-card spotlight-card card-shine visible" data-tool="${slug}" data-category="${tool.category || 'Other'}" data-name="${tool.name.toLowerCase()}" data-desc="${(tool.description || '').toLowerCase()}">
+                    <div class="tool-card-top">
+                        <span class="tool-card-category">${tool.category || 'Other'}</span>
+                        ${isNew ? '<span class="tool-badge-new">✨ MỚI</span>' : ''}
+                    </div>
                     <div class="tool-card-icon">${getIcon(tool.icon)}</div>
                     <div class="tool-card-title">${tool.name}</div>
                     <div class="tool-card-desc">${tool.description || ''}</div>
-                    <span class="tool-card-category">${tool.category || 'Other'}</span>
                 </div>
             `;
         });
         toolsGrid.innerHTML = html;
+        filterToolsGrid();
     }
 
     // --- Command Palette Controls ---
@@ -243,6 +371,50 @@
                 navigateToTool(slug);
             }
         });
+
+        // Category filter pills
+        if (categoryPills) {
+            categoryPills.addEventListener('click', (e) => {
+                const pill = e.target.closest('.category-pill');
+                if (pill) {
+                    categoryPills.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    currentCategory = pill.dataset.category || 'all';
+                    filterToolsGrid();
+                }
+            });
+        }
+
+        // Hero search input
+        if (heroSearchInput) {
+            heroSearchInput.addEventListener('input', (e) => {
+                currentSearch = e.target.value;
+                if (heroSearchClear) {
+                    heroSearchClear.style.display = currentSearch ? 'inline-block' : 'none';
+                }
+                filterToolsGrid();
+            });
+
+            heroSearchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    heroSearchInput.value = '';
+                    if (heroSearchClear) heroSearchClear.style.display = 'none';
+                    currentSearch = '';
+                    filterToolsGrid();
+                }
+            });
+        }
+
+        // Hero search clear button
+        if (heroSearchClear) {
+            heroSearchClear.addEventListener('click', () => {
+                heroSearchInput.value = '';
+                heroSearchClear.style.display = 'none';
+                currentSearch = '';
+                heroSearchInput.focus();
+                filterToolsGrid();
+            });
+        }
 
         // Open command palette
         toolsMenuBtn.addEventListener('click', () => {

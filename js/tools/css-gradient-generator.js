@@ -169,14 +169,14 @@ const CSSGradientGeneratorTool = {
             presetsContainer.innerHTML = '';
             presets.forEach((preset, idx) => {
                 const btn = document.createElement('div');
-                const cssGrad = \`linear-gradient(135deg, \${preset.map(p => \`\${p.color} \${p.position}%\`).join(', ')})\`;
+                const cssGrad = 'linear-gradient(135deg, ' + preset.map(p => p.color + ' ' + p.position + '%').join(', ') + ')';
                 btn.style.width = '32px';
                 btn.style.height = '32px';
                 btn.style.borderRadius = '4px';
                 btn.style.background = cssGrad;
                 btn.style.cursor = 'pointer';
                 btn.style.border = '1px solid var(--border-color)';
-                btn.title = \`Preset \${idx + 1}\`;
+                btn.title = 'Preset ' + (idx + 1);
                 btn.addEventListener('click', () => {
                     stops = preset.map((p, i) => ({ id: nextStopId++, color: p.color, position: p.position }));
                     type = 'linear';
@@ -195,14 +195,14 @@ const CSSGradientGeneratorTool = {
         function getGradientCSS() {
             // Sort stops by position for valid CSS
             const sortedStops = [...stops].sort((a, b) => a.position - b.position);
-            const stopsString = sortedStops.map(s => \`\${s.color} \${s.position}%\`).join(', ');
+            const stopsString = sortedStops.map(s => s.color + ' ' + s.position + '%').join(', ');
             
             if (type === 'linear') {
-                return \`linear-gradient(\${angle}deg, \${stopsString})\`;
+                return 'linear-gradient(' + angle + 'deg, ' + stopsString + ')';
             } else if (type === 'radial') {
-                return \`radial-gradient(\${shape} at \${position}, \${stopsString})\`;
+                return 'radial-gradient(' + shape + ' at ' + position + ', ' + stopsString + ')';
             } else if (type === 'conic') {
-                return \`conic-gradient(from 0deg, \${stopsString})\`;
+                return 'conic-gradient(from 0deg, ' + stopsString + ')';
             }
             return '';
         }
@@ -210,7 +210,7 @@ const CSSGradientGeneratorTool = {
         function updateGradient() {
             const css = getGradientCSS();
             preview.style.background = css;
-            const fullOutput = \`background: \${css};\`;
+            const fullOutput = 'background: ' + css + ';';
             cssOutput.value = fullOutput;
         }
 

@@ -141,25 +141,25 @@ window.DevTools.push({
             
             // Minutes
             if (min === '*') desc += "mỗi phút";
-            else if (min.startsWith('*/')) desc += \`mỗi \${min.slice(2)} phút\`;
-            else desc += \`phút \${min}\`;
+            else if (min.startsWith('*/')) desc += `mỗi \${min.slice(2)} phút`;
+            else desc += `phút \${min}`;
             
             // Hours
             if (hour !== '*') {
-                if (hour.startsWith('*/')) desc += \`, mỗi \${hour.slice(2)} giờ\`;
-                else desc += \`, giờ \${hour}\`;
+                if (hour.startsWith('*/')) desc += `, mỗi \${hour.slice(2)} giờ`;
+                else desc += `, giờ \${hour}`;
             }
             
             // DOM
             if (dom !== '*') {
-                if (dom.startsWith('*/')) desc += \`, mỗi \${dom.slice(2)} ngày\`;
-                else desc += \`, ngày \${dom} của tháng\`;
+                if (dom.startsWith('*/')) desc += `, mỗi \${dom.slice(2)} ngày`;
+                else desc += `, ngày \${dom} của tháng`;
             }
             
             // Month
             if (mon !== '*') {
-                if (mon.startsWith('*/')) desc += \`, mỗi \${mon.slice(2)} tháng\`;
-                else desc += \`, tháng \${mon}\`;
+                if (mon.startsWith('*/')) desc += `, mỗi \${mon.slice(2)} tháng`;
+                else desc += `, tháng \${mon}`;
             }
             
             // DOW
@@ -171,7 +171,7 @@ window.DevTools.push({
                 else if (dow === '5') desc += ', vào Thứ 6';
                 else if (dow === '6') desc += ', vào Thứ 7';
                 else if (dow === '0' || dow === '7') desc += ', vào Chủ Nhật';
-                else desc += \`, vào thứ \${dow}\`;
+                else desc += `, vào thứ \${dow}`;
             }
             
             return desc;
@@ -274,10 +274,10 @@ window.DevTools.push({
                 descEl.textContent = desc;
                 
                 nextEl.innerHTML = dates.map((d, i) => 
-                    \`<div class="cron-next-item">
+                    `<div class="cron-next-item">
                         <span class="idx">#\${i+1}</span>
                         <span class="time">\${formatDateTime(d)}</span>
-                    </div>\`
+                    </div>`
                 ).join('');
                 
             } catch (err) {

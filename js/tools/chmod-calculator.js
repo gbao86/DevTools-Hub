@@ -162,7 +162,7 @@ window.DevTools.push({
                 if (val === 1) return 'chỉ thực thi (--x)';
                 return 'không có quyền (---)';
             };
-            return \`Chủ sở hữu: \${getDesc(arr[0])}. Nhóm: \${getDesc(arr[1])}. Khác: \${getDesc(arr[2])}.\`;
+            return `Chủ sở hữu: \${getDesc(arr[0])}. Nhóm: \${getDesc(arr[1])}. Khác: \${getDesc(arr[2])}.`;
         }
 
         function updateUI(numStr, symStr) {
@@ -176,9 +176,9 @@ window.DevTools.push({
             const arr = parseNumToOctalArray(numStr);
             const updateCheckboxes = (groupIndex, groupName) => {
                 let val = arr[groupIndex];
-                container.querySelector(\`#cb-\${groupName}-r\`).checked = (val & 4) !== 0;
-                container.querySelector(\`#cb-\${groupName}-w\`).checked = (val & 2) !== 0;
-                container.querySelector(\`#cb-\${groupName}-x\`).checked = (val & 1) !== 0;
+                container.querySelector(`#cb-\${groupName}-r`).checked = (val & 4) !== 0;
+                container.querySelector(`#cb-\${groupName}-w`).checked = (val & 2) !== 0;
+                container.querySelector(`#cb-\${groupName}-x`).checked = (val & 1) !== 0;
             };
             updateCheckboxes(0, 'owner');
             updateCheckboxes(1, 'group');
@@ -200,9 +200,9 @@ window.DevTools.push({
         function updateFromCheckboxes() {
             const getVal = (groupName) => {
                 let val = 0;
-                if (container.querySelector(\`#cb-\${groupName}-r\`).checked) val += 4;
-                if (container.querySelector(\`#cb-\${groupName}-w\`).checked) val += 2;
-                if (container.querySelector(\`#cb-\${groupName}-x\`).checked) val += 1;
+                if (container.querySelector(`#cb-\${groupName}-r`).checked) val += 4;
+                if (container.querySelector(`#cb-\${groupName}-w`).checked) val += 2;
+                if (container.querySelector(`#cb-\${groupName}-x`).checked) val += 1;
                 return val;
             };
             let numStr = '' + getVal('owner') + getVal('group') + getVal('others');

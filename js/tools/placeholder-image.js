@@ -98,26 +98,26 @@ const PlaceholderImageTool = {
             const h = parseInt(hInput.value) || 600;
             const bg = bgColor.value;
             const fg = textColor.value;
-            const text = customText.value || \`\${w} × \${h}\`;
+            const text = customText.value || `\${w} × \${h}`;
             
             // Calculate font size relative to image size
             const fontSize = Math.min(w * 0.15, h * 0.3, 100);
 
-            const svg = \`<svg xmlns="http://www.w3.org/2000/svg" width="\${w}" height="\${h}" viewBox="0 0 \${w} \${h}">
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="\${w}" height="\${h}" viewBox="0 0 \${w} \${h}">
     <rect width="\${w}" height="\${h}" fill="\${bg}"/>
     <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="\${fg}" font-family="sans-serif" font-weight="bold" font-size="\${fontSize}px">\${text}</text>
-</svg>\`;
+</svg>`;
             
             currentSvgString = svg;
             
             // Update preview aspect ratio to match
-            previewContainer.style.aspectRatio = \`\${w}/\${h}\`;
+            previewContainer.style.aspectRatio = `\${w}/\${h}`;
             
             // Generate data URI for preview
             const encodedSvg = encodeURIComponent(svg)
                 .replace(/'/g, '%27')
                 .replace(/"/g, '%22');
-            const dataUri = \`data:image/svg+xml;charset=utf-8,\${encodedSvg}\`;
+            const dataUri = `data:image/svg+xml;charset=utf-8,\${encodedSvg}`;
             previewImg.src = dataUri;
         }
 
@@ -169,7 +169,7 @@ const PlaceholderImageTool = {
                 const encodedSvg = encodeURIComponent(currentSvgString)
                     .replace(/'/g, '%27')
                     .replace(/"/g, '%22');
-                window.copyToClipboard(\`data:image/svg+xml;charset=utf-8,\${encodedSvg}\`, btnCopyUri);
+                window.copyToClipboard(`data:image/svg+xml;charset=utf-8,\${encodedSvg}`, btnCopyUri);
             }
         });
 
@@ -188,7 +188,7 @@ const PlaceholderImageTool = {
         btnDlSvg.addEventListener('click', () => {
             const w = wInput.value;
             const h = hInput.value;
-            downloadFile(currentSvgString, \`placeholder-\${w}x\${h}.svg\`, 'image/svg+xml');
+            downloadFile(currentSvgString, `placeholder-\${w}x\${h}.svg`, 'image/svg+xml');
             if (window.showToast) window.showToast('Downloaded SVG', 'success');
         });
 
@@ -208,7 +208,7 @@ const PlaceholderImageTool = {
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = \`placeholder-\${w}x\${h}.png\`;
+                    a.download = `placeholder-\${w}x\${h}.png`;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
@@ -220,7 +220,7 @@ const PlaceholderImageTool = {
             const encodedSvg = encodeURIComponent(currentSvgString)
                 .replace(/'/g, '%27')
                 .replace(/"/g, '%22');
-            img.src = \`data:image/svg+xml;charset=utf-8,\${encodedSvg}\`;
+            img.src = `data:image/svg+xml;charset=utf-8,\${encodedSvg}`;
         });
 
         // Initial generation

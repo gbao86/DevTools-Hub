@@ -4,7 +4,7 @@
 
 # All your dev tools. One tab. Zero BS.
 
-### No servers. No sign-ups. No ads. Just 36 tools that work *instantly*.
+### No servers. No sign-ups. No ads. Just 45 tools that work *instantly*.
 
 <br/>
 
@@ -16,7 +16,7 @@
 [![Made with JS](https://img.shields.io/badge/Made_with-JavaScript-f7df1e?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![100% Offline](https://img.shields.io/badge/100%25-Offline-10b981?style=flat-square)](#-privacy--security)
 [![Zero Dependencies](https://img.shields.io/badge/Dependencies-ZERO-ef4444?style=flat-square)](#-tech-stack)
-[![36 Tools](https://img.shields.io/badge/Tools-36-a855f7?style=flat-square)](#-the-toolbox)
+[![45 Tools](https://img.shields.io/badge/Tools-45-a855f7?style=flat-square)](#-the-toolbox)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-22c55e?style=flat-square)](#-contributing)
 
 <br/>
@@ -74,7 +74,7 @@ Pure HTML/CSS/JS. No React, no build step, no `node_modules` black hole.
 
 ---
 
-## 🛠️ The Toolbox — 36 Tools, 7 Categories
+## 🛠️ The Toolbox — 45 Tools, 8 Categories
 
 <details open>
 <summary><b>🔐 Encode / Decode</b> — 6 tools</summary>
@@ -92,7 +92,7 @@ Pure HTML/CSS/JS. No React, no build step, no `node_modules` black hole.
 </details>
 
 <details>
-<summary><b>📋 Formatter</b> — 6 tools</summary>
+<summary><b>📋 Formatter</b> — 7 tools</summary>
 <br/>
 
 | Tool | What it does |
@@ -103,11 +103,12 @@ Pure HTML/CSS/JS. No React, no build step, no `node_modules` black hole.
 | 📖 **Markdown Preview** | Live editor, instant render |
 | ✨ **Code Snippet Beautifier** | Carbon‑style screenshots — 6 themes, 14 languages, PNG export |
 | ✨ **.env Viewer** | Parse `.env` into a table, auto‑detect types, mask secrets |
+| 📋 **Table Generator** | 🆕 GUI editor → Markdown, HTML, CSV, JSON export |
 
 </details>
 
 <details>
-<summary><b>🎲 Generator</b> — 6 tools</summary>
+<summary><b>🎲 Generator</b> — 7 tools</summary>
 <br/>
 
 | Tool | What it does |
@@ -118,11 +119,12 @@ Pure HTML/CSS/JS. No React, no build step, no `node_modules` black hole.
 | 🎨 **CSS Gradient Generator** | Visual builder, linear/radial/conic, presets |
 | 📝 **Lorem Ipsum** | Paragraphs, sentences, or words |
 | 🆔 **Placeholder Image Generator** | Custom dimensions, colors & text — SVG/PNG |
+| ⚙️ **Favicon Generator** | 🆕 Upload image → multi‑size favicons + HTML tags |
 
 </details>
 
 <details>
-<summary><b>🔀 Converter</b> — 8 tools</summary>
+<summary><b>🔀 Converter</b> — 11 tools</summary>
 <br/>
 
 | Tool | What it does |
@@ -135,11 +137,14 @@ Pure HTML/CSS/JS. No React, no build step, no `node_modules` black hole.
 | ⏰ **Cron Expression Parser** | Next‑run preview + visual builder |
 | 🔐 **Chmod Calculator** | Numeric ↔ symbolic, interactive |
 | 🔀 **cURL Converter** | → JavaScript (fetch/axios), Python, Go, PHP |
+| 🔀 **JSON to TypeScript** | 🆕 Auto‑generate interfaces/types from JSON |
+| 🔀 **HTML to JSX** | 🆕 Convert HTML → React JSX with all attribute mappings |
+| 🎨 **Image Compressor** | 🆕 Resize, compress, convert format — 100% client‑side |
 
 </details>
 
 <details>
-<summary><b>🔤 Text</b> — 4 tools</summary>
+<summary><b>🔤 Text</b> — 5 tools</summary>
 <br/>
 
 | Tool | What it does |
@@ -148,17 +153,21 @@ Pure HTML/CSS/JS. No React, no build step, no `node_modules` black hole.
 | 🔍 **Diff Checker** | LCS‑based side‑by‑side comparison |
 | 🔢 **Text Counter** | Words, characters, sentences, paragraphs |
 | 📝 **String Case Converter** | 13 formats — camelCase, snake_case, kebab‑case & more |
+| 📝 **Slugify / Text Sanitizer** | 🆕 Text → URL slug with full Vietnamese support |
 
 </details>
 
 <details>
-<summary><b>🌐 Web & Testing</b> — 3 tools</summary>
+<summary><b>🌐 Web & Testing</b> — 6 tools</summary>
 <br/>
 
 | Tool | What it does |
 |:--|:--|
 | 🎨 **Box Shadow Generator** | Multi‑layer visual editor + presets |
 | 🌐 **Meta Tag Generator** | SEO, Open Graph, Twitter Card + live preview |
+| 🌐 **Flexbox Playground** | Interactive flexbox layout builder |
+| 🔲 **CSS Grid Generator** | Visual CSS Grid builder |
+| 🎬 **CSS Animation Builder** | Keyframe animation creator with live preview |
 | 🌐 **API Tester** | Send requests, inspect responses/headers/timing |
 
 </details>
@@ -224,14 +233,20 @@ DevTools-Hub/
 ├── js/
 │   ├── app.js                 # Controller, command palette, routing
 │   ├── effects.js             # Spotlight glow, stagger observer, counters
-│   └── tools/                 # 35 self-contained, drop-in tool modules
+│   └── tools/                 # 45 self-contained, drop-in tool modules
 │       ├── json-formatter.js
 │       ├── json-path-finder.js
 │       ├── base64.js
 │       ├── regex-tester.js
 │       ├── curl-converter.js
 │       ├── api-tester.js
-│       └── ...  (30 more, see full list above)
+│       ├── json-to-typescript.js   # NEW
+│       ├── html-to-jsx.js          # NEW
+│       ├── image-compressor.js     # NEW
+│       ├── slugify.js              # NEW
+│       ├── table-generator.js      # NEW
+│       ├── favicon-generator.js    # NEW
+│       └── ...  (33 more, see full list above)
 ├── CHANGELOG.md
 ├── LICENSE
 └── README.md
@@ -320,7 +335,7 @@ window.copyToClipboard(text, btnEl)    // copies + shows ✅ on the button
 
 ## 🤝 Contributing
 
-Found a bug? Got an idea for tool #37? PRs and issues are genuinely welcome — see [Adding a New Tool](#-adding-a-new-tool) above to get started in about five minutes.
+Found a bug? Got an idea for tool #46? PRs and issues are genuinely welcome — see [Adding a New Tool](#-adding-a-new-tool) above to get started in about five minutes.
 
 ---
 

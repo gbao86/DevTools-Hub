@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.0] - 2026-09-16
+
+### 🚀 6 New Modern Developer Tools & Modernized Index UI
+
+Expanded the DevTools Hub toolbox from 39 to 45 tools with 6 high-demand developer utilities, redesigned the homepage index with instant search and category filter pills, and performed an across-the-board syntax repair on all modules.
+
+### Added
+
+- **🔀 JSON to TypeScript**: Automatically generates clean TypeScript `interface` or `type` definitions from JSON input. Supports deeply nested objects, array union types, PascalCase naming inference, custom root name, and optional `export` keywords.
+- **🔀 HTML to JSX**: Converts raw HTML into valid React JSX with comprehensive attribute mapping (`className`, `htmlFor`, `tabIndex`, `readOnly`, etc.), style string to object parsing (`style={{ color: 'red' }}`), auto-closing void elements (`<img />`, `<br />`, `<input />`), event handler conversions, and HTML comment to JSX `{/* ... */}` conversion.
+- **📝 Slugify / Text Sanitizer**: Text to URL slug converter with full Vietnamese diacritics removal and normalization. Simultaneously generates 7 formats: URL Slug, File Name, CSS Class, camelCase, PascalCase, CONSTANT_CASE, and Clean Text, with character count statistics and individual copy buttons.
+- **📋 Table Generator**: Interactive visual table builder with dynamic row/column management and Tab key navigation. Supports CSV/TSV import with auto-delimiter detection, and instant multi-format export to **Markdown Table**, **HTML Table**, **CSV**, and **JSON**.
+- **🎨 Image Compressor & Resizer**: 100% offline client-side image compression and conversion via HTML5 Canvas API. Supports JPEG, WebP, PNG, custom quality slider, width/height resizing with locked aspect ratio, compression savings percentage calculation, and instant download.
+- **⚙️ Favicon Generator**: Multi-size favicon generator from any image (16×16, 32×32, 48×48, 180×180 iOS, 192×192, 512×512 Android PWA) with border radius, background color, and padding controls. Includes individual/batch download and ready-to-use `<link>` tags and `site.webmanifest` snippets.
+
+### Changed & Improved
+
+- **Hero Quick Search Bar**: Added an interactive search input directly on the welcome hero with `Ctrl+K` shortcut hint, clear button, and real-time filtering across all 45 tools.
+- **Category Filter Pills**: Interactive pill buttons with dynamic tool counts for every category (`All (45)`, `Converter (11)`, `Generator (8)`, `Formatter (7)`, `Encode / Decode (6)`, `Web (6)`, `Text (5)`, `Reference (3)`).
+- **Status Counter & Empty State**: Live display of matching tools count with a friendly empty state and "Reset filters" action button when no results match the query.
+- **Modern Animations & Badges**: Added pulsing `NEW` highlight badges on new cards and in the Command Palette, card hover lift effect (`translateY(-3px)`), spotlight cursor tracking, and smooth card-appear transitions when filtering.
+- **Icon Mapping**: Added SVG icon mappings for Image (`🖼️`) and Star / Favicon (`⭐`) in the icon system.
+- **Tool Counter & Documentation**: Updated welcome screen counter and README to accurately reflect 45 tools across 8 categories.
+
+### Fixed
+
+- **🔴 Syntax Errors in 6 Existing Tool Modules**: Fixed escaped backtick (`\``) and escaped template literal sequences in `password-generator.js`, `placeholder-image.js`, `cron-parser.js`, `chmod-calculator.js`, `css-gradient-generator.js`, and `code-beautifier.js` that previously caused silent runtime/script parse failures. All 45 tool scripts now pass 100% automated syntax validation.
+
+---
+
 ## [0.4.0] - 2026-08-05
 
 ### 🌐 Web Category Expansion — 3 New Visual CSS Tools
@@ -257,7 +287,8 @@ First public release of DevTools Hub — a collection of 15 developer tools runn
 
 ---
 
-[0.3.2]: https://github.com/gbao86/DevTools-Hub/compare/v0.3.1...v0.3.2
+[0.5.0]: https://github.com/gbao86/DevTools-Hub/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/gbao86/DevTools-Hub/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/gbao86/DevTools-Hub/compare/v0.3...v0.3.1
 [0.3]: https://github.com/gbao86/DevTools-Hub/compare/v0.2.1...v0.3
 [0.2.1]: https://github.com/gbao86/DevTools-Hub/compare/v0.2...v0.2.1

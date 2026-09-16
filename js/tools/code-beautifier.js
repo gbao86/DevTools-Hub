@@ -103,7 +103,7 @@ window.DevTools.push({
                         <div class="tool-group">
                             <label class="tool-label">Ngôn ngữ</label>
                             <select id="cb-lang" class="tool-select">
-                                ${languages.map(l => \`<option value="\${l}">\${l}</option>\`).join('')}
+                                ${languages.map(l => '<option value="' + l + '">' + l + '</option>').join('')}
                             </select>
                         </div>
                         <div class="tool-group">
@@ -133,7 +133,7 @@ window.DevTools.push({
                     <div class="tool-group">
                         <label class="tool-label">Nền ngoài (Background)</label>
                         <select id="cb-bg" class="tool-select">
-                            ${backgrounds.map((b, i) => \`<option value="\${i}">\${b.name}</option>\`).join('')}
+                            ${backgrounds.map((b, i) => '<option value="' + i + '">' + b.name + '</option>').join('')}
                         </select>
                     </div>
 
@@ -188,18 +188,18 @@ window.DevTools.push({
             let html = escapeHTML(code);
             
             // Strings
-            html = html.replace(/("(?:[^"\\\\]|\\\\.)*"|'(?:[^'\\\\]|\\\\.)*'|\`(?:[^\`\\\\]|\\\\.)*\`)/g, \`<span style="color: \${themeColors.str}">$1</span>\`);
+            html = html.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)/g, '<span style="color: ' + themeColors.str + '">$1</span>');
             
             // Numbers
-            html = html.replace(/\\b(\\d+\\.?\\d*)\\b/g, \`<span style="color: \${themeColors.num}">$1</span>\`);
+            html = html.replace(/\b(\d+\.?\d*)\b/g, '<span style="color: ' + themeColors.num + '">$1</span>');
             
             // Keywords
-            const kws = ['function','const','let','var','if','else','return','for','while','class','import','export','from','def','class','public','private','protected','interface'];
-            const kwRegex = new RegExp(\`\\\\b(\${kws.join('|')})\\\\b\`, 'g');
-            html = html.replace(kwRegex, \`<span style="color: \${themeColors.kw}; font-weight: bold;">$1</span>\`);
+            const kws = ['function','const','let','var','if','else','return','for','while','class','import','export','from','def','public','private','protected','interface'];
+            const kwRegex = new RegExp('\\b(' + kws.join('|') + ')\\b', 'g');
+            html = html.replace(kwRegex, '<span style="color: ' + themeColors.kw + '; font-weight: bold;">$1</span>');
             
             // Functions
-            html = html.replace(/([a-zA-Z_$][a-zA-Z0-9_$]*)\\s*(?=\\()/g, \`<span style="color: \${themeColors.func}">$1</span>\`);
+            html = html.replace(/([a-zA-Z_$][a-zA-Z0-9_$]*)\s*(?=\()/g, '<span style="color: ' + themeColors.func + '">$1</span>');
 
             return html;
         }
@@ -249,7 +249,7 @@ window.DevTools.push({
             
             // Inline critical styles for SVG
             const style = document.createElement('style');
-            style.textContent = \`
+            style.textContent = `
                 .cb-preview-area { display: flex; justify-content: center; align-items: center; overflow: hidden; box-sizing: border-box; font-family: sans-serif; }
                 .cb-window { box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow: hidden; width: 100%; max-width: 800px; }
                 .cb-window-header { display: flex; align-items: center; padding: 0.75rem 1rem; position: relative; }
@@ -260,21 +260,21 @@ window.DevTools.push({
                 .cb-dot.green { background-color: #27c93f; }
                 .cb-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: bold; opacity: 0.6; }
                 .cb-code-content { padding: 1rem; margin: 0; font-family: 'Fira Code', 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
-            \`;
+            `;
             clone.insertBefore(style, clone.firstChild);
             clone.style.width = width + 'px';
             clone.style.height = height + 'px';
             clone.style.border = 'none';
 
-            const svgData = \`
-                <svg xmlns="http://www.w3.org/2000/svg" width="\${width}" height="\${height}">
+            const svgData = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
                     <foreignObject width="100%" height="100%">
                         <div xmlns="http://www.w3.org/1999/xhtml">
-                            \${clone.outerHTML}
+                            ${clone.outerHTML}
                         </div>
                     </foreignObject>
                 </svg>
-            \`;
+            `;
 
             const img = new Image();
             img.onload = () => {
@@ -286,7 +286,7 @@ window.DevTools.push({
                 canvas.toBlob((blob) => {
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
-                    a.download = \`code-snippet.png\`;
+                    a.download = 'code-snippet.png';
                     a.href = url;
                     a.click();
                     URL.revokeObjectURL(url);
