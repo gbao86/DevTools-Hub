@@ -340,6 +340,28 @@ body {
     border-color: var(--border-color);
 }
 
+/* Topbar Icon Link (GitHub, etc) */
+.topbar-icon-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    padding: 7px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+    text-decoration: none;
+}
+
+.topbar-icon-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+    border-color: var(--border-color);
+    transform: translateY(-1px);
+}
+
 /* Theme Icon Logic */
 [data-theme="light"] .moon-icon { display: block; }
 [data-theme="light"] .sun-icon { display: none; }
@@ -551,12 +573,37 @@ body {
 .cmd-footer {
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
+    justify-content: space-between;
+    gap: var(--space-md);
     padding: var(--space-sm) var(--space-lg);
     border-top: 1px solid var(--border-color);
     font-size: var(--fs-xs);
     color: var(--text-muted);
     flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.cmd-footer-shortcuts {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.cmd-footer-credit {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.cmd-footer-credit a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--transition-fast);
+}
+
+.cmd-footer-credit a:hover {
+    color: var(--accent-primary);
 }
 
 .cmd-footer kbd {
