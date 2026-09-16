@@ -339,6 +339,14 @@ Found a bug? Got an idea for tool #46? PRs and issues are genuinely welcome — 
 
 ---
 
+## 👨‍💻 Author
+
+**Trịnh Gia Bảo**
+- GitHub: [@gbao86](https://github.com/gbao86)
+- Repository: [gbao86/DevTools-Hub](https://github.com/gbao86/DevTools-Hub)
+
+---
+
 ## 📄 License
 
 MIT — see [LICENSE](LICENSE). Use it, fork it, ship it. Go wild. 🚀
@@ -346,9 +354,9 @@ MIT — see [LICENSE](LICENSE). Use it, fork it, ship it. Go wild. 🚀
 <div align="center">
 <br/>
 
-**Built with ❤️ and vanilla JavaScript**
+Designed & Developed with ❤️ by **[Trịnh Gia Bảo](https://github.com/gbao86)**
 
-*No React. No Angular. No Vue. No dependencies. Just vibes.*
+*No React. No Angular. No Vue. No dependencies. Just pure web craft.*
 
 <br/>
 
