@@ -126,7 +126,14 @@ console.log('Result:', calculateSum(10, 20));
         // Render preview and statistics
         const update = () => {
             const val = inputTextarea.value;
-            previewDiv.innerHTML = this.parseMarkdown(val);
+            const parsedHtml = this.parseMarkdown(val);
+            const doc = new DOMParser().parseFromString(parsedHtml, 'text/html');
+            if (typeof previewDiv.replaceChildren === 'function') {
+                previewDiv.replaceChildren(...Array.from(doc.body.childNodes));
+            } else {
+                previewDiv.textContent = '';
+                Array.from(doc.body.childNodes).forEach(node => previewDiv.appendChild(node));
+            }
             
             // Statistics calculation
             const lines = val ? val.split(/\r?\n/).length : 0;
@@ -202,10 +209,20 @@ console.log('Result:', calculateSum(10, 20));
             let res = escapeHtml(str);
 
             // Images: ![alt](url)
-            res = res.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
+            res = res.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, url) => {
+                const cleanUrl = url.trim();
+                if (/^(?:https?:\/\/|\/|data:image\/|blob:)/i.test(cleanUrl)) {
+                    return `<img src="${cleanUrl}" alt="${alt}">`;
+                }
+                return '';
+            });
 
             // Links: [text](url)
-            res = res.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+            res = res.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
+                const cleanUrl = url.trim();
+                const safe = /^(?:https?:\/\/|\/|#|mailto:)/i.test(cleanUrl) ? cleanUrl : '#';
+                return `<a href="${safe}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+            });
 
             // Bold: **text** or __text__
             res = res.replace(/(\*\*|__)(.*?)\1/g, '<strong>$2</strong>');

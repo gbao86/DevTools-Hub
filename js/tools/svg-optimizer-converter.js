@@ -248,27 +248,41 @@ window.DevTools.push({
 
             // Strip XML declaration
             if (optDoctype.checked) {
-                svg = svg.replace(/<\?xml[\s\S]*?\?>/gi, '');
-                svg = svg.replace(/<!DOCTYPE[\s\S]*?>/gi, '');
+                let prev;
+                do {
+                    prev = svg;
+                    svg = svg.replace(/<\?xml[\s\S]*?\?>/gi, '').replace(/<!DOCTYPE[\s\S]*?>/gi, '');
+                } while (svg !== prev);
             }
 
-            // Strip comments
+            // Strip comments (repeated until no nested comments remain)
             if (optComments.checked) {
-                svg = svg.replace(/<!--[\s\S]*?-->/g, '');
+                let prev;
+                do {
+                    prev = svg;
+                    svg = svg.replace(/<!--[\s\S]*?-->/g, '');
+                } while (svg !== prev);
             }
 
             // Strip editor metadata
             if (optMeta.checked) {
-                svg = svg.replace(/<metadata[\s\S]*?<\/metadata>/gi, '');
-                svg = svg.replace(/<title[\s\S]*?<\/title>/gi, '');
-                svg = svg.replace(/<desc[\s\S]*?<\/desc>/gi, '');
-                svg = svg.replace(/\s*(?:xmlns:sketch|sketch:type|xmlns:inkscape|inkscape:[a-z0-9_-]+|xmlns:sodipodi|sodipodi:[a-z0-9_-]+|xmlns:adobe|adobe:[a-z0-9_-]+)="[^"]*"/gi, '');
+                let prev;
+                do {
+                    prev = svg;
+                    svg = svg.replace(/<metadata[\s\S]*?<\/metadata>/gi, '')
+                             .replace(/<title[\s\S]*?<\/title>/gi, '')
+                             .replace(/<desc[\s\S]*?<\/desc>/gi, '')
+                             .replace(/\s*(?:xmlns:sketch|sketch:type|xmlns:inkscape|inkscape:[a-z0-9_-]+|xmlns:sodipodi|sodipodi:[a-z0-9_-]+|xmlns:adobe|adobe:[a-z0-9_-]+)="[^"]*"/gi, '');
+                } while (svg !== prev);
             }
 
             // Strip empty tags
             if (optEmpty.checked) {
-                svg = svg.replace(/<g[^>]*>\s*<\/g>/gi, '');
-                svg = svg.replace(/<defs[^>]*>\s*<\/defs>/gi, '');
+                let prev;
+                do {
+                    prev = svg;
+                    svg = svg.replace(/<g[^>]*>\s*<\/g>/gi, '').replace(/<defs[^>]*>\s*<\/defs>/gi, '');
+                } while (svg !== prev);
             }
 
             // Minify whitespace

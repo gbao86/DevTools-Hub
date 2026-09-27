@@ -145,9 +145,36 @@ window.DevTools.push({
         }
 
         function decodeHtml(str) {
-            let textarea = document.createElement("textarea");
-            textarea.innerHTML = str;
-            return textarea.value;
+            if (!str) return '';
+            // Decode numeric character references (decimal and hex)
+            let decoded = str
+                .replace(/&#(\d+);/g, (match, dec) => {
+                    const code = parseInt(dec, 10);
+                    return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : match;
+                })
+                .replace(/&#x([0-9a-fA-F]+);/g, (match, hex) => {
+                    const code = parseInt(hex, 16);
+                    return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : match;
+                });
+
+            // Decode named entities
+            const entityMap = {
+                '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&apos;': "'",
+                '&nbsp;': ' ', '&copy;': '©', '&reg;': '®', '&trade;': '™',
+                '&euro;': '€', '&pound;': '£', '&yen;': '¥', '&cent;': '¢',
+                '&times;': '×', '&divide;': '÷', '&plusmn;': '±', '&deg;': '°',
+                '&micro;': 'µ', '&para;': '¶', '&sect;': '§', '&bull;': '•',
+                '&middot;': '·', '&laquo;': '«', '&raquo;': '»', '&hellip;': '…',
+                '&ndash;': '–', '&mdash;': '—', '&lsquo;': '‘', '&rsquo;': '’',
+                '&ldquo;': '“', '&rdquo;': '”', '&dagger;': '†', '&Dagger;': '‡',
+                '&permil;': '‰', '&lsaquo;': '‹', '&rsaquo;': '›'
+            };
+
+            decoded = decoded.replace(/&[a-zA-Z]+;/g, (match) => {
+                return entityMap[match] || entityMap[match.toLowerCase()] || match;
+            });
+
+            return decoded;
         }
 
         function process() {
