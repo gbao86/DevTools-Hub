@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.6.0] - 2026-09-27
+
+### 🚀 50th Tool Milestone — 5 New Developer Tools & Bug Fixes
+
+Expanded DevTools Hub from 45 to 50 tools, achieving the major 50-tool milestone with 5 high-utility developer tools: **SVG Optimizer & Converter**, **User-Agent Parser**, **Git Command Builder**, **Glassmorphism Generator**, and **JSON Schema Generator**. Fixed critical template literal interpolation errors in Chmod Calculator, Cron Parser, and Placeholder Image Generator.
+
+### Added
+
+- **🎨 SVG Optimizer & Converter**: Clean, minify, and convert raw SVG code. Features automated stripping of DOCTYPE, XML declarations, comments, and editor metadata (Sketch, Inkscape, Adobe). Provides real-time rendering preview with background switcher (Grid, Dark, Light, Gradient), size comparison metrics with savings percentage, and 1-click conversions into:
+  - **Clean Minified SVG** (with `.svg` file download)
+  - **React JSX Component** (auto-converting kebab-case attributes to camelCase `strokeWidth`, `fillRule`, etc.)
+  - **CSS Background** (`background-image: url("data:image/svg+xml,...")`)
+  - **Data URI** (both UTF-8 and Base64 encoded)
+- **🕵️ User-Agent Parser & Device Detector**: Deep User-Agent inspection tool that automatically parses the current browser's UA or custom inputs. Categorizes information into interactive cards:
+  - **Browser**: Name, full version, major release
+  - **Operating System**: Platform name (Windows 11/10, macOS, iOS, Android, Linux), version, and architecture (x86_64, ARM64)
+  - **Device**: Category (Desktop, Mobile, Tablet, Smart TV, Console), brand, and model
+  - **Engine**: Layout/rendering engine identification (Blink, WebKit, Gecko, Trident)
+  - **Search Bot & Crawler Detection**: Instant detection of Googlebot, Bingbot, Facebook External Hit, Twitterbot, etc. Includes common presets and full JSON export.
+- **🐙 Git Command Builder & Interactive Cheat Sheet**: Visual and interactive command generator for Git scenarios:
+  - **Undo & Recovery**: Soft undo last commit, hard reset, unstage files, discard changes, amend commit, and reflog recovery
+  - **Branch & Merge**: Create & switch, rename local/remote, safe delete vs force delete, remote branch deletion, cherry-pick, and interactive squash rebase
+  - **Stash**: Push with message, pop latest, list, drop/clear
+  - **Remote & Sync**: Safe force push (`--force-with-lease`), upstream synchronization, hard sync to remote
+  - **Clean & Releases**: Annotated tag creation & push, untrack cached files (`git rm --cached`), untracked garbage cleanup, and pretty graph logs
+  - Real-time parameter inputs, safety status badges (Safe vs Dangerous), and explanations in Vietnamese.
+- **✨ Glassmorphism Generator**: Frosted glass UI designer utilizing CSS `backdrop-filter`. Features a live floating card with animated backdrop refraction shapes, customizable blur, background opacity, tint color, border width & reflection opacity, border radius, and shadow depth sliders. Provides quick presets (Soft Frosted, Dark Obsidian, Cyber Neon, Crystal Clear) and cross-browser CSS output.
+- **📐 JSON Schema Generator & Validator**: Inferred JSON Schema generation following Draft-07 and Draft 2020-12 specifications from any JSON input. Recursively maps types (`string`, `integer`, `number`, `boolean`, `array`, `object`), automatically detects string formats (`email`, `uri`, `date-time`, `uuid`, `ipv4`), allows configurable required property policies, and includes a built-in interactive schema test validator.
+
+### Changed & Improved
+
+- **Tool Counter**: Welcome hero counter updated to 50 tools across 8 categories.
+- **New Badges**: Attached `✨ MỚI` badges to all 5 newly launched tools in the homepage grid and command palette.
+- **Icon Library**: Added dedicated SVG icon mappings for Detective / User-Agent (`🕵️`) and Git Branch (`🐙`).
+- **Chmod Calculator Enhancements**: Added 📋 Copy Command button, descriptive tooltip labels for all permission presets, and mobile-friendly responsive grid layout.
+
+### Fixed
+
+- **🔴 Chmod Calculator DOM Exception**: Fixed escaped template literal syntax `\${groupName}` that caused `querySelector` DOMException errors and prevented tool rendering.
+- **🔴 Cron Parser & Placeholder Image Interpolation**: Fixed escaped `\${...}` template sequences ensuring proper schedule description text and clean SVG placeholder generation.
+- **🔴 Code Beautifier Fallbacks**: Added null-safety fallbacks for theme and background selection to prevent unexpected runtime errors.
+
+---
+
 ## [0.5.0] - 2026-09-16
 
 ### 🚀 6 New Modern Developer Tools & Modernized Index UI
@@ -287,6 +331,7 @@ First public release of DevTools Hub — a collection of 15 developer tools runn
 
 ---
 
+[0.6.0]: https://github.com/gbao86/DevTools-Hub/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/gbao86/DevTools-Hub/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/gbao86/DevTools-Hub/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/gbao86/DevTools-Hub/compare/v0.3...v0.3.1

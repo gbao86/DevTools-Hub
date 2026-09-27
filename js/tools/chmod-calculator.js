@@ -10,6 +10,7 @@ window.DevTools.push({
             style.id = 'chmod-tool-style';
             style.textContent = `
                 .chmod-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+                @media (max-width: 640px) { .chmod-grid { grid-template-columns: 1fr; } }
                 .chmod-col-box { background: var(--bg-secondary); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); }
                 .chmod-col-box h3 { margin-top: 0; margin-bottom: 1rem; font-size: 1rem; text-align: center; color: var(--text-primary); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
                 .chmod-checkbox-row { margin-bottom: 0.5rem; }
@@ -18,7 +19,8 @@ window.DevTools.push({
                 .chmod-output-box p { margin: 0.5rem 0; color: var(--text-secondary); }
                 .chmod-output-box strong { color: var(--text-primary); display: inline-block; width: 100px; }
                 .chmod-output-val { color: var(--accent-primary); font-weight: bold; }
-                .chmod-command { background: var(--bg-primary); padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); margin-top: 0.5rem; }
+                .chmod-command { background: var(--bg-primary); padding: 0.75rem 1rem; border-radius: 6px; border: 1px solid var(--border-color); margin-top: 0.75rem; }
+                .chmod-cmd-inner { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
             `;
             document.head.appendChild(style);
         }
@@ -43,7 +45,7 @@ window.DevTools.push({
 
                     <div class="chmod-grid">
                         <div class="chmod-col-box">
-                            <h3>Owner (Chủ)</h3>
+                            <h3>Owner (Chủ sở hữu)</h3>
                             <div class="chmod-checkbox-row tool-checkbox">
                                 <input type="checkbox" id="cb-owner-r" data-val="4" data-group="owner" checked>
                                 <label for="cb-owner-r">Read (r) - 4</label>
@@ -97,9 +99,14 @@ window.DevTools.push({
                     <div class="chmod-output-box">
                         <p><strong>Numeric:</strong> <span class="chmod-output-val" id="chmod-out-num">755</span></p>
                         <p><strong>Symbolic:</strong> <span class="chmod-output-val" id="chmod-out-sym">rwxr-xr-x</span></p>
-                        <p><strong>Giải thích:</strong> <span id="chmod-out-desc">Owner có rwx, Group có r-x, Others có r-x</span></p>
+                        <p><strong>Giải thích:</strong> <span id="chmod-out-desc">Đang tính toán...</span></p>
                         <div class="chmod-command">
-                            <span style="color: var(--text-muted);">$</span> <span style="color: var(--accent-primary);">chmod</span> <span id="chmod-out-cmd-num" style="color: var(--text-primary);">755</span> <span style="color: var(--text-secondary);">filename</span>
+                            <div class="chmod-cmd-inner">
+                                <div>
+                                    <span style="color: var(--text-muted);">$</span> <span style="color: var(--accent-primary);">chmod</span> <span id="chmod-out-cmd-num" style="color: var(--text-primary);">755</span> <span style="color: var(--text-secondary);">filename</span>
+                                </div>
+                                <button type="button" class="tool-btn tool-btn-sm" id="chmod-copy-cmd" title="Sao chép lệnh chmod">📋 Copy Command</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -115,25 +122,46 @@ window.DevTools.push({
         const outSym = container.querySelector('#chmod-out-sym');
         const outDesc = container.querySelector('#chmod-out-desc');
         const outCmdNum = container.querySelector('#chmod-out-cmd-num');
+        const copyCmdBtn = container.querySelector('#chmod-copy-cmd');
 
         const presets = [
-            '644', '755', '777', '700', '600', '400', '444', '555', '775'
+            { code: '644', desc: '644 (rw-r--r--) - Tệp công khai tiêu chuẩn (HTML, ảnh, văn bản)' },
+            { code: '755', desc: '755 (rwxr-xr-x) - Thư mục / tệp thực thi tiêu chuẩn' },
+            { code: '777', desc: '777 (rwxrwxrwx) - Đầy đủ quyền cho tất cả người dùng' },
+            { code: '700', desc: '700 (rwx------) - Toàn quyền riêng tư cho chủ sở hữu' },
+            { code: '600', desc: '600 (rw-------) - Chỉ chủ đọc/ghi (Private key, config)' },
+            { code: '400', desc: '400 (r--------) - Chỉ chủ sở hữu đọc (Read-only SSH key)' },
+            { code: '444', desc: '444 (r--r--r--) - Mọi người chỉ đọc' },
+            { code: '555', desc: '555 (r-xr-xr-x) - Mọi người chỉ đọc & thực thi' },
+            { code: '775', desc: '775 (rwxrwxr-x) - Cho phép nhóm ghi, người khác đọc' }
         ];
 
         presets.forEach(p => {
             const btn = document.createElement('button');
+            btn.type = 'button';
             btn.className = 'tool-btn tool-btn-sm';
-            btn.textContent = p;
+            btn.textContent = p.code;
+            btn.title = p.desc;
             btn.addEventListener('click', () => {
-                numIn.value = p;
-                updateFromNum(p);
+                updateFromNum(p.code);
             });
             presetsContainer.appendChild(btn);
         });
 
+        if (copyCmdBtn) {
+            copyCmdBtn.addEventListener('click', () => {
+                const cmd = `chmod ${outNum.textContent} filename`;
+                if (window.copyToClipboard) {
+                    window.copyToClipboard(cmd, copyCmdBtn);
+                } else if (navigator.clipboard) {
+                    navigator.clipboard.writeText(cmd);
+                }
+            });
+        }
+
         function parseNumToOctalArray(numStr) {
             let str = String(numStr).replace(/[^0-7]/g, '').padStart(3, '0').slice(-3);
-            return [parseInt(str[0]), parseInt(str[1]), parseInt(str[2])];
+            return [parseInt(str[0], 10), parseInt(str[1], 10), parseInt(str[2], 10)];
         }
 
         function numToSym(num) {
@@ -144,9 +172,9 @@ window.DevTools.push({
 
         function symToNum(sym) {
             if (sym.length !== 9) return '000';
-            let owner = (sym[0]==='r'?4:0) + (sym[1]==='w'?2:0) + (sym[2]==='x'?1:0);
-            let group = (sym[3]==='r'?4:0) + (sym[4]==='w'?2:0) + (sym[5]==='x'?1:0);
-            let others = (sym[6]==='r'?4:0) + (sym[7]==='w'?2:0) + (sym[8]==='x'?1:0);
+            let owner = (sym[0] === 'r' ? 4 : 0) + (sym[1] === 'w' ? 2 : 0) + (sym[2] === 'x' ? 1 : 0);
+            let group = (sym[3] === 'r' ? 4 : 0) + (sym[4] === 'w' ? 2 : 0) + (sym[5] === 'x' ? 1 : 0);
+            let others = (sym[6] === 'r' ? 4 : 0) + (sym[7] === 'w' ? 2 : 0) + (sym[8] === 'x' ? 1 : 0);
             return '' + owner + group + others;
         }
 
@@ -162,12 +190,12 @@ window.DevTools.push({
                 if (val === 1) return 'chỉ thực thi (--x)';
                 return 'không có quyền (---)';
             };
-            return `Chủ sở hữu: \${getDesc(arr[0])}. Nhóm: \${getDesc(arr[1])}. Khác: \${getDesc(arr[2])}.`;
+            return `Chủ sở hữu: ${getDesc(arr[0])}. Nhóm: ${getDesc(arr[1])}. Khác: ${getDesc(arr[2])}.`;
         }
 
         function updateUI(numStr, symStr) {
-            numIn.value = numStr;
-            symIn.value = symStr;
+            if (document.activeElement !== numIn) numIn.value = numStr;
+            if (document.activeElement !== symIn) symIn.value = symStr;
             outNum.textContent = numStr;
             outSym.textContent = symStr;
             outCmdNum.textContent = numStr;
@@ -176,9 +204,12 @@ window.DevTools.push({
             const arr = parseNumToOctalArray(numStr);
             const updateCheckboxes = (groupIndex, groupName) => {
                 let val = arr[groupIndex];
-                container.querySelector(`#cb-\${groupName}-r`).checked = (val & 4) !== 0;
-                container.querySelector(`#cb-\${groupName}-w`).checked = (val & 2) !== 0;
-                container.querySelector(`#cb-\${groupName}-x`).checked = (val & 1) !== 0;
+                const cbR = container.querySelector(`#cb-${groupName}-r`);
+                const cbW = container.querySelector(`#cb-${groupName}-w`);
+                const cbX = container.querySelector(`#cb-${groupName}-x`);
+                if (cbR) cbR.checked = (val & 4) !== 0;
+                if (cbW) cbW.checked = (val & 2) !== 0;
+                if (cbX) cbX.checked = (val & 1) !== 0;
             };
             updateCheckboxes(0, 'owner');
             updateCheckboxes(1, 'group');
@@ -200,9 +231,12 @@ window.DevTools.push({
         function updateFromCheckboxes() {
             const getVal = (groupName) => {
                 let val = 0;
-                if (container.querySelector(`#cb-\${groupName}-r`).checked) val += 4;
-                if (container.querySelector(`#cb-\${groupName}-w`).checked) val += 2;
-                if (container.querySelector(`#cb-\${groupName}-x`).checked) val += 1;
+                const cbR = container.querySelector(`#cb-${groupName}-r`);
+                const cbW = container.querySelector(`#cb-${groupName}-w`);
+                const cbX = container.querySelector(`#cb-${groupName}-x`);
+                if (cbR && cbR.checked) val += 4;
+                if (cbW && cbW.checked) val += 2;
+                if (cbX && cbX.checked) val += 1;
                 return val;
             };
             let numStr = '' + getVal('owner') + getVal('group') + getVal('others');
@@ -211,12 +245,33 @@ window.DevTools.push({
 
         numIn.addEventListener('input', (e) => {
             let val = e.target.value.replace(/[^0-7]/g, '');
+            if (e.target.value !== val) e.target.value = val;
             if (val.length === 3) updateFromNum(val);
+        });
+
+        numIn.addEventListener('blur', () => {
+            let val = numIn.value.replace(/[^0-7]/g, '');
+            if (val.length > 0) {
+                val = val.padStart(3, '0').slice(-3);
+                updateFromNum(val);
+            } else {
+                updateFromNum('755');
+            }
         });
 
         symIn.addEventListener('input', (e) => {
             let val = e.target.value.toLowerCase().replace(/[^rwx-]/g, '');
+            if (e.target.value !== val) e.target.value = val;
             if (val.length === 9) updateFromSym(val);
+        });
+
+        symIn.addEventListener('blur', () => {
+            let val = symIn.value.toLowerCase().replace(/[^rwx-]/g, '');
+            if (val.length > 0) {
+                updateFromSym(val.padEnd(9, '-').slice(0, 9));
+            } else {
+                updateFromNum(outNum.textContent || '755');
+            }
         });
 
         checkboxes.forEach(cb => {

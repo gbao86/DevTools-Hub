@@ -205,15 +205,17 @@ window.DevTools.push({
         }
 
         function renderPreview() {
-            const theme = themes[themeSel.value];
+            const theme = themes[themeSel.value] || themes['dracula'] || Object.values(themes)[0];
             const code = codeInput.value;
             const lang = langSel.value;
-            const pad = padInput.value + 'px';
-            const rad = radInput.value + 'px';
-            const bg = backgrounds[bgSel.value].val;
+            const pad = (padInput.value || 32) + 'px';
+            const rad = (radInput.value || 8) + 'px';
+            const bg = (backgrounds[bgSel.value] || backgrounds[0]).val;
 
-            container.querySelector('#cb-pad-val').textContent = padInput.value;
-            container.querySelector('#cb-br-val').textContent = radInput.value;
+            const padValEl = container.querySelector('#cb-pad-val');
+            if (padValEl) padValEl.textContent = padInput.value || 32;
+            const brValEl = container.querySelector('#cb-br-val');
+            if (brValEl) brValEl.textContent = radInput.value || 8;
 
             titleEl.textContent = lang;
             previewArea.style.background = bg;
