@@ -125,7 +125,7 @@ window.DevTools.push({
                 } else if (/^-?\d+(\.\d+)?$/.test(val)) {
                     props.push(camelKey + ': ' + val);
                 } else {
-                    props.push(camelKey + ": '" + val.replace(/'/g, "\\'") + "'");
+                    props.push(camelKey + ": '" + val.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'");
                 }
             }
             return '{{' + props.join(', ') + '}}';

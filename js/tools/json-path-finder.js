@@ -527,7 +527,7 @@ const JsonPathFinderTool = {
                         if (/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(k)) {
                             childPath += `.${k}`;
                         } else {
-                            childPath += `["${k.replace(/"/g, '\\"')}"]`;
+                            childPath += '["' + k.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"]';
                         }
                     }
                     

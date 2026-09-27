@@ -280,7 +280,7 @@ const CurlConverter = {
                     p.formData.forEach(f => c += `    fd.append('${f.key}', '${f.value}');\n`);
                     c += `    return fd;\n  })(),\n`;
                 } else if (p.data) {
-                    c += `  body: '${p.data.replace(/'/g, "\\'")}',\n`;
+                    c += `  body: '${p.data.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}',\n`;
                 }
                 
                 if (p.flags.location) c += `  redirect: 'follow',\n`;
@@ -308,7 +308,7 @@ const CurlConverter = {
                     p.formData.forEach(f => c += `data.append('${f.key}', '${f.value}');\n`);
                     c += `\nlet config = {\n  method: '${p.method.toLowerCase()}',\n  maxBodyLength: Infinity,\n  url: '${p.url}',\n  headers: { \n    ...data.getHeaders()\n  },\n  data : data\n`;
                 } else if (p.data) {
-                    c = `const axios = require('axios');\nlet data = '${p.data.replace(/'/g, "\\'")}'\n\n` + c;
+                    c = `const axios = require('axios');\nlet data = '${p.data.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'\n\n` + c;
                     c += `  data : data,\n`;
                 }
                 c += `};\n\naxios.request(config)\n.then((response) => {\n  console.log(JSON.stringify(response.data));\n})\n.catch((error) => {\n  console.log(error);\n});`;
@@ -327,7 +327,7 @@ const CurlConverter = {
                     c += `}\n`;
                     kwargs.push('data=payload');
                 } else if (p.data) {
-                    c += `payload = '${p.data.replace(/'/g, "\\'")}'\n`;
+                    c += `payload = '${p.data.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'\n`;
                     kwargs.push('data=payload');
                 }
                 
@@ -388,7 +388,7 @@ const CurlConverter = {
                     p.formData.forEach(f => c += `    '${f.key}' => '${f.value}',\n`);
                     c += `  ),\n`;
                 } else if (p.data) {
-                    c += `  CURLOPT_POSTFIELDS => '${p.data.replace(/'/g, "\\'")}',\n`;
+                    c += `  CURLOPT_POSTFIELDS => '${p.data.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}',\n`;
                 }
                 
                 const h = {...p.headers};

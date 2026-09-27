@@ -285,7 +285,7 @@ const HttpStatusCodesTool = {
 
             grid.innerHTML = filteredCodes.map(item => `
                 <div class="hsc-card cat-${item.category}" data-code="${item.code}">
-                    <button class="hsc-copy-btn" title="Copy code" onclick="event.stopPropagation(); window.copyToClipboard('${item.code} ${item.name.replace(/'/g, "\\'")}', this)">
+                    <button class="hsc-copy-btn" title="Copy code" data-copy="${item.code} ${item.name}">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -306,6 +306,18 @@ const HttpStatusCodesTool = {
                     </div>
                 </div>
             `).join('');
+
+            // Add click events for copy buttons
+            const copyBtns = grid.querySelectorAll('.hsc-copy-btn');
+            copyBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const text = btn.getAttribute('data-copy');
+                    if (window.copyToClipboard) {
+                        window.copyToClipboard(text, btn);
+                    }
+                });
+            });
 
             // Add click events to expand cards
             const cards = grid.querySelectorAll('.hsc-card');
