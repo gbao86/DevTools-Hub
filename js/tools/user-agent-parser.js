@@ -7,6 +7,7 @@ window.DevTools.push({
     name: 'User-Agent Parser',
     icon: '🕵️',
     category: 'Tester',
+    version: '0.6.0',
     description: 'Phân tích chi tiết chuỗi User-Agent: Trình duyệt, Hệ điều hành, Thiết bị, Engine và Bot',
 
     render(container) {

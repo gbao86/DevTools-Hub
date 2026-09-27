@@ -18,20 +18,13 @@
         'Reference': { icon: '📖', order: 8 },
     };
 
-    
-    const NEW_TOOL_SLUGS = new Set([
-        'svg-optimizer-converter',
-        'user-agent-parser',
-        'git-command-builder',
-        'glassmorphism-generator',
-        'json-schema-generator',
-        'json-to-typescript',
-        'html-to-jsx',
-        'image-compressor',
-        'slugify-text-sanitizer',
-        'table-generator',
-        'favicon-generator'
-    ]);
+    // Current release version: tools matching this version automatically receive the "MỚI" badge
+    const CURRENT_VERSION = '0.6.0';
+
+    function isNewTool(tool) {
+        if (!tool) return false;
+        return tool.version === CURRENT_VERSION;
+    }
 
     const ICONS = {
         '📋': '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>',
@@ -145,7 +138,7 @@
             `;
             grouped[cat].forEach(tool => {
                 const slug = toSlug(tool.name);
-                const isNew = NEW_TOOL_SLUGS.has(slug);
+                const isNew = isNewTool(tool);
                 html += `
                     <div class="cmd-item" data-tool="${slug}" data-category="${cat}" data-name="${tool.name.toLowerCase()}">
                         <span class="cmd-item-icon">${getIcon(tool.icon)}</span>
@@ -263,7 +256,7 @@
         let html = '';
         tools.forEach(tool => {
             const slug = toSlug(tool.name);
-            const isNew = NEW_TOOL_SLUGS.has(slug);
+            const isNew = isNewTool(tool);
             html += `
                 <div class="tool-card spotlight-card card-shine visible" data-tool="${slug}" data-category="${tool.category || 'Other'}" data-name="${tool.name.toLowerCase()}" data-desc="${(tool.description || '').toLowerCase()}">
                     <div class="tool-card-top">

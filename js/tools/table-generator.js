@@ -7,6 +7,7 @@ window.DevTools.push({
     name: 'Table Generator',
     icon: '📋',
     category: 'Formatter',
+    version: '0.5.0',
     description: 'Tạo bảng Markdown, HTML, CSV, JSON từ giao diện trực quan',
 
     render(container) {

@@ -7,6 +7,7 @@ window.DevTools.push({
     name: 'HTML to JSX',
     icon: '🔀',
     category: 'Converter',
+    version: '0.5.0',
     description: 'Chuyển đổi HTML sang JSX cho React',
 
     render(container) {

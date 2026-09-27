@@ -7,6 +7,7 @@ window.DevTools.push({
     name: 'SVG Optimizer & Converter',
     icon: '🎨',
     category: 'Converter',
+    version: '0.6.0',
     description: 'Tối ưu, làm sạch mã SVG và chuyển đổi sang React JSX, CSS Background, Data URI',
 
     render(container) {

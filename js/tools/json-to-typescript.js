@@ -7,6 +7,7 @@ window.DevTools.push({
     name: 'JSON to TypeScript',
     icon: '🔀',
     category: 'Converter',
+    version: '0.5.0',
     description: 'Chuyển đổi JSON sang TypeScript interface/type tự động',
 
     render(container) {

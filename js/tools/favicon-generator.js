@@ -7,6 +7,7 @@ window.DevTools.push({
     name: 'Favicon Generator',
     icon: '⚙️',
     category: 'Generator',
+    version: '0.5.0',
     description: 'Tạo trọn bộ favicon đa kích thước và thẻ HTML từ ảnh bất kỳ',
 
     render(container) {

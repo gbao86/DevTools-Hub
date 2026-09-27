@@ -7,6 +7,7 @@ window.DevTools.push({
     name: 'Git Command Builder',
     icon: '🐙',
     category: 'Reference',
+    version: '0.6.0',
     description: 'Tạo lệnh Git tương tác theo kịch bản: hoàn tác, branch, commit, stash, remote',
 
     render(container) {

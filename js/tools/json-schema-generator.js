@@ -7,6 +7,7 @@ window.DevTools.push({
     name: 'JSON Schema Generator',
     icon: '📐',
     category: 'Formatter',
+    version: '0.6.0',
     description: 'Tự động suy luận và sinh chuẩn JSON Schema (Draft-07 / 2020-12) từ dữ liệu JSON',
 
     render(container) {

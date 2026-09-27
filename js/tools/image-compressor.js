@@ -7,6 +7,7 @@ window.DevTools.push({
     name: 'Image Compressor',
     icon: '🎨',
     category: 'Converter',
+    version: '0.5.0',
     description: 'Nén, resize và đổi định dạng ảnh (JPEG, PNG, WebP) 100% offline',
 
     render(container) {

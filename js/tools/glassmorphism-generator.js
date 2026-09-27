@@ -7,6 +7,7 @@ window.DevTools.push({
     name: 'Glassmorphism Generator',
     icon: '✨',
     category: 'Web',
+    version: '0.6.0',
     description: 'Tạo hiệu ứng kính mờ (frosted glass / backdrop-filter) và CSS hiện đại',
 
     render(container) {

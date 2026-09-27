@@ -7,6 +7,7 @@ window.DevTools.push({
     name: 'Slugify / Text Sanitizer',
     icon: '📝',
     category: 'Text',
+    version: '0.5.0',
     description: 'Chuyển đổi văn bản sang URL slug, hỗ trợ tiếng Việt',
 
     render(container) {
