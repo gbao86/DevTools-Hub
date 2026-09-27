@@ -126,14 +126,7 @@ console.log('Result:', calculateSum(10, 20));
         // Render preview and statistics
         const update = () => {
             const val = inputTextarea.value;
-            const parsedHtml = this.parseMarkdown(val);
-            const doc = new DOMParser().parseFromString(parsedHtml, 'text/html');
-            if (typeof previewDiv.replaceChildren === 'function') {
-                previewDiv.replaceChildren(...Array.from(doc.body.childNodes));
-            } else {
-                previewDiv.textContent = '';
-                Array.from(doc.body.childNodes).forEach(node => previewDiv.appendChild(node));
-            }
+            this.renderMarkdownNodes(val, previewDiv);
             
             // Statistics calculation
             const lines = val ? val.split(/\r?\n/).length : 0;
@@ -178,94 +171,127 @@ console.log('Result:', calculateSum(10, 20));
     },
 
     /**
-     * Pure JavaScript Markdown Parser
-     * Supports: Headings, Bold, Italic, Strikethrough, Links, Images, Lists, Code Blocks, Inline Code, Blockquotes, HR, Tables, Line Breaks
-     * @param {string} md 
-     * @returns {string} HTML output
+     * Parse inline markdown tokens and append corresponding DOM nodes
+     * @param {HTMLElement} parent
+     * @param {string} str
      */
-    parseMarkdown(md) {
-        if (!md) return '';
-
-        const placeholders = [];
-        const addPlaceholder = (html) => {
-            const id = `___PLACEHOLDER_${placeholders.length}___`;
-            placeholders.push({ id, html });
-            return id;
+    appendInlineNodes(parent, str) {
+        if (!str) return;
+        const safeUrl = (url) => {
+            const u = (url || '').trim();
+            if (/^(?:https?:\/\/|\/|data:image\/|blob:|#|mailto:)/i.test(u)) return u;
+            return '#';
         };
 
-        // Escape HTML tags to prevent XSS
-        const escapeHtml = (str) => {
-            return str
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
-        };
+        const tokenRegex = /(!\[[^\]]*\]\([^)]+\)|\[[^\]]+\]\([^)]+\)|`[^`]+`|\*\*[^*]+\*\*|__[^_]+__|\*[^*]+\*|_[^_]+_|~~[^~]+~~)/g;
+        const parts = str.split(tokenRegex);
 
-        // Parse inline Markdown constructs
-        const parseInline = (str) => {
-            if (!str) return '';
-            let res = escapeHtml(str);
+        for (let j = 0; j < parts.length; j++) {
+            const part = parts[j];
+            if (!part) continue;
 
-            // Images: ![alt](url)
-            res = res.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, url) => {
-                const cleanUrl = url.trim();
-                if (/^(?:https?:\/\/|\/|data:image\/|blob:)/i.test(cleanUrl)) {
-                    return `<img src="${cleanUrl}" alt="${alt}">`;
+            if (part.startsWith('![') && part.endsWith(')')) {
+                const m = part.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+                if (m) {
+                    const img = document.createElement('img');
+                    img.setAttribute('src', safeUrl(m[2]));
+                    img.setAttribute('alt', m[1]);
+                    parent.appendChild(img);
+                    continue;
                 }
-                return '';
-            });
+            }
 
-            // Links: [text](url)
-            res = res.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
-                const cleanUrl = url.trim();
-                const safe = /^(?:https?:\/\/|\/|#|mailto:)/i.test(cleanUrl) ? cleanUrl : '#';
-                return `<a href="${safe}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-            });
+            if (part.startsWith('[') && part.endsWith(')')) {
+                const m = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+                if (m) {
+                    const a = document.createElement('a');
+                    a.setAttribute('href', safeUrl(m[2]));
+                    a.setAttribute('target', '_blank');
+                    a.setAttribute('rel', 'noopener noreferrer');
+                    a.textContent = m[1];
+                    parent.appendChild(a);
+                    continue;
+                }
+            }
 
-            // Bold: **text** or __text__
-            res = res.replace(/(\*\*|__)(.*?)\1/g, '<strong>$2</strong>');
+            if (part.startsWith('`') && part.endsWith('`') && part.length >= 2) {
+                const code = document.createElement('code');
+                code.textContent = part.slice(1, -1);
+                parent.appendChild(code);
+                continue;
+            }
 
-            // Italic: *text* or _text_
-            res = res.replace(/(\*|_)(.*?)\1/g, '<em>$2</em>');
+            if ((part.startsWith('**') && part.endsWith('**')) || (part.startsWith('__') && part.endsWith('__'))) {
+                const strong = document.createElement('strong');
+                strong.textContent = part.slice(2, -2);
+                parent.appendChild(strong);
+                continue;
+            }
 
-            // Strikethrough: ~~text~~
-            res = res.replace(/~~(.*?)~~/g, '<del>$1</del>');
+            if ((part.startsWith('*') && part.endsWith('*')) || (part.startsWith('_') && part.endsWith('_'))) {
+                const em = document.createElement('em');
+                em.textContent = part.slice(1, -1);
+                parent.appendChild(em);
+                continue;
+            }
 
-            return res;
-        };
+            if (part.startsWith('~~') && part.endsWith('~~')) {
+                const del = document.createElement('del');
+                del.textContent = part.slice(2, -2);
+                parent.appendChild(del);
+                continue;
+            }
 
-        // 1. Extract Fenced Code Blocks (```lang ... ```)
-        let text = md.replace(/```(\w*)\r?\n([\s\S]*?)```/g, (match, lang, code) => {
-            const escapedCode = escapeHtml(code.replace(/\r?\n$/, ''));
-            const langClass = lang ? ` class="language-${escapeHtml(lang)}"` : '';
-            return addPlaceholder(`<pre><code${langClass}>${escapedCode}</code></pre>`);
+            parent.appendChild(document.createTextNode(part));
+        }
+    },
+
+    /**
+     * Render parsed markdown directly into DOM container using safe DOM APIs (0 HTML sinks)
+     * @param {string} md
+     * @param {HTMLElement} container
+     */
+    renderMarkdownNodes(md, container) {
+        if (typeof container.replaceChildren === 'function') {
+            container.replaceChildren();
+        } else {
+            container.textContent = '';
+        }
+        if (!md) return;
+
+        // Extract fenced code blocks first
+        const codeBlocks = [];
+        const textWithPlaceholders = md.replace(/```(\w*)\r?\n([\s\S]*?)```/g, (match, lang, code) => {
+            const id = `___FENCED_CODE_${codeBlocks.length}___`;
+            codeBlocks.push({ id, lang, code: code.replace(/\r?\n$/, '') });
+            return id;
         });
 
-        // 2. Extract Inline Code (`code`)
-        text = text.replace(/`([^`]+)`/g, (match, code) => {
-            return addPlaceholder(`<code>${escapeHtml(code)}</code>`);
-        });
-
-        // Process blocks line by line
-        const lines = text.split(/\r?\n/);
-        const output = [];
+        const lines = textWithPlaceholders.split(/\r?\n/);
+        const fragment = document.createDocumentFragment();
         let i = 0;
 
         while (i < lines.length) {
             let line = lines[i];
 
-            // Code block placeholders
-            if (line.trim().startsWith('___PLACEHOLDER_') && line.trim().endsWith('___')) {
-                output.push(line.trim());
+            // Fenced Code block
+            if (line.trim().startsWith('___FENCED_CODE_') && line.trim().endsWith('___')) {
+                const block = codeBlocks.find(b => b.id === line.trim());
+                if (block) {
+                    const pre = document.createElement('pre');
+                    const code = document.createElement('code');
+                    if (block.lang) code.className = `language-${block.lang}`;
+                    code.textContent = block.code;
+                    pre.appendChild(code);
+                    fragment.appendChild(pre);
+                }
                 i++;
                 continue;
             }
 
             // Horizontal rules (---, ***, ___)
             if (/^(?:---|\*\*\*|___)\s*$/.test(line.trim())) {
-                output.push('<hr>');
+                fragment.appendChild(document.createElement('hr'));
                 i++;
                 continue;
             }
@@ -274,8 +300,9 @@ console.log('Result:', calculateSum(10, 20));
             const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
             if (headingMatch) {
                 const level = headingMatch[1].length;
-                const content = parseInline(headingMatch[2]);
-                output.push(`<h${level}>${content}</h${level}>`);
+                const h = document.createElement(`h${level}`);
+                this.appendInlineNodes(h, headingMatch[2]);
+                fragment.appendChild(h);
                 i++;
                 continue;
             }
@@ -287,8 +314,14 @@ console.log('Result:', calculateSum(10, 20));
                     quoteLines.push(lines[i].trim().replace(/^>\s?/, ''));
                     i++;
                 }
-                const quoteContent = quoteLines.map(l => parseInline(l)).join('<br>');
-                output.push(`<blockquote><p>${quoteContent}</p></blockquote>`);
+                const bq = document.createElement('blockquote');
+                const p = document.createElement('p');
+                quoteLines.forEach((ql, qIdx) => {
+                    if (qIdx > 0) p.appendChild(document.createElement('br'));
+                    this.appendInlineNodes(p, ql);
+                });
+                bq.appendChild(p);
+                fragment.appendChild(bq);
                 continue;
             }
 
@@ -312,46 +345,58 @@ console.log('Result:', calculateSum(10, 20));
                 };
 
                 const headers = parseRow(headerLine);
-                let tableHtml = '<table><thead><tr>';
-                headers.forEach(h => {
-                    tableHtml += `<th>${parseInline(h)}</th>`;
+                const table = document.createElement('table');
+                const thead = document.createElement('thead');
+                const trHead = document.createElement('tr');
+                headers.forEach(hText => {
+                    const th = document.createElement('th');
+                    this.appendInlineNodes(th, hText);
+                    trHead.appendChild(th);
                 });
-                tableHtml += '</tr></thead><tbody>';
+                thead.appendChild(trHead);
+                table.appendChild(thead);
 
+                const tbody = document.createElement('tbody');
                 bodyRows.forEach(rowStr => {
                     const cells = parseRow(rowStr);
-                    tableHtml += '<tr>';
-                    cells.forEach(c => {
-                        tableHtml += `<td>${parseInline(c)}</td>`;
+                    const trBody = document.createElement('tr');
+                    cells.forEach(cText => {
+                        const td = document.createElement('td');
+                        this.appendInlineNodes(td, cText);
+                        trBody.appendChild(td);
                     });
-                    tableHtml += '</tr>';
+                    tbody.appendChild(trBody);
                 });
-                tableHtml += '</tbody></table>';
-                output.push(tableHtml);
+                table.appendChild(tbody);
+                fragment.appendChild(table);
                 continue;
             }
 
             // Unordered Lists (- item, * item, + item)
             if (/^\s*[-*+]\s+/.test(line)) {
-                const listItems = [];
+                const ul = document.createElement('ul');
                 while (i < lines.length && /^\s*[-*+]\s+/.test(lines[i])) {
                     const itemText = lines[i].replace(/^\s*[-*+]\s+/, '');
-                    listItems.push(`<li>${parseInline(itemText)}</li>`);
+                    const li = document.createElement('li');
+                    this.appendInlineNodes(li, itemText);
+                    ul.appendChild(li);
                     i++;
                 }
-                output.push(`<ul>${listItems.join('')}</ul>`);
+                fragment.appendChild(ul);
                 continue;
             }
 
             // Ordered Lists (1. item)
             if (/^\s*\d+\.\s+/.test(line)) {
-                const listItems = [];
+                const ol = document.createElement('ol');
                 while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) {
                     const itemText = lines[i].replace(/^\s*\d+\.\s+/, '');
-                    listItems.push(`<li>${parseInline(itemText)}</li>`);
+                    const li = document.createElement('li');
+                    this.appendInlineNodes(li, itemText);
+                    ol.appendChild(li);
                     i++;
                 }
-                output.push(`<ol>${listItems.join('')}</ol>`);
+                fragment.appendChild(ol);
                 continue;
             }
 
@@ -371,26 +416,35 @@ console.log('Result:', calculateSum(10, 20));
                 !/^(?:---|\*\*\*|___)\s*$/.test(lines[i].trim()) &&
                 !/^\s*[-*+]\s+/.test(lines[i]) &&
                 !/^\s*\d+\.\s+/.test(lines[i]) &&
-                !lines[i].trim().startsWith('___PLACEHOLDER_')
+                !lines[i].trim().startsWith('___FENCED_CODE_')
             ) {
                 paragraphLines.push(lines[i]);
                 i++;
             }
 
             if (paragraphLines.length > 0) {
-                const pContent = paragraphLines.map(l => parseInline(l)).join('<br>');
-                output.push(`<p>${pContent}</p>`);
+                const p = document.createElement('p');
+                paragraphLines.forEach((pl, pIdx) => {
+                    if (pIdx > 0) p.appendChild(document.createElement('br'));
+                    this.appendInlineNodes(p, pl);
+                });
+                fragment.appendChild(p);
             }
         }
 
-        let htmlResult = output.join('\n');
+        container.appendChild(fragment);
+    },
 
-        // Restore placeholders
-        placeholders.forEach(({ id, html }) => {
-            htmlResult = htmlResult.replace(id, html);
-        });
-
-        return htmlResult;
+    /**
+     * Pure JavaScript Markdown Parser returning HTML string
+     * @param {string} md 
+     * @returns {string} HTML output
+     */
+    parseMarkdown(md) {
+        if (!md) return '';
+        const temp = document.createElement('div');
+        this.renderMarkdownNodes(md, temp);
+        return temp.innerHTML;
     }
 };
 
