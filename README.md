@@ -17,11 +17,11 @@
 [![100% Offline](https://img.shields.io/badge/100%25-Offline-10b981?style=flat-square)](#-privacy--security)
 [![Zero Dependencies](https://img.shields.io/badge/Dependencies-ZERO-ef4444?style=flat-square)](#-tech-stack)
 [![50 Tools](https://img.shields.io/badge/Tools-50-a855f7?style=flat-square)](#-the-toolbox)
-[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-22c55e?style=flat-square)](#-contributing)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-22c55e?style=flat-square)](CONTRIBUTING.md)
 
 <br/>
 
-**[📦 GitHub](https://github.com/gbao86/DevTools-Hub)** · **[📝 Changelog](CHANGELOG.md)** · **[⌨️ Shortcuts](#️-navigation)** · **[🛠️ Add a Tool](#-adding-a-new-tool)**
+**[📦 GitHub](https://github.com/gbao86/DevTools-Hub)** · **[📝 Changelog](CHANGELOG.md)** · **[🤝 Contributing](CONTRIBUTING.md)** · **[🔒 Security](SECURITY.md)** · **[⌨️ Shortcuts](#️-navigation)**
 
 </div>
 
@@ -338,8 +338,8 @@ window.copyToClipboard(text, btnEl)    // copies + shows ✅ on the button
 ---
 
 ## 🤝 Contributing
-
-Found a bug? Got an idea for tool #46? PRs and issues are genuinely welcome — see [Adding a New Tool](#-adding-a-new-tool) above to get started in about five minutes.
+ 
+Found a bug? Got an idea for tool #51? PRs and issues are genuinely welcome — please see our [Contributing Guide](CONTRIBUTING.md) to get started in about five minutes.
 
 ---
 
