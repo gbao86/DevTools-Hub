@@ -17,6 +17,43 @@ window.DevTools.push({
             style.textContent = `
                 .svg-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem; }
                 @media (max-width: 900px) { .svg-layout { grid-template-columns: 1fr; } }
+                
+                .svg-drop-zone {
+                    position: relative;
+                    border-radius: 8px;
+                    transition: all 0.2s ease;
+                }
+                .svg-drop-zone.dragover textarea {
+                    border-color: var(--accent-primary);
+                }
+                .svg-drop-overlay {
+                    display: none;
+                    position: absolute;
+                    inset: 0;
+                    background: rgba(99, 102, 241, 0.12);
+                    backdrop-filter: blur(3px);
+                    -webkit-backdrop-filter: blur(3px);
+                    border: 2px dashed var(--accent-primary);
+                    border-radius: 8px;
+                    z-index: 10;
+                    align-items: center;
+                    justify-content: center;
+                    pointer-events: none;
+                    animation: fadeIn 0.15s ease;
+                }
+                .svg-drop-zone.dragover .svg-drop-overlay {
+                    display: flex;
+                }
+                .svg-drop-msg {
+                    text-align: center;
+                    background: var(--bg-primary);
+                    padding: 1.25rem 2rem;
+                    border-radius: 8px;
+                    border: 1px solid var(--border-color);
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+                    color: var(--text-primary);
+                }
+                
                 .svg-preview-box { border: 1px solid var(--border-color); border-radius: 8px; min-height: 240px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; margin-bottom: 1rem; transition: background 0.2s ease; }
                 .svg-preview-box svg { max-width: 80%; max-height: 200px; display: block; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
                 .svg-preview-box.bg-grid {
@@ -36,10 +73,11 @@ window.DevTools.push({
                 .svg-tabs { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1rem; overflow-x: auto; }
                 .svg-tab-btn { background: none; border: none; padding: 0.5rem 1rem; color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; font-size: var(--fs-sm); white-space: nowrap; }
                 .svg-tab-btn:hover { color: var(--text-primary); }
-                .svg-tab-btn.active { color: var(--accent-primary); border-bottom-color: var(--accent-primary); }
+                .svg-tab-btn.active { color: var(--accent-primary); border-bottom-color: var(--accent-primary); font-weight: 600; }
                 .svg-opt-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
                 .svg-opt-item { display: flex; align-items: center; gap: 0.4rem; font-size: var(--fs-sm); color: var(--text-secondary); cursor: pointer; }
                 .svg-opt-item input { accent-color: var(--accent-primary); }
+                .svg-quick-copies { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
             `;
             document.head.appendChild(style);
         }
@@ -51,14 +89,16 @@ window.DevTools.push({
                     <p class="tool-description">Tối ưu dung lượng, làm sạch thẻ rác và chuyển đổi mã SVG sang React JSX, CSS Background hoặc Data URI.</p>
                 </div>
                 <div class="tool-body">
-                    <div class="tool-actions" style="margin-bottom: 1rem; justify-content: space-between; flex-wrap: wrap;">
+                    <!-- Actions & Upload Bar -->
+                    <div class="tool-actions" style="margin-bottom: 1rem; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
                         <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                            <label class="tool-btn tool-btn-primary" style="cursor:pointer; margin:0;">
+                            <label class="tool-btn tool-btn-primary" style="cursor:pointer; margin:0;" title="Chọn file .svg từ máy tính">
                                 📁 Chọn file SVG
                                 <input type="file" id="svg-file-in" accept=".svg,image/svg+xml" style="display:none;">
                             </label>
-                            <button type="button" class="tool-btn" id="svg-btn-sample">✨ Mẫu SVG</button>
-                            <button type="button" class="tool-btn tool-btn-danger" id="svg-btn-clear">Xóa</button>
+                            <button type="button" class="tool-btn" id="svg-btn-paste" title="Dán trực tiếp mã SVG hoặc file từ Clipboard (Ctrl+V)">📋 Dán từ Clipboard</button>
+                            <button type="button" class="tool-btn" id="svg-btn-sample" title="Xem thử dữ liệu mẫu">✨ Mẫu SVG</button>
+                            <button type="button" class="tool-btn tool-btn-danger" id="svg-btn-clear" title="Xóa toàn bộ">Xóa</button>
                         </div>
                         <div style="display:flex; gap:0.5rem; align-items:center;">
                             <span style="font-size:var(--fs-sm); color:var(--text-secondary);">Nền xem trước:</span>
@@ -69,6 +109,7 @@ window.DevTools.push({
                         </div>
                     </div>
 
+                    <!-- Clean & Optimization Options -->
                     <div class="svg-opt-row">
                         <label class="svg-opt-item"><input type="checkbox" id="opt-doctype" checked> Xóa DOCTYPE & XML</label>
                         <label class="svg-opt-item"><input type="checkbox" id="opt-comments" checked> Xóa Comment</label>
@@ -77,6 +118,7 @@ window.DevTools.push({
                         <label class="svg-opt-item"><input type="checkbox" id="opt-minify" checked> Minify khoảng trắng</label>
                     </div>
 
+                    <!-- File Size Comparison Stats -->
                     <div class="svg-stats-bar" id="svg-stats-bar">
                         <div>
                             <span>Gốc: <strong id="svg-size-orig">0 B</strong></span>
@@ -87,10 +129,22 @@ window.DevTools.push({
                     </div>
 
                     <div class="svg-layout">
-                        <!-- Input Column -->
+                        <!-- Input Column with Drag & Drop Zone -->
                         <div class="tool-group">
-                            <label class="tool-label">Mã SVG đầu vào (Raw SVG)</label>
-                            <textarea id="svg-input" class="tool-textarea" style="min-height: 380px; font-family: monospace; font-size: 13px;" placeholder="Dán mã <svg>...</svg> vào đây hoặc tải file lên..."></textarea>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                                <label class="tool-label" style="margin:0;">Mã SVG đầu vào (Raw SVG)</label>
+                                <span style="font-size:11px; color:var(--text-muted);">Hỗ trợ kéo thả file hoặc Ctrl+V</span>
+                            </div>
+                            <div class="svg-drop-zone" id="svg-drop-zone">
+                                <div class="svg-drop-overlay">
+                                    <div class="svg-drop-msg">
+                                        <span style="font-size:2.2rem; display:block; margin-bottom:0.25rem;">📥</span>
+                                        <strong>Thả file .SVG vào đây</strong>
+                                        <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">Tự động đọc và tối ưu ngay tức thì</div>
+                                    </div>
+                                </div>
+                                <textarea id="svg-input" class="tool-textarea" style="min-height: 400px; font-family: monospace; font-size: 13px;" placeholder="Kéo thả file .svg vào đây, hoặc nhấn Dán từ Clipboard (Ctrl+V)..."></textarea>
+                            </div>
                         </div>
 
                         <!-- Output & Preview Column -->
@@ -108,11 +162,19 @@ window.DevTools.push({
                                 <button type="button" class="svg-tab-btn" data-tab="tab-uri">Data URI</button>
                             </div>
 
+                            <!-- Quick Copy Toolbar -->
+                            <div class="svg-quick-copies">
+                                <button type="button" class="tool-btn tool-btn-sm" id="btn-quick-clean" title="Copy mã SVG đã tối ưu">📋 Copy SVG</button>
+                                <button type="button" class="tool-btn tool-btn-sm" id="btn-quick-jsx" title="Copy component React JSX">📋 Copy JSX</button>
+                                <button type="button" class="tool-btn tool-btn-sm" id="btn-quick-css" title="Copy CSS background-image">📋 Copy CSS</button>
+                                <button type="button" class="tool-btn tool-btn-sm" id="btn-quick-uri" title="Copy chuỗi Data URI">📋 Copy Data URI</button>
+                            </div>
+
                             <div class="tool-result">
-                                <textarea id="svg-output" class="tool-textarea" style="min-height: 200px; font-family: monospace; font-size: 13px;" readonly placeholder="Kết quả sẽ hiển thị ở đây..."></textarea>
+                                <textarea id="svg-output" class="tool-textarea" style="min-height: 180px; font-family: monospace; font-size: 13px;" readonly placeholder="Kết quả sẽ hiển thị ở đây..."></textarea>
                                 <div style="display:flex; gap:0.5rem; margin-top:0.75rem; justify-content: flex-end;">
                                     <button type="button" class="tool-btn tool-btn-sm" id="svg-btn-download">💾 Tải .svg</button>
-                                    <button type="button" class="tool-btn tool-btn-primary tool-btn-sm" id="svg-btn-copy">📋 Copy Kết quả</button>
+                                    <button type="button" class="tool-btn tool-btn-primary tool-btn-sm" id="svg-btn-copy">📋 Copy Tab Hiện Tại</button>
                                 </div>
                             </div>
                         </div>
@@ -124,12 +186,18 @@ window.DevTools.push({
         const inputEl = container.querySelector('#svg-input');
         const outputEl = container.querySelector('#svg-output');
         const previewContainer = container.querySelector('#svg-preview-container');
-        const previewPlaceholder = container.querySelector('#svg-preview-placeholder');
+        const dropZone = container.querySelector('#svg-drop-zone');
         const fileInput = container.querySelector('#svg-file-in');
+        const pasteBtn = container.querySelector('#svg-btn-paste');
         const sampleBtn = container.querySelector('#svg-btn-sample');
         const clearBtn = container.querySelector('#svg-btn-clear');
         const copyBtn = container.querySelector('#svg-btn-copy');
         const downloadBtn = container.querySelector('#svg-btn-download');
+
+        const btnQuickClean = container.querySelector('#btn-quick-clean');
+        const btnQuickJsx = container.querySelector('#btn-quick-jsx');
+        const btnQuickCss = container.querySelector('#btn-quick-css');
+        const btnQuickUri = container.querySelector('#btn-quick-uri');
 
         const sizeOrigEl = container.querySelector('#svg-size-orig');
         const sizeOptEl = container.querySelector('#svg-size-opt');
@@ -313,6 +381,146 @@ window.DevTools.push({
             }
         }
 
+        function handleSvgFile(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                inputEl.value = ev.target.result;
+                updateOutputs();
+                if (window.showToast) window.showToast(`Đã nhận file: ${file.name}`, 'success');
+            };
+            reader.readAsText(file);
+        }
+
+        function copyContent(text, btn) {
+            if (!text || !text.trim()) return;
+            if (window.copyToClipboard) {
+                window.copyToClipboard(text, btn);
+            } else {
+                navigator.clipboard.writeText(text);
+            }
+        }
+
+        // ============================================
+        // Drag & Drop Handling
+        // ============================================
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.add('dragover');
+            });
+        });
+
+        ['dragleave', 'dragend'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.remove('dragover');
+            });
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('dragover');
+
+            const files = e.dataTransfer.files;
+            if (files && files.length > 0) {
+                handleSvgFile(files[0]);
+            } else {
+                const text = e.dataTransfer.getData('text');
+                if (text && text.trim()) {
+                    inputEl.value = text.trim();
+                    updateOutputs();
+                    if (window.showToast) window.showToast('Đã nạp SVG thả vào!', 'success');
+                }
+            }
+        });
+
+        // Also allow dropping onto the preview area
+        previewContainer.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        previewContainer.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        previewContainer.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                handleSvgFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        // ============================================
+        // Clipboard Paste Handling
+        // ============================================
+        pasteBtn.addEventListener('click', async () => {
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    const text = await navigator.clipboard.readText();
+                    if (text && text.trim()) {
+                        inputEl.value = text.trim();
+                        updateOutputs();
+                        if (window.showToast) window.showToast('Đã dán SVG từ clipboard!', 'success');
+                        return;
+                    }
+                }
+                if (window.showToast) window.showToast('Nhấn Ctrl+V để dán trực tiếp!', 'info');
+            } catch (err) {
+                if (window.showToast) window.showToast('Trình duyệt chặn truy cập Clipboard, hãy bấm Ctrl+V!', 'info');
+            }
+        });
+
+        // Listen for global / panel paste
+        container.addEventListener('paste', (e) => {
+            // Check if files in clipboard (e.g. copied from Figma or file explorer)
+            if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length > 0) {
+                const file = e.clipboardData.files[0];
+                if (file.type.includes('svg') || file.name.endsWith('.svg')) {
+                    e.preventDefault();
+                    handleSvgFile(file);
+                    return;
+                }
+            }
+
+            // If not focused on textarea, auto-intercept SVG text
+            if (document.activeElement !== inputEl) {
+                const text = (e.clipboardData || window.clipboardData).getData('text');
+                if (text && (text.includes('<svg') || text.includes('xmlns'))) {
+                    e.preventDefault();
+                    inputEl.value = text.trim();
+                    updateOutputs();
+                    if (window.showToast) window.showToast('Đã nhận diện và dán mã SVG!', 'success');
+                }
+            }
+        });
+
+        // ============================================
+        // Quick Copy Buttons
+        // ============================================
+        btnQuickClean.addEventListener('click', () => {
+            if (!optimizedSvg) return;
+            copyContent(optimizedSvg, btnQuickClean);
+        });
+
+        btnQuickJsx.addEventListener('click', () => {
+            if (!optimizedSvg) return;
+            copyContent(toJsx(optimizedSvg), btnQuickJsx);
+        });
+
+        btnQuickCss.addEventListener('click', () => {
+            if (!optimizedSvg) return;
+            copyContent(toCssBackground(optimizedSvg), btnQuickCss);
+        });
+
+        btnQuickUri.addEventListener('click', () => {
+            if (!optimizedSvg) return;
+            copyContent(toDataUri(optimizedSvg), btnQuickUri);
+        });
+
         // Background switcher
         container.querySelectorAll('[data-bg]').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -343,14 +551,7 @@ window.DevTools.push({
         // File upload
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                inputEl.value = ev.target.result;
-                updateOutputs();
-                if (window.showToast) window.showToast(`Đã tải: ${file.name}`, 'success');
-            };
-            reader.readAsText(file);
+            if (file) handleSvgFile(file);
         });
 
         // Sample button
@@ -367,14 +568,10 @@ window.DevTools.push({
             updateOutputs();
         });
 
-        // Copy button
+        // Copy button for active tab
         copyBtn.addEventListener('click', () => {
             if (!outputEl.value.trim()) return;
-            if (window.copyToClipboard) {
-                window.copyToClipboard(outputEl.value, copyBtn);
-            } else {
-                navigator.clipboard.writeText(outputEl.value);
-            }
+            copyContent(outputEl.value, copyBtn);
         });
 
         // Download button
