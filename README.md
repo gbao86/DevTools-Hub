@@ -252,94 +252,21 @@ DevTools-Hub/
 │       ├── json-schema-generator.js   # NEW
 │       └── ...  (39 more, see full list above)
 ├── CHANGELOG.md
+├── CONTRIBUTING.md
 ├── LICENSE
-└── README.md
-```
-
----
-
-## 🧩 Adding a New Tool
-
-New tool = one file. No config, no registry to edit by hand.
-
-```javascript
-const MyTool = {
-    name: 'My Tool',
-    icon: '🔧',                  // Emoji key → mapped to an SVG icon
-    category: 'Converter',       // Encode/Decode | Formatter | Generator | Converter | Text | Web | Tester | Reference
-    description: 'What it does',
-
-    render(container) {
-        container.innerHTML = `
-            <div class="tool-panel">
-                <div class="tool-header">
-                    <h2>My Tool</h2>
-                    <p class="tool-description">What it does</p>
-                </div>
-                <div class="tool-body">
-                    <div class="tool-group">
-                        <label class="tool-label">Input</label>
-                        <textarea class="tool-textarea" id="my-input" placeholder="Enter text..."></textarea>
-                    </div>
-                    <div class="tool-actions">
-                        <button class="tool-btn tool-btn-primary" id="my-btn">Process</button>
-                    </div>
-                    <div class="tool-group">
-                        <label class="tool-label">Output</label>
-                        <div class="tool-result">
-                            <textarea class="tool-textarea" id="my-output" readonly></textarea>
-                            <button class="tool-copy-btn" id="my-copy">📋</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-        container.querySelector('#my-btn').addEventListener('click', () => { /* ... */ });
-        container.querySelector('#my-copy').addEventListener('click', () => {
-            window.copyToClipboard(container.querySelector('#my-output').value, container.querySelector('#my-copy'));
-        });
-    }
-};
-
-window.DevTools = window.DevTools || [];
-window.DevTools.push(MyTool);
-```
-
-Drop a `<script>` tag for it in `index.html` before `app.js` — done. It shows up in the command palette and the welcome grid automatically.
-
-<details>
-<summary><b>Available UI components</b></summary>
-<br/>
-
-| Class | Purpose |
-|:--|:--|
-| `.tool-panel` | Main wrapper |
-| `.tool-header` / `.tool-description` | Title & subtitle |
-| `.tool-body` | Content container (flex column) |
-| `.tool-group` / `.tool-label` | Form group with label |
-| `.tool-textarea` / `.tool-input` / `.tool-select` / `.tool-number` | Themed form controls |
-| `.tool-btn` / `.tool-btn-primary` / `.tool-btn-danger` | Action buttons |
-| `.tool-actions` | Button row |
-| `.tool-result` / `.tool-copy-btn` | Output area with copy button |
-| `.tool-split` / `.tool-row` / `.tool-col` | Layout helpers |
-| `.tool-tabs` / `.tool-tab` | Tab navigation |
-| `.tool-stats` / `.tool-stat` | Statistics grid |
-| `.tool-badge` / `.tool-info` | Badges & info boxes |
-
-</details>
-
-> ⚠️ **Rule #1:** always use CSS variables (`var(--text-primary)`, `var(--bg-secondary)`, etc). Never hardcode hex values — both themes have to survive contact with your code.
-
-```javascript
-window.showToast(message, type)        // 'info' | 'success' | 'error' | 'warning'
-window.copyToClipboard(text, btnEl)    // copies + shows ✅ on the button
+├── README.md
+└── SECURITY.md
 ```
 
 ---
 
 ## 🤝 Contributing
- 
-Found a bug? Got an idea for tool #51? PRs and issues are genuinely welcome — please see our [Contributing Guide](CONTRIBUTING.md) to get started in about five minutes.
+
+We welcome contributions of all kinds! Whether you want to add tool #51, fix an edge-case bug, or polish UI/UX:
+
+- **Add a tool in < 5 minutes**: A new tool is just one modular file in `js/tools/` with zero build steps and zero configuration.
+- **Developer Guide**: Please check out our **[Contributing Guidelines (CONTRIBUTING.md)](CONTRIBUTING.md)** for architecture principles, the full tool template, CSS variables, and PR process.
+- **Security**: Please review our **[Security Policy (SECURITY.md)](SECURITY.md)** for responsible vulnerability reporting.
 
 ---
 
