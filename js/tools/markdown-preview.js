@@ -177,10 +177,20 @@ console.log('Result:', calculateSum(10, 20));
      */
     appendInlineNodes(parent, str) {
         if (!str) return;
-        const safeUrl = (url) => {
+        const sanitizeUrl = (url) => {
             const u = (url || '').trim();
-            if (/^(?:https?:\/\/|\/|data:image\/|blob:|#|mailto:)/i.test(u)) return u;
-            return '#';
+            if (!/^(?:https?:\/\/|\/|#|mailto:)/i.test(u)) {
+                return '#';
+            }
+            return encodeURI(u);
+        };
+
+        const sanitizeImageUrl = (url) => {
+            const u = (url || '').trim();
+            if (!/^(?:https?:\/\/|\/|data:image\/|blob:)/i.test(u)) {
+                return '';
+            }
+            return encodeURI(u);
         };
 
         const tokenRegex = /(!\[[^\]]*\]\([^)]+\)|\[[^\]]+\]\([^)]+\)|`[^`]+`|\*\*[^*]+\*\*|__[^_]+__|\*[^*]+\*|_[^_]+_|~~[^~]+~~)/g;
@@ -194,7 +204,7 @@ console.log('Result:', calculateSum(10, 20));
                 const m = part.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
                 if (m) {
                     const img = document.createElement('img');
-                    img.setAttribute('src', safeUrl(m[2]));
+                    img.setAttribute('src', sanitizeImageUrl(m[2]));
                     img.setAttribute('alt', m[1]);
                     parent.appendChild(img);
                     continue;
@@ -205,7 +215,7 @@ console.log('Result:', calculateSum(10, 20));
                 const m = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
                 if (m) {
                     const a = document.createElement('a');
-                    a.setAttribute('href', safeUrl(m[2]));
+                    a.setAttribute('href', sanitizeUrl(m[2]));
                     a.setAttribute('target', '_blank');
                     a.setAttribute('rel', 'noopener noreferrer');
                     a.textContent = m[1];
